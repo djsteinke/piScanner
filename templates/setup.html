@@ -39,7 +39,7 @@
         }
     </style>
     <!--
-    <script type="text/javascript">
+    <script type="text/scripts">
         $.ajax({
           url: "/_getStatus",
           data: {},
@@ -50,25 +50,78 @@
     </script>
     -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="scripts/API.js"></script>
     <script type=text/javascript>
-        var API = {
-            GET: function(endpoint) {
-                return $.ajax({
-                    type: "GET",
-                    async: true,
-                    success: function(result) {
-                        alert("saved");
-                    }
-                });
+        var SetupData = {};
+        var Setup = {
+            GET: function(endpoint, successCallback) {
+                return MYAPI.GET(endpoint, successCallback);
+            },
+            POST: function(endpoint, successCallback) {
+                Setup_LoadObj();
+                return MYAPI.POST(endpoint, successCallback, SetupData);
+            },
+            FIELDS: {
+                LEFT_ANGLE: "LeftAngle",
+                RIGHT_ANGLE: "RightAngle",
+                BLOCK_SIZE: "BlockSize",
+                BLOCK_X_COUNT: "BlockXCount",
+                BLOCK_Y_COUNT: "BlockYCount",
+                CAM_F_PX: "CamFPx",
+                CAM_F_MM: "CamFMm",
+                CAM_CX: "CamCx",
+                CAM_CY: "CamCy",
+                CAM_CZ: "CamCz"
             }
         }
+
+        function Setup_LoadObj() {
+            SetupData[Setup.FIELDS.LEFT_ANGLE] = $('#input_left_angle').val();
+            SetupData[Setup.FIELDS.RIGHT_ANGLE] = $('#input_right_angle').val();
+            SetupData[Setup.FIELDS.BLOCK_SIZE] = $('#input_block_size').val();
+            SetupData[Setup.FIELDS.BLOCK_X_COUNT] = $('#input_x_count').val();
+            SetupData[Setup.FIELDS.BLOCK_Y_COUNT] = $('#input_y_count').val();
+            SetupData[Setup.FIELDS.CAM_F_PX] = $('#input_f_px').val();
+            SetupData[Setup.FIELDS.CAM_F_MM] = $('#input_f_mm').val();
+            SetupData[Setup.FIELDS.CAM_CX] = $('#input_cx').val();
+            SetupData[Setup.FIELDS.CAM_CY] = $('#input_cy').val();
+            SetupData[Setup.FIELDS.CAM_CZ] = $('#input_cz').val();
+        }
+
+        function Setup_LoadUI() {
+            $('#input_left_angle').val(SetupData[Setup.FIELDS.LEFT_ANGLE]);
+            $('#input_right_angle').val(SetupData[Setup.FIELDS.RIGHT_ANGLE]);
+            $('#input_block_size').val(SetupData[Setup.FIELDS.BLOCK_SIZE]);
+            $('#input_x_count').val(SetupData[Setup.FIELDS.BLOCK_X_COUNT]);
+            $('#input_y_count').val(SetupData[Setup.FIELDS.BLOCK_Y_COUNT]);
+            $('#input_f_px').val(SetupData[Setup.FIELDS.CAM_F_PX]);
+            $('#input_f_mm').val(SetupData[Setup.FIELDS.CAM_F_MM]);
+            $('#input_cx').val(SetupData[Setup.FIELDS.CAM_CX]);
+            $('#input_cy').val(SetupData[Setup.FIELDS.CAM_CY]);
+            $('#input_cz').val(SetupData[Setup.FIELDS.CAM_CZ]);
+        }
+
+        function saved() {
+            alert("Saved");
+        }
+
+        function loaded(data) {
+            SetupData = {};
+            SetupData = $.parseJSON(data["message"]);
+            Setup_LoadUI();
+        }
+
         function save() {
-            API.GET('/save_setup');
+            Setup.POST('/save_setup', saved);
             return false;
+        }
+
+        function loadSetup() {
+            Setup.GET('/load_setup', loaded);
         }
     </script>
 </head>
-<body>
+<body onload="loadSetup()">
     <table>
         <tr>
             <td class="label-title">Lasers</td>
@@ -80,23 +133,6 @@
         <tr>
             <td class="label right">Right Angle:</td>
             <td class="input"><input id="input_right_angle" style="width: 50px;"/> deg</td>
-        </tr>
-    </table>
-    <table>
-        <tr>
-            <td class="label-title-next">Pattern</td>
-        </tr>
-        <tr>
-            <td class="label">Block Size:</td>
-            <td class="input"><input id="input_block_size" style="width: 50px;"/> mm</td>
-        </tr>
-        <tr>
-            <td class="label">X Count:</td>
-            <td class="input"><input id="input_x_count" style="width: 50px;"/></td>
-        </tr>
-        <tr>
-            <td class="label right">Y Count:</td>
-            <td class="input"><input id="input_y_count" style="width: 50px;"/></td>
         </tr>
     </table>
     <table>
@@ -120,6 +156,23 @@
         <tr>
             <td class="label-short">Cz</td>
             <td class="input-short"><input id="input_cz" style="width: 50px;"/> px</td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td class="label-title-next">Pattern</td>
+        </tr>
+        <tr>
+            <td class="label">Block Size:</td>
+            <td class="input"><input id="input_block_size" style="width: 50px;"/> mm</td>
+        </tr>
+        <tr>
+            <td class="label">X Count:</td>
+            <td class="input"><input id="input_x_count" style="width: 50px;"/></td>
+        </tr>
+        <tr>
+            <td class="label right">Y Count:</td>
+            <td class="input"><input id="input_y_count" style="width: 50px;"/></td>
         </tr>
     </table>
 

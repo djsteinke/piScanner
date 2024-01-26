@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .label {
+            width: 100px;
+            padding-left: 10px;
+        }
+        .label-short {
+            width: 20px;
+            padding-left: 10px;
+        }
+        .input {
+            width: 125px;
+        }
+        .input-short {
+            width: 85px;
+        }
+        .label-title {
+            font-weight: bold;
+            padding-bottom: 5px;
+        }
+        .label-title-next {
+            font-weight: bold;
+            padding-top: 20px;
+            padding-bottom: 5px;
+        }
+        .btn {
+            padding: 5px 10px;
+            font-size: 16px;
+            width: 100px;
+        }
+    </style>
+    <!--
+    <script type="text/javascript">
+        $.ajax({
+          url: "/_getStatus",
+          data: {},
+          success: function( result ) {
+            $( "#statusValue" ).text( result.value );
+          }
+        });
+    </script>
+    -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type=text/javascript>
+        var API = {
+            GET: function(endpoint) {
+                return $.ajax({
+                    type: "GET",
+                    async: true,
+                    success: function(result) {
+                        alert("saved");
+                    }
+                });
+            }
+        }
+        function save() {
+            API.GET('/save_setup');
+            return false;
+        }
+    </script>
+</head>
+<body>
+    <table>
+        <tr>
+            <td class="label-title">Lasers</td>
+        </tr>
+        <tr>
+            <td class="label">Left Angle:</td>
+            <td class="input"><input id="input_left_angle" style="width: 50px;"/> deg</td>
+        </tr>
+        <tr>
+            <td class="label right">Right Angle:</td>
+            <td class="input"><input id="input_right_angle" style="width: 50px;"/> deg</td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td class="label-title-next">Pattern</td>
+        </tr>
+        <tr>
+            <td class="label">Block Size:</td>
+            <td class="input"><input id="input_block_size" style="width: 50px;"/> mm</td>
+        </tr>
+        <tr>
+            <td class="label">X Count:</td>
+            <td class="input"><input id="input_x_count" style="width: 50px;"/></td>
+        </tr>
+        <tr>
+            <td class="label right">Y Count:</td>
+            <td class="input"><input id="input_y_count" style="width: 50px;"/></td>
+        </tr>
+    </table>
+    <table>
+        <tr>
+            <td class="label-title-next">Camera</td>
+        </tr>
+        <tr>
+            <td class="label-short">f</td>
+            <td class="input-short"><input id="input_f_px" style="width: 50px;"/> px</td>
+            <td class="label-short right"></td>
+            <td class="input"><input id="input_f_mm" style="width: 50px;"/> mm</td>
+        </tr>
+        <tr>
+            <td class="label-short">Cx</td>
+            <td class="input-short"><input id="input_cx" style="width: 50px;"/> px</td>
+        </tr>
+        <tr>
+            <td class="label-short">Cy</td>
+            <td class="input-short"><input id="input_cy" style="width: 50px;"/> px</td>
+        </tr>
+        <tr>
+            <td class="label-short">Cz</td>
+            <td class="input-short"><input id="input_cz" style="width: 50px;"/> px</td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <td class="label-title-next">&nbsp;</td>
+        </tr>
+        <tr>
+            <td class="label"><button id="btn_photo" class="btn">Photo</button></td>
+            <td class="label"><button id="btn_calibrate" class="btn">Calibrate</button></td>
+            <td class="label"><button id="btn_save" class="btn" onclick="save()">Save</button></td>
+        </tr>
+    </table>
+</body>
+</html>

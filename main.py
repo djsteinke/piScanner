@@ -4,6 +4,7 @@ from flask import Flask, render_template, Response, jsonify, request
 #import cv2
 from picamera2 import Picamera2
 from libcamera import controls
+from time import sleep
 
 app = Flask(__name__)
 #camera = cv2.VideoCapture(0)
@@ -16,6 +17,7 @@ camera.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": 0.0})
 
 def gen_frames():
     while True:
+        sleep(1)
         data = io.BytesIO()
         camera.capture_file(data, format='jpeg')
         #success, frame = camera.read()  # read the camera frame

@@ -92,10 +92,11 @@ if __name__ == '__main__':
                                                       display="lores")
     picam2.configure(camera_config)
     picam2.start_preview(Preview.NULL)
+    sleep(2)
     # picam2.configure(camera_config)
     #picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": 0.0})
     picam2.start()
-    sleep(4)
+    sleep(2)
     load_setup()
     app.run(debug=True, host="192.168.0.154", port=31000)
 

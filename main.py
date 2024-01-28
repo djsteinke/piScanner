@@ -5,7 +5,6 @@ from picamera2 import Picamera2, Preview
 from libcamera import controls
 from time import sleep
 
-app = Flask(__name__)
 #camera = cv2.VideoCapture(0)
 setup = []
 
@@ -19,6 +18,9 @@ picam2.start_preview(Preview.NULL)
 # picam2.configure(camera_config)
 picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": 0.0})
 picam2.start()
+sleep(4)
+
+app = Flask(__name__)
 
 
 def gen_frames():

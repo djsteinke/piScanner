@@ -21,7 +21,7 @@ if __name__ == '__main__':
     #picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": 0.0})
     sleep(2)
     picam2.start()
-    threading.Timer(1, flaskApp.start_app).start()
+    #threading.Timer(1, flaskApp.start_app).start()
     flaskApp.picam2 = picam2
 
 

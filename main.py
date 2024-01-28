@@ -98,7 +98,7 @@ def start_cam():
     picam2.start_preview(Preview.NULL)
     sleep(2)
     # picam2.configure(camera_config)
-    #picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": 0.0})
+    picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": 0.0})
     picam2.start()
     sleep(2)
 

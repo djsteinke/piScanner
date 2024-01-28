@@ -4,6 +4,7 @@ from flask import Flask, render_template, Response, jsonify, request
 from picamera2 import Picamera2, Preview
 from libcamera import controls
 from time import sleep
+import threading
 
 #camera = cv2.VideoCapture(0)
 setup = []
@@ -11,24 +12,27 @@ setup = []
 
 
 app = Flask(__name__)
-
+picam2 = None
 
 def gen_frames():
     while True:
         sleep(1)
-        data = io.BytesIO()
-        picam2.capture_file(data, format='jpeg')
-        #success, frame = camera.read()  # read the camera frame
-        #if not success:
-        #    break
-        #else:
-        #    ret, buffer = cv2.imencode('.jpg', frame)
-        #    frame = buffer.tobytes()
-        data.seek(0)
-        frame = data.read()
-        data.truncate()
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
+        if picam2 is not None:
+            data = io.BytesIO()
+            picam2.capture_file(data, format='jpeg')
+            #success, frame = camera.read()  # read the camera frame
+            #if not success:
+            #    break
+            #else:
+            #    ret, buffer = cv2.imencode('.jpg', frame)
+            #    frame = buffer.tobytes()
+            data.seek(0)
+            frame = data.read()
+            data.truncate()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
+        else:
+            yield b''
 
 
 @app.route('/')
@@ -84,7 +88,7 @@ def load_setup():
         pass
 
 
-if __name__ == '__main__':
+def start_cam():
     picam2 = Picamera2()
     # camera_config = picam2.create_preview_configuration()
     # config = camera.create_video_configuration(main={"size": (640, 480)}, controls={"FrameDurationLimits": (15000, 15000)}, buffer_count=2)
@@ -97,6 +101,10 @@ if __name__ == '__main__':
     #picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": 0.0})
     picam2.start()
     sleep(2)
+
+
+if __name__ == '__main__':
+    threading.Timer(1, start_cam).start()
     load_setup()
     app.run(debug=True, host="192.168.0.154", port=31000)
 

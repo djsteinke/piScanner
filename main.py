@@ -1,8 +1,9 @@
 from picamera2 import Picamera2, Preview
-from libcamera import controls
+#from libcamera import controls
 from time import sleep
 import threading
 import flaskApp
+#import cv2
 
 #camera = cv2.VideoCapture(0)
 
@@ -17,7 +18,7 @@ if __name__ == '__main__':
     picam2.start_preview(Preview.NULL)
     sleep(2)
     # picam2.configure(camera_config)
-    picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": 0.0})
+    #picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": 0.0})
     sleep(2)
     picam2.start()
     threading.Timer(1, flaskApp.start_app).start()

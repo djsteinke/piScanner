@@ -8,17 +8,7 @@ from time import sleep
 #camera = cv2.VideoCapture(0)
 setup = []
 
-picam2 = Picamera2()
-#camera_config = picam2.create_preview_configuration()
-#config = camera.create_video_configuration(main={"size": (640, 480)}, controls={"FrameDurationLimits": (15000, 15000)}, buffer_count=2)
-camera_config = picam2.create_still_configuration(main={"size": (1920, 1080)}, lores={"size": (640, 480)}, display="lores")
 
-picam2.configure(camera_config)
-picam2.start_preview(Preview.NULL)
-# picam2.configure(camera_config)
-picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": 0.0})
-picam2.start()
-sleep(4)
 
 app = Flask(__name__)
 
@@ -95,6 +85,17 @@ def load_setup():
 
 
 if __name__ == '__main__':
+    picam2 = Picamera2()
+    # camera_config = picam2.create_preview_configuration()
+    # config = camera.create_video_configuration(main={"size": (640, 480)}, controls={"FrameDurationLimits": (15000, 15000)}, buffer_count=2)
+    camera_config = picam2.create_still_configuration(main={"size": (1920, 1080)}, lores={"size": (640, 480)},
+                                                      display="lores")
+    picam2.configure(camera_config)
+    picam2.start_preview(Preview.NULL)
+    # picam2.configure(camera_config)
+    picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": 0.0})
+    picam2.start()
+    sleep(4)
     load_setup()
     app.run(debug=True, host="192.168.0.154", port=31000)
 

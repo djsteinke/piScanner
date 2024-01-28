@@ -93,7 +93,7 @@ if __name__ == '__main__':
     picam2.configure(camera_config)
     picam2.start_preview(Preview.NULL)
     # picam2.configure(camera_config)
-    picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": 0.0})
+    #picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": 0.0})
     picam2.start()
     sleep(4)
     load_setup()

@@ -17,7 +17,7 @@ picam2 = None
 def gen_frames():
     while True:
         sleep(1)
-        frame = []
+        frame = b''
         if picam2 is not None:
             data = io.BytesIO()
             picam2.capture_file(data, format='jpeg')

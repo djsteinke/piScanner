@@ -6,24 +6,18 @@ import flaskApp
 #import cv2
 
 #camera = cv2.VideoCapture(0)
-
+camera = Picamera2()
+config = camera.create_video_configuration(
+    main={"size": (640, 480)},
+    controls={"FrameDurationLimits": (15000, 15000)}, #this should be about 60fps
+    buffer_count=2
+    )
+camera.configure(config)
+camera.start()
+sleep(1) #time to let the camera start
 
 if __name__ == '__main__':
-    picam2 = Picamera2()
-    # camera_config = picam2.create_preview_configuration()
-    # config = camera.create_video_configuration(main={"size": (640, 480)}, controls={"FrameDurationLimits": (15000, 15000)}, buffer_count=2)
-    camera_config = picam2.create_still_configuration(main={"size": (1920, 1080)}, lores={"size": (640, 480)},
-                                                      display="lores")
-    picam2.configure(camera_config)
-    picam2.start_preview(Preview.NULL)
-    sleep(2)
-    # picam2.configure(camera_config)
-    #picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": 0.0})
-    picam2.start()
-    sleep(2)
+    flaskApp.picam2 = camera
     flaskApp.start_app()
-    flaskApp.picam2 = picam2
-
-    picam2.capture_file('test.jpg')
 
 

@@ -24,4 +24,6 @@ if __name__ == '__main__':
     #threading.Timer(1, flaskApp.start_app).start()
     flaskApp.picam2 = picam2
 
+    picam2.capture_file('test.jpg')
+
 

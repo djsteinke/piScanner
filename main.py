@@ -21,7 +21,7 @@ if __name__ == '__main__':
         if camera is not None:
             break
         sleep(1)
-    flaskApp.picam2 = camera
+    #flaskApp.picam2 = camera
     flaskApp.start_app()
 
 

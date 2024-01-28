@@ -17,6 +17,10 @@ camera.start()
 sleep(1) #time to let the camera start
 
 if __name__ == '__main__':
+    while True:
+        if camera is not None:
+            break
+        sleep(1)
     flaskApp.picam2 = camera
     flaskApp.start_app()
 

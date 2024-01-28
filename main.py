@@ -17,6 +17,7 @@ picam2 = None
 def gen_frames():
     while True:
         sleep(1)
+        frame = []
         if picam2 is not None:
             data = io.BytesIO()
             picam2.capture_file(data, format='jpeg')
@@ -29,10 +30,8 @@ def gen_frames():
             data.seek(0)
             frame = data.read()
             data.truncate()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
-        else:
-            yield b''
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
 
 
 @app.route('/')

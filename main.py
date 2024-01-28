@@ -1,33 +1,42 @@
 import io
 import json
 from flask import Flask, render_template, Response, jsonify, request
-#import cv2
-from picamera2 import Picamera2
+from picamera2 import Picamera2, Preview
 from libcamera import controls
 from time import sleep
 
 app = Flask(__name__)
 #camera = cv2.VideoCapture(0)
 setup = []
-camera = Picamera2()
-capture_config = camera.create_still_configuration()
-camera.start(show_preview=False)
-camera.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": 0.0})
+
+picam2 = Picamera2()
+#camera_config = picam2.create_preview_configuration()
+#config = camera.create_video_configuration(main={"size": (640, 480)}, controls={"FrameDurationLimits": (15000, 15000)}, buffer_count=2)
+camera_config = picam2.create_still_configuration(main={"size": (1920, 1080)}, lores={"size": (640, 480)}, display="lores")
+
+picam2.configure(camera_config)
+picam2.start_preview(Preview.NULL)
+# picam2.configure(camera_config)
+picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": 0.0})
+picam2.start()
 
 
 def gen_frames():
     while True:
         sleep(1)
         data = io.BytesIO()
-        camera.capture_file(data, format='jpeg')
+        picam2.capture_file(data, format='jpeg')
         #success, frame = camera.read()  # read the camera frame
         #if not success:
         #    break
         #else:
         #    ret, buffer = cv2.imencode('.jpg', frame)
         #    frame = buffer.tobytes()
+        data.seek(0)
+        frame = data.read()
+        data.truncate()
         yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + data.read() + b'\r\n')  # concat frame one by one and show result
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
 
 
 @app.route('/')
@@ -73,6 +82,7 @@ def save_file(file_path, data):
     f.write(data)
     f.close()
 
+
 def load_setup():
     global setup
     try:
@@ -80,6 +90,7 @@ def load_setup():
         setup = json.load(f)
     except:
         pass
+
 
 if __name__ == '__main__':
     load_setup()

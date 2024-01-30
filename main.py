@@ -27,7 +27,7 @@ def gen_frames():
     while True:
         try:
             im = picam2.capture_array()
-            cv2.rotate(im, cv2.ROTATE_90_CLOCKWISE)
+            im = cv2.rotate(im, cv2.ROTATE_90_CLOCKWISE)
             ret, buffer = cv2.imencode('.jpg', im)
             frame = buffer.tobytes()
             yield(b'--frame\r\n'

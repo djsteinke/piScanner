@@ -3,14 +3,15 @@ from flask import Flask, render_template, Response, jsonify, request
 from time import sleep
 import json
 import cv2
-import libcamera
 
 app = Flask(__name__)
 
 picam2 = Picamera2()
 picam2.start_preview(Preview.NULL)
-capture_config = picam2.create_still_configuration(main={"size": (640, 360)}, lores={"size": (640, 360)}, display="lores")
-picam2.configure(capture_config)
+capture_config_preview = picam2.create_still_configuration(main={"size": (640, 360)}, display="main")
+#capture_config_preview = picam2.create_still_configuration(main={"size": (640, 360)}, lores={"size": (640, 360)}, display="main")
+capture_config_save = picam2.create_still_configuration
+picam2.configure(capture_config_preview)
 picam2.start()
 
 sleep(1)

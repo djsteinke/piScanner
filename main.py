@@ -29,7 +29,8 @@ def gen_frames():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    #return render_template('index.html')
 
 
 @app.route('/setup')

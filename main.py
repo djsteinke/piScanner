@@ -3,8 +3,13 @@ from flask import Flask, render_template, Response, jsonify, request
 from time import sleep
 import json
 import cv2
+import subprocess
+
+
+subprocess.run(['v4l2-ctl', '--set-ctrl', 'wide_dynamic_range=1', '-d', '/dev/v4l-subdev0'])
 
 app = Flask(__name__)
+
 
 picam2 = Picamera2()
 picam2.start_preview(Preview.NULL)

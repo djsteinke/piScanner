@@ -5,8 +5,8 @@ import json
 import cv2
 import subprocess
 
-
-subprocess.run(['v4l2-ctl', '--set-ctrl', 'wide_dynamic_range=1', '-d', '/dev/v4l-subdev0'])
+# v4l2-ctl --set-ctrl wide_dynamic_range=0 -d /dev/v4l-subdev0
+# subprocess.run(['v4l2-ctl', '--set-ctrl', 'wide_dynamic_range=1', '-d', '/dev/v4l-subdev0'])
 
 app = Flask(__name__)
 
@@ -14,7 +14,7 @@ app = Flask(__name__)
 picam2 = Picamera2()
 picam2.start_preview(Preview.NULL)
 #capture_config_preview = picam2.create_still_configuration(main={"size": (640, 360), "format": "XBGR8888"}, display="main")
-capture_config_preview = picam2.create_still_configuration(main={"size": (640, 360)}, display="main")
+capture_config_preview = picam2.create_still_configuration(main={"size": (640, 360), "format": "XBGR8888"}, lores={"size": (320, 180)}, display="main")
 picam2.align_configuration(capture_config_preview)
 #capture_config_preview = picam2.create_still_configuration(main={"size": (640, 360)}, lores={"size": (640, 360)}, display="main")
 capture_config_save = picam2.create_still_configuration

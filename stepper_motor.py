@@ -51,6 +51,7 @@ class StepperMotor(object):
         self._mps = mps_min
         self._last_step_us = 0
         self._steps_to_full = 0
+        self.ENB.on()
 
     def _reset(self):
         self._rpm = 0.0

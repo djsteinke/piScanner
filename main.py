@@ -9,8 +9,18 @@ app = Flask(__name__)
 picam2 = Picamera2()
 capture_config = picam2.create_still_configuration(main={"size": (640, 360)}, lores={"size": (640, 360)}, display="lores")
 picam2.configure(capture_config)
-picam2.start()
-sleep(2)
+#picam2.start()
+#sleep(2)
+#picam2.stop()
+
+picam2_started = False
+
+def start_picam2():
+    global picam2_started
+    if not picam2_started:
+        picam2.start()
+        sleep(2)
+        picam2_started = True
 
 
 def gen_frames():
@@ -28,18 +38,18 @@ def gen_frames():
 
 @app.route('/')
 def index():
-    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
-    #return render_template('index.html')
+    #return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    return render_template('index.html')
 
-"""
 @app.route('/setup')
 def setup_frame():
     return render_template('setup.html')
 
 
-#@app.route('/video_feed')
-#def video_feed():
-#    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+@app.route('/video_feed')
+def video_feed():
+    start_picam2()
+    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 @app.route('/load_setup', methods=["GET"])
@@ -77,9 +87,9 @@ def load_setup():
         setup = json.load(f)
     except:
         pass
-"""
+
 
 if __name__ == '__main__':
     setup = {}
-    app.run(debug=False, host="192.168.0.154", port=3100)
+    app.run(debug=True, host="192.168.0.154", port=3100)
 

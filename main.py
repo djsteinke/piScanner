@@ -5,13 +5,12 @@ from picamera2 import Picamera2
 #from libcamera import controls
 from time import sleep
 
-app = Flask(__name__)
-#camera = cv2.VideoCapture(0)
 setup = []
+app = Flask(__name__)
 picam2 = Picamera2()
 capture_config = picam2.create_still_configuration(main={"size": (640, 360)}, lores={"size": (640, 360)}, display="lores")
 picam2.configure(capture_config)
-#picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": 0.0})
+# picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": 0.0})
 picam2.start()
 sleep(2)
 

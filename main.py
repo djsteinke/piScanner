@@ -1,4 +1,3 @@
-import io
 import json
 import cv2
 from flask import Flask, render_template, Response, jsonify, request

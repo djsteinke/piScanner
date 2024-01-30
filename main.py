@@ -1,7 +1,7 @@
 import io
 import json
+import cv2
 from flask import Flask, render_template, Response, jsonify, request
-#import cv2
 from picamera2 import Picamera2
 from libcamera import controls
 from time import sleep
@@ -9,25 +9,21 @@ from time import sleep
 app = Flask(__name__)
 #camera = cv2.VideoCapture(0)
 setup = []
-camera = Picamera2()
-capture_config = camera.create_still_configuration()
-camera.start(show_preview=False)
-camera.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": 0.0})
+picam2 = Picamera2()
+capture_config = picam2.create_still_configuration(main={"size": (640, 360)}, lores={"size": (640, 360)}, display="lores")
+picam2.configure(capture_config)
+picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": 0.0})
+picam2.start()
+sleep(2)
 
 
 def gen_frames():
     while True:
-        sleep(1)
-        data = io.BytesIO()
-        camera.capture_file(data, format='jpeg')
-        #success, frame = camera.read()  # read the camera frame
-        #if not success:
-        #    break
-        #else:
-        #    ret, buffer = cv2.imencode('.jpg', frame)
-        #    frame = buffer.tobytes()
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + data.read() + b'\r\n')  # concat frame one by one and show result
+        im = picam2.capture_array()
+        ret, buffer = cv2.imencode('.jpg', im)
+        frame = buffer.tobytes()
+        yield(b'--frame\r\n'
+              b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 
 @app.route('/')

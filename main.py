@@ -17,11 +17,15 @@ sleep(2)
 
 def gen_frames():
     while True:
-        im = picam2.capture_array()
-        ret, buffer = cv2.imencode('.jpg', im)
-        frame = buffer.tobytes()
-        yield(b'--frame\r\n'
-              b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+        try:
+            im = picam2.capture_array()
+            ret, buffer = cv2.imencode('.jpg', im)
+            frame = buffer.tobytes()
+            yield(b'--frame\r\n'
+                  b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+        except:
+            sleep(1)
+            yield b''
 
 
 @app.route('/')

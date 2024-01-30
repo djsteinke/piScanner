@@ -1,18 +1,17 @@
+from picamera2 import Picamera2
+from flask import Flask, render_template, Response, jsonify, request
+from time import sleep
 import json
 import cv2
-from flask import Flask, render_template, Response, jsonify, request
-from picamera2 import Picamera2
-#from libcamera import controls
-from time import sleep
 
 setup = []
 app = Flask(__name__)
+
 picam2 = Picamera2()
 capture_config = picam2.create_still_configuration(main={"size": (640, 360)}, lores={"size": (640, 360)}, display="lores")
 picam2.configure(capture_config)
-# picam2.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": 0.0})
 picam2.start()
-sleep(2)
+sleep(5)
 
 
 def gen_frames():
@@ -80,6 +79,5 @@ def load_setup():
         pass
 
 if __name__ == '__main__':
-    #load_setup()
     app.run(debug=True, host="192.168.0.154", port=3100)
 

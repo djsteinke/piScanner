@@ -8,7 +8,8 @@ app = Flask(__name__)
 
 picam2 = Picamera2()
 picam2.start_preview(Preview.NULL)
-capture_config_preview = picam2.create_still_configuration(main={"size": (640, 360)}, display="main")
+capture_config_preview = picam2.create_still_configuration(main={"size": (640, 360), "format": "BGR888"}, display="main")
+picam2.align_configuration(capture_config_preview)
 #capture_config_preview = picam2.create_still_configuration(main={"size": (640, 360)}, lores={"size": (640, 360)}, display="main")
 capture_config_save = picam2.create_still_configuration
 picam2.configure(capture_config_preview)
@@ -22,7 +23,7 @@ def gen_frames():
     while True:
         try:
             im = picam2.capture_array()
-            im = cv2.cvtColor(im, cv2.COLOR_RGB2BGR)
+#            im = cv2.cvtColor(im, cv2.COLOR_RGB2BGR)
             im = cv2.rotate(im, cv2.ROTATE_90_CLOCKWISE)
             ret, buffer = cv2.imencode('.jpg', im)
             frame = buffer.tobytes()

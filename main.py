@@ -9,8 +9,8 @@ app = Flask(__name__)
 picam2 = Picamera2()
 capture_config = picam2.create_still_configuration(main={"size": (640, 360)}, lores={"size": (640, 360)}, display="lores")
 picam2.configure(capture_config)
-#picam2.start()
-#sleep(2)
+picam2.start()
+sleep(2)
 #picam2.stop()
 
 picam2_started = False
@@ -48,7 +48,7 @@ def setup_frame():
 
 @app.route('/video_feed')
 def video_feed():
-    start_picam2()
+    #start_picam2()
     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
@@ -91,5 +91,6 @@ def load_setup():
 
 if __name__ == '__main__':
     setup = {}
-    app.run(debug=True, host="192.168.0.154", port=3100)
+    load_setup()
+    app.run(debug=False, host="192.168.0.154", port=3100)
 

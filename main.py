@@ -81,5 +81,5 @@ def load_setup():
 
 if __name__ == '__main__':
     setup = {}
-    app.run(debug=True, host="192.168.0.154", port=3100)
+    app.run(debug=False, host="192.168.0.154", port=3100)
 

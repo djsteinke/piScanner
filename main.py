@@ -77,6 +77,6 @@ def load_setup():
         pass
 
 if __name__ == '__main__':
-    load_setup()
-    app.run(debug=True, host="192.168.0.154", port=31000)
+    #load_setup()
+    app.run(debug=True, host="192.168.0.154", port=3100)
 

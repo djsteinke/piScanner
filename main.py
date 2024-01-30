@@ -29,7 +29,7 @@ def gen_frames():
     while True:
         try:
             im = picam2.capture_array()
-#            im = cv2.cvtColor(im, cv2.COLOR_RGB2BGR)
+            im = cv2.cvtColor(im, cv2.COLOR_RGB2BGR)
             im = cv2.rotate(im, cv2.ROTATE_90_CLOCKWISE)
             ret, buffer = cv2.imencode('.jpg', im)
             frame = buffer.tobytes()

@@ -13,7 +13,8 @@ app = Flask(__name__)
 
 picam2 = Picamera2()
 picam2.start_preview(Preview.NULL)
-capture_config_preview = picam2.create_still_configuration(main={"size": (640, 360), "format": "XBGR8888"}, display="main")
+#capture_config_preview = picam2.create_still_configuration(main={"size": (640, 360), "format": "XBGR8888"}, display="main")
+capture_config_preview = picam2.create_still_configuration(main={"size": (640, 360)}, display="main")
 picam2.align_configuration(capture_config_preview)
 #capture_config_preview = picam2.create_still_configuration(main={"size": (640, 360)}, lores={"size": (640, 360)}, display="main")
 capture_config_save = picam2.create_still_configuration

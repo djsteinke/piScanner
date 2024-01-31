@@ -7,7 +7,7 @@ from os import getcwd, path
 import accessories.camera as camera
 
 from accessories.stepper_motor import StepperMotor
-
+from scanner_paths import calibration_path
 
 pickle_file = 'calibration.p'
 
@@ -21,7 +21,6 @@ criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
 out = True
 printed = False
-cwd = getcwd()
 
 
 class CameraCalibration(object):
@@ -61,7 +60,7 @@ class CameraCalibration(object):
         obj_points = []  # 3d point in real world space
         img_points = []  # 2d points in image plane.
 
-        p = os.path.join(cwd, 'images')
+        p = calibration_path
 
         images = glob.glob('%s/calibration_*.jpg' % p.rstrip('/'))
         print(images)
@@ -133,7 +132,7 @@ class CameraCalibration(object):
         return False
 
     def load_calibration(self, calculate):
-        source = os.path.join(cwd, pickle_file)
+        source = os.path.join(calibration_path, pickle_file)
         if calculate:
             ret = self.determine_calibration()
             if not ret:
@@ -153,7 +152,7 @@ class CameraCalibration(object):
                 }
 
     def save_calibration(self):
-        source = os.path.join(cwd, pickle_file)
+        source = os.path.join(calibration_path, pickle_file)
         pickle.dump(self._config, open(source, "wb"))
 
     @property
@@ -167,7 +166,7 @@ class CameraCalibration(object):
 def run_calibration(motor: StepperMotor):
     steps = 18
     degrees = 10.0
-    images_path = path.join(cwd, 'images')
+    images_path = path.join(calibration_path, 'images')
     motor.rotate(90, True)
     for i in range(1, steps):
         try:

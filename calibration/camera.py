@@ -109,7 +109,7 @@ class CameraCalibration(object):
                 x_a.append(pdx)
                 i += 1
                 # Rx, Ry, f, Cx, Cy, Cz
-                if self._config['ry'] == 0 or pdx/pdy > self._config['rx']/self._config['ry']:
+                if self._config['ry'] == 0 or pdx/pdy < self._config['rx']/self._config['ry']:
                     self._config['rx'] = round(pdx, 2)
                     self._config['ry'] = round(pdy, 2)
                 print('corners', i, px, pdx, pdy)

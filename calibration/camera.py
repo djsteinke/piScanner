@@ -17,7 +17,7 @@ nx = 11              # nx: number of grids in x axis
 ny = 8              # ny: number of grids in y axis
 
 objp = np.zeros((nx * ny, 3), np.float32)
-objp[:, :2] = np.mgrid[0:ny, 0:nx].T.reshape(-1, 2)
+objp[:, :2] = np.mgrid[0:nx, 0:ny].T.reshape(-1, 2)
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
 out = True
@@ -119,7 +119,7 @@ class CameraCalibration(object):
             return None, None
 
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, gray_pic.shape[::-1], None, None)
-        print('calibrationMatrixValues', cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 6.450, 3.628))
+        print('calibrationMatrixValues', cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 6.451, 3.629))
         if mtx is not None or dist is not None:
             self._config['f'] = round((mtx[0][0] + mtx[1][1])/2.0, 2)
             self._config['cx'] = round(mtx[0][2], 2)
@@ -173,7 +173,7 @@ def run_calibration(motor: StepperMotor):
     camera.set_config('save')
     for i in range(1, steps):
         try:
-            camera.capture_file(f'%s/calibration_%04d.jpg' % (calibration_path, i))
+            camera.capture_file_cam(f'%s/calibration_%04d.jpg' % (calibration_path, i))
             print('captured', f'%s/calibration_%04d.jpg' % (calibration_path, i))
         except:
             print('error taking photo')

@@ -52,6 +52,10 @@ def capture_file(f_name):
     cv2.imwrite(f_name, buffer)
 
 
+def capture_file_cam(f_name):
+    picam2.capture_file(f_name, 'jpeg')
+
+
 def get_rotated_buffer():
     img = get_buffer()
     img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)

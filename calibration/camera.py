@@ -88,8 +88,8 @@ class CameraCalibration(object):
 
                 # Draw and display the corners
                 img = cv2.drawChessboardCorners(img, (nx, ny), corners2, ret)
-                cv2.imshow('img', img)
-                cv2.waitKey(500)
+                # cv2.imshow('img', img)
+                # cv2.waitKey(500)
 
                 px = corners2[(ny - 1) * nx][0][0]
                 pdx = 0
@@ -114,12 +114,12 @@ class CameraCalibration(object):
                     self._config['ry'] = round(pdy, 2)
                 print(i, px, pdx, pdy)
 
-        cv2.destroyAllWindows()
+        # cv2.destroyAllWindows()
         if gray_pic is None:
             return None, None
 
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, gray_pic.shape[::-1], None, None)
-        # print(cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 5.6448, 4.2336))
+        print(cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 3.628, 6.450))
         if mtx is not None or dist is not None:
             self._config['f'] = round((mtx[0][0] + mtx[1][1])/2.0, 2)
             self._config['cx'] = round(mtx[0][2], 2)

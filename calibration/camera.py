@@ -13,8 +13,8 @@ from scanner_paths import calibration_path
 pickle_file = 'calibration.p'
 
 grid_size = 14.7
-nx = 11              # nx: number of grids in x axis
-ny = 8              # ny: number of grids in y axis
+nx = 9              # nx: number of grids in x axis
+ny = 6              # ny: number of grids in y axis
 
 objp = np.zeros((nx * ny, 3), np.float32)
 objp[:, :2] = np.mgrid[0:nx, 0:ny].T.reshape(-1, 2)
@@ -204,7 +204,7 @@ def run_calibration(motor: StepperMotor):
         motor.rotate(degrees, False)
         time.sleep(0.5)
 
-    motor.rotate(25, False)
+    motor.rotate(25, True)
 
     CameraCalibration(True)
 

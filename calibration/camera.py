@@ -119,7 +119,7 @@ class CameraCalibration(object):
             return None, None
 
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, gray_pic.shape[::-1], None, None)
-        print('calibrationMatrixValues', cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 6.451, 3.629))
+        print('calibrationMatrixValues', cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 6.4512, 3.6288))
         if mtx is not None or dist is not None:
             self._config['f'] = round((mtx[0][0] + mtx[1][1])/2.0, 2)
             self._config['cx'] = round(mtx[0][2], 2)

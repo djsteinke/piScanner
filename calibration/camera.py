@@ -77,7 +77,7 @@ class CameraCalibration(object):
             # Find the chess board corners
             ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
 
-            print(f_name, "found chessboard", ret)
+            # print(f_name, "found chessboard", ret)
 
             # If found, add object points, image points (after refining them)
             if ret:
@@ -112,7 +112,7 @@ class CameraCalibration(object):
                 if self._config['ry'] == 0 or pdx/pdy > self._config['rx']/self._config['ry']:
                     self._config['rx'] = round(pdx, 2)
                     self._config['ry'] = round(pdy, 2)
-                # print(i, px, pdx, pdy)
+                print(i, px, pdx, pdy)
 
         # cv2.destroyAllWindows()
         if gray_pic is None:

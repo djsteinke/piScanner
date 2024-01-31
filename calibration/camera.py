@@ -4,6 +4,9 @@ import numpy as np
 import cv2
 import glob
 from os import getcwd, path
+import accessories.camera as camera
+
+from accessories.stepper_motor import StepperMotor
 
 
 pickle_file = 'calibration.p'
@@ -161,23 +164,20 @@ class CameraCalibration(object):
             return self._config['mtx']
 
 
-def calibrate():
+def run_calibration(motor: StepperMotor):
     steps = 18
-    dps = 180.0 / 360.0 / (steps * 1.0 - 1.0)  # degrees / step, 180 degrees / 10 steps
-    pps = round(200.0 * 16.0 * dps)  # 200 full steps per rotation (motor), 16 micro-steps
+    degrees = 10.0
     images_path = path.join(cwd, 'images')
+    motor.rotate(90, True)
     for i in range(1, steps):
-        ret, img = False, None
-        # ret, img = camera.read()
-        if ret:
-            h, w, _ = img.shape
-            if w > h:
-                img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
-            cv2.imwrite(f'%s/calibration_%04d.jpg' % (images_path, i), img)
+        try:
+            camera.capture_file(f'%s/calibration_%04d.jpg' % (images_path, i))
+        except:
+            print('error taking photo')
+            pass
+        motor.rotate(degrees, False)
 
-        # TODO turn platform by pps
-        # arduino.send_msg_new(6, 1, pps)  # turn platform
-
+    CameraCalibration(True)
 
 """
 p = getcwd() + "\\calibration\\android"

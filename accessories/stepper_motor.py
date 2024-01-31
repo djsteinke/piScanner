@@ -36,10 +36,13 @@ class Pin(object):
 
 pulse_w = 20.0    # us
 ppr = 400.0       # pulse/rot
-rpm_max = 120.0
-rpm_acc = 60.0    # rot/m/s
+rpm_max = 100.0
+rpm_min = 0.5
+rpm_acc = 10.0    # rot/m/s
 mps_min = int(60000000.0 / rpm_max / ppr) - pulse_w
-mps_max = 20000.0
+mps_max = 100000.0
+
+spd = 8.0           # steps / deg
 
 
 class StepperMotor(object):
@@ -71,11 +74,18 @@ class StepperMotor(object):
             sleep_us(pulse_w)
             self.PUL.off()
             sleep_us(self._mps)
-            acc = True if self._steps_to_full == 0 or steps - self._steps_to_full > n or n < (steps - n) else False
+            acc = True if (self._steps_to_full == 0 and n < (steps - n)) or (self._steps_to_full > 0 and steps - self._steps_to_full > n) else False
+            if not acc and n%3 == 0:
+                pass
             if self._update_mps(acc) and self._steps_to_full == 0:
                 self._steps_to_full = n
-                # print(n)
+                print(n)
+        print(self._mps)
         self._reset()
+
+    def rotate(self, degrees: float, cw=True):
+        steps = degrees * spd
+        self.step(steps, cw)
 
     def _update_mps(self, acc):
         curr_us = int(time.time_ns()/1000.0)
@@ -85,16 +95,17 @@ class StepperMotor(object):
             self._rpm = self._rpm if self._rpm < rpm_max else rpm_max
         else:
             self._rpm -= rpm_delta
-            self._rpm = self._rpm if self._rpm > 0 else 1
+            self._rpm = self._rpm if self._rpm > rpm_min else rpm_min
         p_tol = int(60000000.0 / self._rpm / ppr)
         self._mps = p_tol - pulse_w
         if self._mps >= mps_max:
             self._mps = mps_max
         elif self._mps < mps_min:
             self._mps = mps_min
-        # print(self._mps, round(self._rpm, 1))
+        print(self._mps, round(self._rpm, 1))
         return True if self._rpm >= rpm_max else False
 
 stepper = StepperMotor(10, 12, 8)
-stepper.step(200, True)
+stepper.step(400, True)
+
 

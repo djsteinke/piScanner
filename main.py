@@ -1,37 +1,18 @@
-from picamera2 import Picamera2, Preview
+
 from flask import Flask, render_template, Response, jsonify, request
 from time import sleep
 import json
-import cv2
-import subprocess
+import accessories.camera as camera
 
-# v4l2-ctl --set-ctrl wide_dynamic_range=0 -d /dev/v4l-subdev0
-# subprocess.run(['v4l2-ctl', '--set-ctrl', 'wide_dynamic_range=1', '-d', '/dev/v4l-subdev0'])
 
 app = Flask(__name__)
 
 
-picam2 = Picamera2()
-picam2.start_preview(Preview.NULL)
-#capture_config_preview = picam2.create_still_configuration(main={"size": (640, 360), "format": "XBGR8888"}, display="main")
-capture_config_preview = picam2.create_still_configuration(main={"size": (640, 360), "format": "XBGR8888"}, lores={"size": (320, 180)}, display="main")
-picam2.align_configuration(capture_config_preview)
-#capture_config_preview = picam2.create_still_configuration(main={"size": (640, 360)}, lores={"size": (640, 360)}, display="main")
-capture_config_save = picam2.create_still_configuration
-picam2.configure(capture_config_preview)
-picam2.start()
-
-sleep(1)
-picam2.set_controls({"AfMode": 0, "LensPosition": 3.333})
-sleep(5)
-
 def gen_frames():
+    camera.set_config('preview')
     while True:
         try:
-            im = picam2.capture_array()
-            im = cv2.cvtColor(im, cv2.COLOR_RGB2BGR)
-            im = cv2.rotate(im, cv2.ROTATE_90_CLOCKWISE)
-            ret, buffer = cv2.imencode('.jpg', im)
+            buffer = camera.get_jpg_buffer()
             frame = buffer.tobytes()
             yield(b'--frame\r\n'
                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
@@ -52,7 +33,6 @@ def setup_frame():
 
 @app.route('/video_feed')
 def video_feed():
-    #start_picam2()
     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 

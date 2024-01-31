@@ -112,14 +112,14 @@ class CameraCalibration(object):
                 if self._config['ry'] == 0 or pdx/pdy > self._config['rx']/self._config['ry']:
                     self._config['rx'] = round(pdx, 2)
                     self._config['ry'] = round(pdy, 2)
-                print(i, px, pdx, pdy)
+                # print(i, px, pdx, pdy)
 
         # cv2.destroyAllWindows()
         if gray_pic is None:
             return None, None
 
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, gray_pic.shape[::-1], None, None)
-        print(cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 6.450, 3.628))
+        print('calibrationMatrixValues', cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 6.450, 3.628))
         if mtx is not None or dist is not None:
             self._config['f'] = round((mtx[0][0] + mtx[1][1])/2.0, 2)
             self._config['cx'] = round(mtx[0][2], 2)
@@ -127,7 +127,7 @@ class CameraCalibration(object):
             self._config['cz'] = round(grid_size/((self._config['rx']+self._config['ry'])/2.0)*self._config['f'], 2)
             self._config['mtx'] = mtx
             self._config['dist'] = dist
-            print(self._config)
+            print('config', self._config)
             self.save_calibration()
             return True
         return False

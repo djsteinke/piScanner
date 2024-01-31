@@ -103,7 +103,7 @@ class CameraCalibration(object):
             gray = cv2.undistort(gray, mtx, dist, None, new_camera_mtx)
 
             x, y, w, h = roi
-            undistorted_img = undistorted_img[y:y + h, x:x + w]
+            gray = gray[y:y + h, x:x + w]
             print(gray.shape)
             if gray_pic is None:
                 gray_pic = gray

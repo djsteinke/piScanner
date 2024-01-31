@@ -144,9 +144,16 @@ class CameraCalibration(object):
         # cv2.destroyAllWindows()
 
         if mtx is not None or dist is not None:
+            """
             self._config['f'] = round((new_camera_mtx[0][0] + new_camera_mtx[1][1])/2.0, 2)
             self._config['cx'] = round(new_camera_mtx[0][2], 2)
             self._config['cy'] = round(new_camera_mtx[1][2], 2)
+            """
+            self._config['f'] = round((mtx[0][0] + mtx[1][1])/2.0, 2)
+            self._config['f_mm'] = f
+            self._config['r'] = round(grid_size * f, 1)
+            self._config['cx'] = round(mtx[0][2], 2)
+            self._config['cy'] = round(mtx[1][2], 2)
             self._config['cz'] = round(self._config['f'] / f, 1)
             self._config['mtx'] = mtx
             self._config['dist'] = dist

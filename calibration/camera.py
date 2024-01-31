@@ -101,6 +101,7 @@ class CameraCalibration(object):
             img = cv2.imread(f_name)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             gray = cv2.undistort(gray, mtx, dist, None, new_camera_mtx)
+            print(gray.shape)
             if gray_pic is None:
                 gray_pic = gray
 

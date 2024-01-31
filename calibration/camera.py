@@ -92,23 +92,26 @@ class CameraCalibration(object):
                 # cv2.imshow('img', img)
                 # cv2.waitKey(500)
 
+        if gray_pic is None:
+            return None, None
+
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, gray_pic.shape[::-1], None, None)
         new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (h, w), 1, (h, w))
 
         print('calibrationMatrixValues-mtx', cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 6.4512, 3.6288))
         print('calibrationMatrixValues-new_cam', cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 6.4512, 3.6288))
         print(mtx, new_camera_mtx)
+        fov_x, fov_y, f, pp, ar = cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 6.4512, 3.6288)
         gray_pic = None
+        r_diff = 100.0
         for f_name in images:
             img = cv2.imread(f_name)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             gray = cv2.undistort(gray, mtx, dist, None, new_camera_mtx)
 
-            x, y, w, h = roi
-            gray = gray[y:y + h, x:x + w]
-            print(gray.shape)
-            if gray_pic is None:
-                gray_pic = gray
+            #x, y, w, h = roi
+            #gray = gray[y:y + h, x:x + w]
+            #print(gray.shape)
 
             # Find the chess board corners
             ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
@@ -132,20 +135,19 @@ class CameraCalibration(object):
                 x_a.append(pdx)
                 i += 1
                 # Rx, Ry, f, Cx, Cy, Cz
-                if self._config['ry'] == 0 or pdx/pdy < self._config['rx']/self._config['ry']:
+                if abs(pdx-pdy) < r_diff:
+                    r_diff = abs(pdx-pdy)
                     self._config['rx'] = round(pdx, 2)
                     self._config['ry'] = round(pdy, 2)
                 print('corners', i, px, pdx, pdy)
 
         # cv2.destroyAllWindows()
-        if gray_pic is None:
-            return None, None
 
         if mtx is not None or dist is not None:
-            self._config['f'] = round((mtx[0][0] + mtx[1][1])/2.0, 2)
-            self._config['cx'] = round(mtx[0][2], 2)
-            self._config['cy'] = round(mtx[1][2], 2)
-            self._config['cz'] = round(grid_size/((self._config['rx']+self._config['ry'])/2.0)*self._config['f'], 2)
+            self._config['f'] = round((new_camera_mtx[0][0] + new_camera_mtx[1][1])/2.0, 2)
+            self._config['cx'] = round(new_camera_mtx[0][2], 2)
+            self._config['cy'] = round(new_camera_mtx[1][2], 2)
+            self._config['cz'] = round(grid_size * f, 1)
             self._config['mtx'] = mtx
             self._config['dist'] = dist
             print('config', self._config)

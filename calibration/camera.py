@@ -3,8 +3,9 @@ import pickle
 import numpy as np
 import cv2
 import glob
-from os import getcwd, path
+from os import path
 import accessories.camera as camera
+import time
 
 from accessories.stepper_motor import StepperMotor
 from scanner_paths import calibration_path
@@ -168,6 +169,7 @@ def run_calibration(motor: StepperMotor):
     degrees = 10.0
     images_path = path.join(calibration_path, 'images')
     motor.rotate(90, True)
+    time.sleep(0.5)
     for i in range(1, steps):
         try:
             camera.capture_file(f'%s/calibration_%04d.jpg' % (calibration_path, i))
@@ -176,6 +178,7 @@ def run_calibration(motor: StepperMotor):
             print('error taking photo')
             pass
         motor.rotate(degrees, False)
+        time.sleep(0.5)
 
     CameraCalibration(True)
 

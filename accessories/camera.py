@@ -55,7 +55,7 @@ def capture_file(f_name):
 def get_buffer():
     img = picam2.capture_array()
     img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-    img = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
+    img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
     return img
 
 

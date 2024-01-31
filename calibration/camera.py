@@ -17,7 +17,7 @@ nx = 11              # nx: number of grids in x axis
 ny = 8              # ny: number of grids in y axis
 
 objp = np.zeros((nx * ny, 3), np.float32)
-objp[:, :2] = np.mgrid[0:nx, 0:ny].T.reshape(-1, 2)
+objp[:, :2] = np.mgrid[0:ny, 0:nx].T.reshape(-1, 2)
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
 out = True
@@ -101,9 +101,9 @@ class CameraCalibration(object):
                 for y in range(0, ny - 1):
                     for x in range(0, nx - 1):
                         pdt += 1
-                        i = y * nx + x
-                        pdx += corners2[i + 1][0][0] - corners2[i][0][0]
-                        pdy += corners2[i + nx][0][1] - corners2[i][0][1]
+                        p = y * nx + x
+                        pdx += corners2[p + 1][0][0] - corners2[p][0][0]
+                        pdy += corners2[p + nx][0][1] - corners2[p][0][1]
                 pdx /= pdt
                 pdy /= pdt
                 x_a.append(pdx)

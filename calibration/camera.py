@@ -172,6 +172,7 @@ def run_calibration(motor: StepperMotor):
     for i in range(1, steps):
         try:
             camera.capture_file(f'%s/calibration_%04d.jpg' % (images_path, i))
+            print('captured', f'%s/calibration_%04d.jpg' % (images_path, i))
         except:
             print('error taking photo')
             pass

@@ -79,8 +79,8 @@ class StepperMotor(object):
                 pass
             if self._update_mps(acc) and self._steps_to_full == 0:
                 self._steps_to_full = n
-                print(n)
-        print(self._mps)
+                # print(n)
+        # print(self._mps)
         self._reset()
 
     def rotate(self, degrees: float, cw=True):
@@ -102,7 +102,7 @@ class StepperMotor(object):
             self._mps = mps_max
         elif self._mps < mps_min:
             self._mps = mps_min
-        print(self._mps, round(self._rpm, 1))
+        # print(self._mps, round(self._rpm, 1))
         return True if self._rpm >= rpm_max else False
 
 

@@ -90,5 +90,5 @@ picam2.configure(preview_config)
 picam2.start()
 sleep(1)
 
-set_focus_mm(300.0)
+set_focus_mm(360.0)
 sleep(5)

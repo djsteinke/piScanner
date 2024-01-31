@@ -97,6 +97,7 @@ class CameraCalibration(object):
 
         print('calibrationMatrixValues-mtx', cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 6.4512, 3.6288))
         print('calibrationMatrixValues-new_cam', cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 6.4512, 3.6288))
+        print(mtx, new_camera_mtx)
         gray_pic = None
         for f_name in images:
             img = cv2.imread(f_name)

@@ -73,6 +73,8 @@ class CameraCalibration(object):
             img = cv2.imread(f_name)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
+            if gray_pic is None:
+                gray_pic = gray
             # Find the chess board corners
             ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
 
@@ -93,6 +95,7 @@ class CameraCalibration(object):
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, gray_pic.shape[::-1], None, None)
         new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w, h), 1, (w, h))
 
+        print('calibrationMatrixValues', cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 6.4512, 3.6288))
         gray_pic = None
         for f_name in images:
             img = cv2.imread(f_name)
@@ -132,7 +135,6 @@ class CameraCalibration(object):
         if gray_pic is None:
             return None, None
 
-        print('calibrationMatrixValues', cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 6.4512, 3.6288))
         if mtx is not None or dist is not None:
             self._config['f'] = round((mtx[0][0] + mtx[1][1])/2.0, 2)
             self._config['cx'] = round(mtx[0][2], 2)

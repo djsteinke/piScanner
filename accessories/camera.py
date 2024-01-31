@@ -48,20 +48,25 @@ def set_config(value):
 
 
 def capture_file(f_name):
-    buffer = get_jpg_buffer()
+    buffer = get_buffer()
     cv2.imwrite(f_name, buffer)
 
 
-def get_jpg_buffer():
+def get_buffer():
     img = picam2.capture_array()
     img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
     img = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
+    return img
 
+
+def get_jpg_buffer():
+    img = get_buffer()
     ret, buffer = cv2.imencode('.jpg', img)
     if ret:
         return buffer
     else:
         raise Exception()
+
 
 picam2.start_preview(Preview.NULL)
 picam2.align_configuration(preview_config)

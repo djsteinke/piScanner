@@ -2,5 +2,6 @@ import os
 
 cwd = os.getcwd()
 
-calibration_path = os.path.join(cwd, 'images', 'calibration')
-scan_path = os.path.join(cwd, 'images', 'scans')
+images_path = os.path.join(cwd, 'images')
+calibration_path = os.path.join(images_path, 'calibration')
+scan_path = os.path.join(images_path, 'scans')

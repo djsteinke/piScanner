@@ -1,3 +1,4 @@
+import io
 import subprocess
 import cv2
 from time import sleep
@@ -53,7 +54,7 @@ def capture_file(f_name):
 
 
 def capture_file_cam(f_name):
-    picam2.capture_file(f_name, 'jpeg')
+    picam2.capture_file(f_name)
 
 
 def get_rotated_buffer():

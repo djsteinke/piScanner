@@ -188,10 +188,10 @@ class CameraCalibration(object):
 
 
 def run_calibration(motor: StepperMotor):
-    steps = 10
+    steps = 15
     degrees = 5.0
     images_path = path.join(calibration_path, 'images')
-    motor.rotate(25, True)
+    motor.rotate(35, True)
     time.sleep(0.5)
     camera.set_config('save')
     for i in range(1, steps):
@@ -204,7 +204,7 @@ def run_calibration(motor: StepperMotor):
         motor.rotate(degrees, False)
         time.sleep(0.5)
 
-    motor.rotate(25, True)
+    motor.rotate(40, True)
 
     CameraCalibration(True)
 

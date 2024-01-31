@@ -102,8 +102,8 @@ class CameraCalibration(object):
                     for x in range(0, nx - 1):
                         pdt += 1
                         p = y * nx + x
-                        pdx += corners2[p + 1][0][0] - corners2[p][0][0]
-                        pdy += corners2[p + nx][0][1] - corners2[p][0][1]
+                        pdx += abs(corners2[p + 1][0][0] - corners2[p][0][0])
+                        pdy += abs(corners2[p + nx][0][1] - corners2[p][0][1])
                 pdx /= pdt
                 pdy /= pdt
                 x_a.append(pdx)

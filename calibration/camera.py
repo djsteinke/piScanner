@@ -64,7 +64,7 @@ class CameraCalibration(object):
         p = calibration_path
 
         images = glob.glob('%s/calibration_*.jpg' % p.rstrip('/'))
-        print(images)
+        print(len(images))
 
         gray_pic = None
         i = 0
@@ -112,7 +112,7 @@ class CameraCalibration(object):
                 if self._config['ry'] == 0 or pdx/pdy > self._config['rx']/self._config['ry']:
                     self._config['rx'] = round(pdx, 2)
                     self._config['ry'] = round(pdy, 2)
-                print(i, px, pdx, pdy)
+                print('corners', i, px, pdx, pdy)
 
         # cv2.destroyAllWindows()
         if gray_pic is None:

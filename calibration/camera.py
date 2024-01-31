@@ -68,29 +68,43 @@ class CameraCalibration(object):
 
         gray_pic = None
         i = 0
+        h, w = 0, 0
         for f_name in images:
             img = cv2.imread(f_name)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            if gray_pic is None:
-                gray_pic = gray
 
             # Find the chess board corners
             ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
 
             # print(f_name, "found chessboard", ret)
-
-            # If found, add object points, image points (after refining them)
             if ret:
+                if h == 0:
+                    h, w = img.shape[:2]
                 obj_points.append(objp)
 
                 corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
                 img_points.append(corners2)
 
                 # Draw and display the corners
-                img = cv2.drawChessboardCorners(img, (nx, ny), corners2, ret)
+                # img = cv2.drawChessboardCorners(img, (nx, ny), corners2, ret)
                 # cv2.imshow('img', img)
                 # cv2.waitKey(500)
 
+        ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, gray_pic.shape[::-1], None, None)
+        new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w, h), 1, (w, h))
+
+        gray_pic = None
+        for f_name in images:
+            img = cv2.imread(f_name)
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            gray = cv2.undistort(gray, mtx, dist, None, new_camera_mtx)
+            if gray_pic is None:
+                gray_pic = gray
+
+            # Find the chess board corners
+            ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
+            if ret:
+                corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
                 px = corners2[(ny - 1) * nx][0][0]
                 pdx = 0
                 pdy = 0
@@ -118,8 +132,7 @@ class CameraCalibration(object):
         if gray_pic is None:
             return None, None
 
-        ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, gray_pic.shape[::-1], None, None)
-        print('calibrationMatrixValues', cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 6.4512, 3.6288))
+        print('calibrationMatrixValues', cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 6.4512, 3.6288))
         if mtx is not None or dist is not None:
             self._config['f'] = round((mtx[0][0] + mtx[1][1])/2.0, 2)
             self._config['cx'] = round(mtx[0][2], 2)

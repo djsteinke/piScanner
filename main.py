@@ -12,7 +12,7 @@ def gen_frames():
     camera.set_config('preview')
     while True:
         try:
-            buffer = camera.get_jpg_buffer()
+            buffer = camera.get_jpg_buffer(535, 964)
             frame = buffer.tobytes()
             yield(b'--frame\r\n'
                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')

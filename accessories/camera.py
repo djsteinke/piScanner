@@ -69,8 +69,13 @@ def get_buffer():
     return img
 
 
-def get_jpg_buffer():
+def get_jpg_buffer(x=None, y=None):
     img = get_rotated_buffer()
+    h, w = img.shape[:2]
+    if x is not None:
+        img = cv2.line(img, (x, 0), (x, h), (255, 0, 0), 1)
+    if y is not None:
+        img = cv2.line(img, (0, y), (w, y), (255, 0, 0), 1)
     ret, buffer = cv2.imencode('.jpg', img)
     if ret:
         return buffer

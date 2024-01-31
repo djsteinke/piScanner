@@ -52,15 +52,20 @@ def capture_file(f_name):
     cv2.imwrite(f_name, buffer)
 
 
-def get_buffer():
-    img = picam2.capture_array()
-    img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+def get_rotated_buffer():
+    img = get_buffer()
     img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
     return img
 
 
+def get_buffer():
+    img = picam2.capture_array()
+    img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+    return img
+
+
 def get_jpg_buffer():
-    img = get_buffer()
+    img = get_rotated_buffer()
     ret, buffer = cv2.imencode('.jpg', img)
     if ret:
         return buffer

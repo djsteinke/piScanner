@@ -13,8 +13,8 @@ from scanner_paths import calibration_path
 pickle_file = 'calibration.p'
 
 grid_size = 14.7
-nx = 8              # nx: number of grids in x axis
-ny = 11              # ny: number of grids in y axis
+nx = 11              # nx: number of grids in x axis
+ny = 8              # ny: number of grids in y axis
 
 objp = np.zeros((nx * ny, 3), np.float32)
 objp[:, :2] = np.mgrid[0:nx, 0:ny].T.reshape(-1, 2)
@@ -119,7 +119,7 @@ class CameraCalibration(object):
             return None, None
 
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, gray_pic.shape[::-1], None, None)
-        print(cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 3.628, 6.450))
+        print(cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 6.450, 3.628))
         if mtx is not None or dist is not None:
             self._config['f'] = round((mtx[0][0] + mtx[1][1])/2.0, 2)
             self._config['cx'] = round(mtx[0][2], 2)

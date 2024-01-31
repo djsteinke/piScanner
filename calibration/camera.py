@@ -12,9 +12,9 @@ from scanner_paths import calibration_path
 
 pickle_file = 'calibration.p'
 
-grid_size = 14.5
-nx = 11              # nx: number of grids in x axis
-ny = 14              # ny: number of grids in y axis
+grid_size = 14.7
+nx = 9              # nx: number of grids in x axis
+ny = 12              # ny: number of grids in y axis
 
 objp = np.zeros((nx * ny, 3), np.float32)
 objp[:, :2] = np.mgrid[0:nx, 0:ny].T.reshape(-1, 2)

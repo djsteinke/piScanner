@@ -165,11 +165,12 @@ class CameraCalibration(object):
 
 
 def run_calibration(motor: StepperMotor):
-    steps = 18
+    steps = 8
     degrees = 10.0
     images_path = path.join(calibration_path, 'images')
-    motor.rotate(90, True)
+    motor.rotate(40, True)
     time.sleep(0.5)
+    camera.set_config('save')
     for i in range(1, steps):
         try:
             camera.capture_file(f'%s/calibration_%04d.jpg' % (calibration_path, i))

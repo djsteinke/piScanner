@@ -147,7 +147,7 @@ class CameraCalibration(object):
             self._config['f'] = round((new_camera_mtx[0][0] + new_camera_mtx[1][1])/2.0, 2)
             self._config['cx'] = round(new_camera_mtx[0][2], 2)
             self._config['cy'] = round(new_camera_mtx[1][2], 2)
-            self._config['cz'] = round(grid_size * f, 1)
+            self._config['cz'] = round(self._config['f'] / f, 1)
             self._config['mtx'] = mtx
             self._config['dist'] = dist
             print('config', self._config)
@@ -188,13 +188,13 @@ class CameraCalibration(object):
 
 
 def run_calibration(motor: StepperMotor):
-    steps = 15
-    degrees = 5.0
+    steps = 30
+    degrees = 2.5
     images_path = path.join(calibration_path, 'images')
     motor.rotate(35, True)
-    time.sleep(0.5)
+    time.sleep(0.8)
     camera.set_config('save')
-    for i in range(1, steps):
+    for i in range(0, steps):
         try:
             camera.capture_file_cam(f'%s/calibration_%04d.jpg' % (calibration_path, i))
             print('captured', f'%s/calibration_%04d.jpg' % (calibration_path, i))
@@ -202,9 +202,9 @@ def run_calibration(motor: StepperMotor):
             print('error taking photo')
             pass
         motor.rotate(degrees, False)
-        time.sleep(0.5)
+        time.sleep(0.8)
 
-    motor.rotate(40, True)
+    motor.rotate(37.5, True)
 
     CameraCalibration(True)
 

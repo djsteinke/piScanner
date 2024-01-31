@@ -84,7 +84,7 @@ class StepperMotor(object):
         self._reset()
 
     def rotate(self, degrees: float, cw=True):
-        steps = degrees * spd
+        steps = int(degrees * spd)
         self.step(steps, cw)
 
     def _update_mps(self, acc):
@@ -105,7 +105,6 @@ class StepperMotor(object):
         print(self._mps, round(self._rpm, 1))
         return True if self._rpm >= rpm_max else False
 
-stepper = StepperMotor(10, 12, 8)
-stepper.step(400, True)
+
 
 

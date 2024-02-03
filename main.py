@@ -1,7 +1,7 @@
 from flask import Flask, render_template, Response, jsonify, request
 from time import sleep
 import json
-from accessories.camera import camera
+from accessories.camera import camera, get_jpg_buffer
 import calibration.camera as camera_calibration
 from accessories.stepper_motor import stepper
 
@@ -9,10 +9,11 @@ app = Flask(__name__)
 
 
 def gen_frames():
+    camera.set_focus_mm(350.0)
     camera.set_config('preview')
     while True:
         try:
-            buffer = camera.get_jpg_buffer(535, 964)
+            buffer = get_jpg_buffer(535, 964)
             frame = buffer.tobytes()
             yield(b'--frame\r\n'
                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')

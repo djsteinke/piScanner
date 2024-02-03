@@ -91,6 +91,7 @@ class Camera(object):
         self.picam2.align_configuration(config)
         self.picam2.switch_mode(config)
         sleep(0.5)
+        print('config set:', value)
 
     def capture_file(self, f_name):
         self.picam2.capture_file(f_name)

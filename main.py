@@ -44,11 +44,16 @@ def setup_load_setup():
 
 @app.route('/save_setup', methods=["POST"])
 def setup_save_click():
-    global setup
     content_type = request.headers.get('Content-Type')
     if content_type == 'application/json':
         setup = request.json
-        save_file('setup.json', json.dumps(setup))
+        camera_calibration.calibration.configuration['f'] = setup['f']
+        camera_calibration.calibration.configuration['cx'] = setup['cx']
+        camera_calibration.calibration.configuration['cy'] = setup['cy']
+        camera_calibration.calibration.configuration['cz'] = setup['cz']
+        camera_calibration.calibration.configuration['f_mm'] = setup['f_mm']
+        camera_calibration.calibration.save_calibration()
+        # save_file('setup.json', json.dumps(setup))
         return jsonify(message='Success', statusCode=200), 200
     else:
         return jsonify(message='Content-Type not supported!', statusCode=400), 400

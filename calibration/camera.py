@@ -173,6 +173,7 @@ class CameraCalibration(object):
                     "mtx": data['mtx'],
                     "dist": data['dist']
                 }
+                print(self._config)
 
     def save_calibration(self):
         source = os.path.join(calibration_path, pickle_file)

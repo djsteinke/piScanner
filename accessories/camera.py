@@ -51,8 +51,8 @@ def get_jpg_buffer(x, y):
     h, w = img.shape[:2]
     x = int(x / 3)
     y = int(y / 3)
-    img = cv2.line(img, (x, 0), (x, h), (255, 0, 0), 4)
-    img = cv2.line(img, (0, y), (w, y), (255, 0, 0), 4)
+    img = cv2.line(img, (x, 0), (x, h), (0, 0, 255), 1)
+    img = cv2.line(img, (0, y), (w, y), (0, 0, 255), 1)
     ret, buffer = cv2.imencode('.jpg', img)
     if ret:
         return buffer

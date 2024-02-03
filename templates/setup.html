@@ -67,11 +67,20 @@
                 BLOCK_SIZE: "BlockSize",
                 BLOCK_X_COUNT: "BlockXCount",
                 BLOCK_Y_COUNT: "BlockYCount",
-                CAM_F_PX: "CamFPx",
-                CAM_F_MM: "CamFMm",
-                CAM_CX: "CamCx",
-                CAM_CY: "CamCy",
-                CAM_CZ: "CamCz"
+                CAM_F_PX: "f",
+                CAM_F_MM: "f_mm",
+                CAM_CX: "cx",
+                CAM_CY: "cy",
+                CAM_CZ: "cz",
+                LASER_L_PIN: "l_pin",
+                LASER_R_PIN: "r_pin",
+                LASER_R_ANGLE: "r_angle",
+                LASER_L_ANGLE: "l_angle",
+                MOTOR_ENABLE: "enable_pin",
+                MOTOR_DIRECTION: "dir_pin",
+                MOTOR_PULSE: "pulse_pin",
+                MOTOR_STEP_SIZE: "step_size",
+                MOTOR_MICRO_STEPS: "micro_steps"
             }
         }
 
@@ -84,8 +93,15 @@
             SetupData[Setup.FIELDS.CAM_F_PX] = $('#input_f_px').val();
             SetupData[Setup.FIELDS.CAM_F_MM] = $('#input_f_mm').val();
             SetupData[Setup.FIELDS.CAM_CX] = $('#input_cx').val();
-            SetupData[Setup.FIELDS.CAM_CY] = $('#input_cy').val();
-            SetupData[Setup.FIELDS.CAM_CZ] = $('#input_cz').val();
+            SetupData[Setup.FIELDS.LASER_L_PIN] = $('#input_left_pin').val();
+            SetupData[Setup.FIELDS.LASER_R_PIN] = $('#input_right_pin').val();
+            SetupData[Setup.FIELDS.LASER_L_ANGLE] = $('#input_left_angle').val();
+            SetupData[Setup.FIELDS.LASER_R_ANGLE] = $('#input_right_angle').val();
+            SetupData[Setup.FIELDS.MOTOR_ENABLE] = $('#input_enable_pin').val();
+            SetupData[Setup.FIELDS.MOTOR_DIRECTION] = $('#input_dir_pin').val();
+            SetupData[Setup.FIELDS.MOTOR_PULSE] = $('#input_pulse_pin').val();
+            SetupData[Setup.FIELDS.MOTOR_STEP_SIZE] = $('#input_step_size').val();
+            SetupData[Setup.FIELDS.MOTOR_MICRO_STEPS] = $('#input_micro_steps').val();
         }
 
         function Setup_LoadUI() {
@@ -99,6 +115,15 @@
             $('#input_cx').val(SetupData[Setup.FIELDS.CAM_CX]);
             $('#input_cy').val(SetupData[Setup.FIELDS.CAM_CY]);
             $('#input_cz').val(SetupData[Setup.FIELDS.CAM_CZ]);
+            $('#input_left_pin').val(SetupData[Setup.FIELDS.LASER_L_PIN]);
+            $('#input_right_pin').val(SetupData[Setup.FIELDS.LASER_R_PIN]);
+            $('#input_left_angle').val(SetupData[Setup.FIELDS.LASER_L_ANGLE]);
+            $('#input_right_angle').val(SetupData[Setup.FIELDS.LASER_R_ANGLE]);
+            $('#input_enable_pin').val(SetupData[Setup.FIELDS.MOTOR_ENABLE]);
+            $('#input_dir_pin').val(SetupData[Setup.FIELDS.MOTOR_DIRECTION]);
+            $('#input_pulse_pin').val(SetupData[Setup.FIELDS.MOTOR_PULSE]);
+            $('#input_step_size').val(SetupData[Setup.FIELDS.MOTOR_STEP_SIZE]);
+            $('#input_micro_steps').val(SetupData[Setup.FIELDS.MOTOR_MICRO_STEPS]);
         }
 
         function saved() {
@@ -128,20 +153,7 @@
 <body onload="loadSetup()">
     <table>
         <tr>
-            <td class="label-title">Lasers</td>
-        </tr>
-        <tr>
-            <td class="label">Left Angle:</td>
-            <td class="input"><input id="input_left_angle" style="width: 50px;"/> deg</td>
-        </tr>
-        <tr>
-            <td class="label right">Right Angle:</td>
-            <td class="input"><input id="input_right_angle" style="width: 50px;"/> deg</td>
-        </tr>
-    </table>
-    <table>
-        <tr>
-            <td class="label-title-next">Camera</td>
+            <td class="label-title">Camera</td>
         </tr>
         <tr>
             <td class="label-short">f</td>
@@ -162,6 +174,26 @@
             <td class="input-short"><input id="input_cz" style="width: 50px;"/> px</td>
         </tr>
     </table>
+    <div class="label-title-next">Lasers</div>
+    <table>
+        <tr>
+            <th class="">Left</th>
+            <th></th>
+            <th>Right</th>
+        </tr>
+        <tr>
+            <td class="label">Pin:</td>
+            <td class="input-short"><input id="input_left_pin" style="width: 50px;"/></td>
+            <td class="label right">Pin:</td>
+            <td class="input"><input id="input_right_pin" style="width: 50px;"/> deg</td>
+        </tr>
+        <tr>
+            <td class="label">Angle:</td>
+            <td class="input-short"><input id="input_left_angle" style="width: 50px;"/></td>
+            <td class="label right">Angle:</td>
+            <td class="input"><input id="input_right_angle" style="width: 50px;"/> deg</td>
+        </tr>
+    </table>
     <table>
         <tr>
             <td class="label-title-next">Pattern</td>
@@ -179,13 +211,37 @@
             <td class="input"><input id="input_y_count" style="width: 50px;"/></td>
         </tr>
     </table>
+    <div class="label-title-next">Stepper Motor</div>
+    <table>
+        <tr>
+            <th class="">Pins</th>
+            <th></th>
+            <th>Config</th>
+        </tr>
+        <tr>
+            <td class="label">Enable:</td>
+            <td class="input-short"><input id="input_enable_pin" style="width: 50px;"/></td>
+            <td class="label">Step Size:</td>
+            <td class="input"><input id="input_step_size" style="width: 50px;"/> deg</td>
+        </tr>
+        <tr>
+            <td class="label">Direction:</td>
+            <td class="input-short"><input id="input_dir_pin" style="width: 50px;"/></td>
+            <td class="label">Micro Steps:</td>
+            <td class="input"><input id="input_micro_steps" style="width: 50px;"/></td>
+        </tr>
+        <tr>
+            <td class="label">Pulse:</td>
+            <td class="input-short"><input id="input_pulse_pin" style="width: 50px;"/></td>
+        </tr>
+    </table>
 
     <table>
         <tr>
             <td class="label-title-next">&nbsp;</td>
         </tr>
         <tr>
-            <td class="label"><button id="btn_photo" class="btn">Photo</button></td>
+            <!--<td class="label"><button id="btn_photo" class="btn">Photo</button></td>-->
             <td class="label"><button id="btn_calibrate" class="btn" onclick="calibrate()">Calibrate</button></td>
             <td class="label"><button id="btn_save" class="btn" onclick="save()">Save</button></td>
         </tr>

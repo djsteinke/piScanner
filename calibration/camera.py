@@ -37,8 +37,7 @@ class CameraCalibration(object):
             "mtx": [],
             "dist": []
         }
-        if calculate:
-            self.load_calibration(calculate)
+        self.load_calibration(calculate)
 
     def correct_distortion(self, img, crop=True):
         h, w = img.shape[:2]

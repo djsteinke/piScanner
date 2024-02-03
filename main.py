@@ -1,9 +1,9 @@
-
 from flask import Flask, render_template, Response, jsonify, request
 from time import sleep
 import json
-import accessories.camera as camera
-
+from accessories.camera import camera
+import calibration.camera as camera_calibration
+from accessories.stepper_motor import stepper
 
 app = Flask(__name__)
 
@@ -23,8 +23,8 @@ def gen_frames():
 
 @app.route('/')
 def index():
-    #return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
     return render_template('index.html')
+
 
 @app.route('/setup')
 def setup_frame():
@@ -53,6 +53,12 @@ def setup_save_click():
         return jsonify(message='Content-Type not supported!', statusCode=400), 400
 
 
+@app.route('/run_calibration', methods=["GET"])
+def run_calibration():
+    camera_calibration.run_calibration(stepper)
+    return jsonify(message=json.dumps(camera_calibration.calibration.configuration), statusCode=200), 200
+
+
 @app.route('/scripts/<filename>')
 def scripts(filename):
     f = open('scripts/' + filename, 'r')
@@ -64,8 +70,8 @@ def save_file(file_path, data):
     f.write(data)
     f.close()
 
+
 def load_setup():
-    global setup
     try:
         f = open('setup.json', 'r')
         setup = json.load(f)
@@ -74,7 +80,6 @@ def load_setup():
 
 
 if __name__ == '__main__':
-    setup = {}
-    load_setup()
+    camera.start()
     app.run(debug=False, host="192.168.0.154", port=3100)
 

@@ -116,6 +116,10 @@
             return false;
         }
 
+        function calibrate() {
+            Setup.GET('/run_calibration', loaded)
+        }
+
         function loadSetup() {
             Setup.GET('/load_setup', loaded);
         }
@@ -182,7 +186,7 @@
         </tr>
         <tr>
             <td class="label"><button id="btn_photo" class="btn">Photo</button></td>
-            <td class="label"><button id="btn_calibrate" class="btn">Calibrate</button></td>
+            <td class="label"><button id="btn_calibrate" class="btn" onclick="calibrate()">Calibrate</button></td>
             <td class="label"><button id="btn_save" class="btn" onclick="save()">Save</button></td>
         </tr>
     </table>

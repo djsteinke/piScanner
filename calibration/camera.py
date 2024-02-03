@@ -3,7 +3,6 @@ import pickle
 import numpy as np
 import cv2
 import glob
-from os import path
 import accessories.camera as camera
 import time
 
@@ -13,8 +12,8 @@ from scanner_paths import calibration_path
 pickle_file = 'calibration.p'
 
 grid_size = 14.7
-nx = 9              # nx: number of grids in x axis
-ny = 6              # ny: number of grids in y axis
+nx = 6              # nx: number of grids in x-axis
+ny = 9              # ny: number of grids in y-axis
 
 objp = np.zeros((nx * ny, 3), np.float32)
 objp[:, :2] = np.mgrid[0:nx, 0:ny].T.reshape(-1, 2)
@@ -29,33 +28,32 @@ class CameraCalibration(object):
         self._config = {
             "rx": 0.0,
             "ry": 0.0,
+            "r": 0.0,
             "f": 0.0,
+            "f_mm": 0.0,
             "cx": 0.0,
             "cy": 0.0,
             "cz": 0.0,
-            "mtx": None,
-            "dist": None
+            "mtx": [],
+            "dist": []
         }
         if calculate:
             self.load_calibration(calculate)
 
-    def undistort_img(self, img, crop=True):
+    def correct_distortion(self, img, crop=True):
         h, w = img.shape[:2]
-        if h < w:
-            img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
-            h, w = img.shape[:2]
+
         new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(self._config['mtx'], self._config['dist'], (w, h), 1, (w, h))
         undistorted_img = cv2.undistort(img, self._config['mtx'], self._config['dist'], None, new_camera_mtx)
 
         if crop:
             x, y, w, h = roi
             undistorted_img = undistorted_img[y:y + h, x:x + w]
-        # img_color = cv2.cvtColor(img_undist, cv2.COLOR_GRAY2RGB)
         return undistorted_img
 
-    def undistort_file(self, img_path, crop=True):
+    def correct_distortion_file(self, img_path, crop=True):
         img = cv2.imread(img_path)
-        return self.undistort_img(img, crop)
+        return self.correct_distortion(img, crop)
 
     def determine_calibration(self):
         obj_points = []  # 3d point in real world space
@@ -73,6 +71,11 @@ class CameraCalibration(object):
             img = cv2.imread(f_name)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
+            h, w = img.shape[:2]
+            if h < w:
+                img = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
+                h, w = img.shape[:2]
+
             if gray_pic is None:
                 gray_pic = gray
             # Find the chess board corners
@@ -87,13 +90,8 @@ class CameraCalibration(object):
                 corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
                 img_points.append(corners2)
 
-                # Draw and display the corners
-                # img = cv2.drawChessboardCorners(img, (nx, ny), corners2, ret)
-                # cv2.imshow('img', img)
-                # cv2.waitKey(500)
-
         if gray_pic is None:
-            return None, None
+            raise Exception('Calibration failed. Chessboard corners could not be found in any image.')
 
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, gray_pic.shape[::-1], None, None)
         new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w, h), 1, (w, h))
@@ -102,16 +100,12 @@ class CameraCalibration(object):
         print('calibrationMatrixValues-new_cam', cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 6.4512, 3.6288))
         print(mtx, new_camera_mtx)
         fov_x, fov_y, f, pp, ar = cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 6.4512, 3.6288)
-        gray_pic = None
         r_diff = 100.0
         for f_name in images:
             img = cv2.imread(f_name)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            #gray = cv2.undistort(gray, mtx, dist, None, new_camera_mtx)
-
-            #x, y, w, h = roi
-            #gray = gray[y:y + h, x:x + w]
-            #print(gray.shape)
+            # Should we correct distortion??
+            # gray = cv2.undistort(gray, mtx, dist, None, new_camera_mtx)
 
             # Find the chess board corners
             ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
@@ -140,8 +134,6 @@ class CameraCalibration(object):
                     self._config['rx'] = round(pdx, 2)
                     self._config['ry'] = round(pdy, 2)
                 print('corners', i, px, pdx, pdy)
-
-        # cv2.destroyAllWindows()
 
         if mtx is not None or dist is not None:
             """
@@ -193,38 +185,61 @@ class CameraCalibration(object):
         else:
             return self._config['mtx']
 
+    @property
+    def cx(self):
+        if 'cx' in self._config:
+            return self._config['cx']
+        else:
+            return 540
+
+    @property
+    def cy(self):
+        if 'cy' in self._config:
+            return self._config['cy']
+        else:
+            return 960
+
+    @property
+    def cz(self):
+        if 'cz' in self._config['cz']:
+            return self._config['cz']
+        else:
+            return 0
+
+    @property
+    def r(self):
+        if 'r' in self._config['r']:
+            return self._config['r']
+        else:
+            return 0
+
+    @property
+    def configuration(self):
+        return self._config
+
 
 def run_calibration(motor: StepperMotor):
+    motor.enable()
     steps = 30
     degrees = 2.5
-    images_path = path.join(calibration_path, 'images')
     motor.rotate(35, True)
     time.sleep(0.8)
     camera.set_config('save')
     for i in range(0, steps):
+        if i > 0:
+            motor.rotate(degrees, False)
+
         try:
             camera.capture_file_cam(f'%s/calibration_%04d.jpg' % (calibration_path, i))
             print('captured', f'%s/calibration_%04d.jpg' % (calibration_path, i))
         except:
             print('error taking photo')
             pass
-        motor.rotate(degrees, False)
         time.sleep(0.8)
 
     motor.rotate(37.5, True)
+    motor.disable()
+    calibration.determine_calibration()
 
-    CameraCalibration(True)
 
-"""
-p = getcwd() + "\\calibration\\android"
-print(p)
-if path.isfile(p + "\\calibration_0001.jpg"):
-    print("cal exists")
-else:
-    print("incorrect path")
-cal = CameraCalibration(wd=p, reload=True)
-print(cal.mtx)
-print(cal.config)
-"""
-# f 1536.5 / Cx 534 / Cy 962 / f 8.02 / 73.4 / Cz 303.4
-# f 1520.7 / Cx 571.5 / Cy 945.0 / f 7.94
+calibration = CameraCalibration()

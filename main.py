@@ -38,7 +38,7 @@ def video_feed():
 
 @app.route('/load_setup', methods=["GET"])
 def setup_load_setup():
-    return jsonify(message=json.dumps(camera_calibration.calibration), statusCode=200), 200
+    return jsonify(message=json.dumps(camera_calibration.calibration.configuration), statusCode=200), 200
 
 
 @app.route('/save_setup', methods=["POST"])

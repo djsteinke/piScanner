@@ -2,7 +2,7 @@ from flask import Flask, render_template, Response, jsonify, request
 from time import sleep
 import json
 from accessories.camera import camera, get_jpg_buffer
-import configuration.camera as camera_calibration
+from configuration.configuration import ScannerConfiguration
 from accessories.stepper_motor import stepper
 
 app = Flask(__name__)
@@ -40,7 +40,7 @@ def index():
 
 @app.route('/setup')
 def setup_frame():
-    return render_template('setup.html')
+    return render_template('setup.html', config=scanner_config)
 
 
 @app.route('/video_feed')
@@ -50,7 +50,7 @@ def video_feed():
 
 @app.route('/load_setup', methods=["GET"])
 def setup_load_setup():
-    return jsonify(message=json.dumps(camera_calibration.camera_configuration.configuration), statusCode=200), 200
+    return jsonify(message=json.dumps({}), statusCode=200), 200
 
 
 @app.route('/save_setup', methods=["POST"])
@@ -58,12 +58,12 @@ def setup_save_click():
     content_type = request.headers.get('Content-Type')
     if content_type == 'application/json':
         setup = request.json
-        camera_calibration.camera_configuration.configuration['f'] = setup['f']
-        camera_calibration.camera_configuration.configuration['cx'] = setup['cx']
-        camera_calibration.camera_configuration.configuration['cy'] = setup['cy']
-        camera_calibration.camera_configuration.configuration['cz'] = setup['cz']
-        camera_calibration.camera_configuration.configuration['f_mm'] = setup['f_mm']
-        camera_calibration.camera_configuration.save_calibration()
+        scanner_config.camera.f = setup['f']
+        scanner_config.camera.cx = setup['cx']
+        scanner_config.camera.cy = setup['cy']
+        scanner_config.camera.cz = setup['cz']
+        scanner_config.camera.f_mm = setup['f_mm']
+        scanner_config.camera.save_calibration()
         # save_file('setup.json', json.dumps(setup))
         return jsonify(message='Success', statusCode=200), 200
     else:
@@ -72,16 +72,11 @@ def setup_save_click():
 
 @app.route('/run_calibration', methods=["GET"])
 def run_calibration():
-    camera_calibration.run_calibration(stepper)
-    return jsonify(message=json.dumps(camera_calibration.camera_configuration.configuration), statusCode=200), 200
+    scanner_config.camera.run_calibration(stepper)
+    # TODO postback to set all updated values
+    return jsonify(message={}, statusCode=200), 200
 
 
-"""
-@app.route('/static/<filename>')
-def scripts(filename):
-    f = open('static/' + filename, 'r')
-    return f.read()
-"""
 
 def save_file(file_path, data):
     f = open(file_path, 'w')
@@ -98,6 +93,7 @@ def load_setup():
 
 
 if __name__ == '__main__':
+    scanner_config = ScannerConfiguration.load()
     camera.start()
     app.run(debug=False, host="192.168.0.154", port=3100)
 

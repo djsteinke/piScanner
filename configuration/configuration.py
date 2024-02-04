@@ -1,7 +1,12 @@
+import os
+import pickle
 from camera import camera_configuration, CameraConfiguration
+from scanner_paths import config_path
 
 default_step_size = 1.8
 default_micro_steps = 2.0
+
+pickle_file = 'configuration.p'
 
 
 class ScannerConfiguration(object):
@@ -10,6 +15,22 @@ class ScannerConfiguration(object):
         self.stepper_motor: StepperMotorConfiguration = stepper_config
         self.right_laser: LaserConfiguration = right_laser_config
         self.left_laser: LaserConfiguration = left_laser_config
+
+    def save(self):
+        source = os.path.join(config_path, pickle_file)
+        pickle.dump(self, open(source, "wb"))
+
+    @staticmethod
+    def load():
+        source = os.path.join(config_path, pickle_file)
+        try:
+            with open(source, 'rb') as file:
+                return pickle.load(file)
+        except:
+            scanner_config = ScannerConfiguration(CameraConfiguration(), StepperMotorConfiguration(3, 5, 7),
+                                                  LaserConfiguration(11), LaserConfiguration(13))
+            scanner_config.save()
+            return scanner_config
 
 
 class LaserConfiguration(object):

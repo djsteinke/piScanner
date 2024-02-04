@@ -25,25 +25,25 @@ printed = False
 
 class CameraConfiguration(object):
     def __init__(self, calculate=False):
-        self._config = {
-            "rx": 0.0,
-            "ry": 0.0,
-            "r": 0.0,
-            "f": 0.0,
-            "f_mm": 0.0,
-            "cx": 0.0,
-            "cy": 0.0,
-            "cz": 0.0,
-            "mtx": [],
-            "dist": []
-        }
-        self.load_calibration(calculate)
+        self.rx = 0.0
+        self.ry = 0.0
+        self.r = 0.0
+        self.f = 0.0
+        self.f_mm = 0.0
+        self.cx = 0.0
+        self.cy = 0.0
+        self.cz = 0.0
+        self.grid_size = grid_size
+        self.nx = nx
+        self.ny = ny
+        self.mtx = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+        self.dist = []
 
     def correct_distortion(self, img, crop=True):
         h, w = img.shape[:2]
 
-        new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(self._config['mtx'], self._config['dist'], (w, h), 1, (w, h))
-        undistorted_img = cv2.undistort(img, self._config['mtx'], self._config['dist'], None, new_camera_mtx)
+        new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(self.mtx, self.dist, (w, h), 1, (w, h))
+        undistorted_img = cv2.undistort(img, self.mtx, self.dist, None, new_camera_mtx)
 
         if crop:
             x, y, w, h = roi
@@ -130,8 +130,8 @@ class CameraConfiguration(object):
                 # Rx, Ry, f, Cx, Cy, Cz
                 if abs(pdx-pdy) < r_diff:
                     r_diff = abs(pdx-pdy)
-                    self._config['rx'] = round(pdx, 2)
-                    self._config['ry'] = round(pdy, 2)
+                    self.rx = round(pdx, 2)
+                    self.ry = round(pdy, 2)
                 print('corners', i, px, pdx, pdy)
 
         if mtx is not None or dist is not None:
@@ -140,109 +140,44 @@ class CameraConfiguration(object):
             self._config['cx'] = round(new_camera_mtx[0][2], 2)
             self._config['cy'] = round(new_camera_mtx[1][2], 2)
             """
-            self._config['f'] = round((mtx[0][0] + mtx[1][1])/2.0, 2)
-            self._config['f_mm'] = f
-            self._config['r'] = round(grid_size * f, 1)
-            self._config['cx'] = round(mtx[0][2], 2)
-            self._config['cy'] = round(mtx[1][2], 2)
-            self._config['cz'] = round(self._config['f'] / f, 1)
-            self._config['mtx'] = mtx
-            self._config['dist'] = dist
-            print('config', self._config)
+            self.f = round((mtx[0][0] + mtx[1][1])/2.0, 2)
+            self.f_mm = f
+            self.r = round(grid_size * f, 1)
+            self.cx = round(mtx[0][2], 2)
+            self.cy = round(mtx[1][2], 2)
+            self.cz = round(self.f / f, 1)
+            self.mtx = mtx
+            self.dist = dist
             self.save_calibration()
             return True
         return False
 
-    def load_calibration(self, calculate):
-        source = os.path.join(calibration_path, pickle_file)
-        if calculate:
-            ret = self.determine_calibration()
-            if not ret:
-                print('configuration failed.')
-        else:
-            try:
-                with open(source, 'rb') as file:
-                    data = pickle.load(file)
-                    self._config = {
-                        "rx": data['rx'],
-                        "ry": data['ry'],
-                        "f": data['f'],
-                        "cx": data['cx'],
-                        "cy": data['cy'],
-                        "cz": data['cz'],
-                        "mtx": data['mtx'],
-                        "dist": data['dist']
-                    }
-            except:
-                pass
-            print(self._config)
-
     def save_calibration(self):
         source = os.path.join(calibration_path, pickle_file)
-        pickle.dump(self._config, open(source, "wb"))
+        pickle.dump(self, open(source, "wb"))
 
-    @property
-    def mtx(self):
-        if self._config['mtx'] is None:
-            return [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
-        else:
-            return self._config['mtx']
-
-    @property
-    def cx(self):
-        if 'cx' in self._config:
-            return self._config['cx']
-        else:
-            return 540
-
-    @property
-    def cy(self):
-        if 'cy' in self._config:
-            return self._config['cy']
-        else:
-            return 960
-
-    @property
-    def cz(self):
-        if 'cz' in self._config['cz']:
-            return self._config['cz']
-        else:
-            return 0
-
-    @property
-    def r(self):
-        if 'r' in self._config['r']:
-            return self._config['r']
-        else:
-            return 0
-
-    @property
-    def configuration(self):
-        return self._config
-
-
-def run_calibration(motor: StepperMotor):
-    motor.enable()
-    steps = 30
-    degrees = 2.5
-    motor.rotate(35, True)
-    time.sleep(0.8)
-    camera.set_config('save')
-    for i in range(0, steps):
-        if i > 0:
-            motor.rotate(degrees, False)
-
-        try:
-            camera.capture_file_cam(f'%s/calibration_%04d.jpg' % (calibration_path, i))
-            print('captured', f'%s/calibration_%04d.jpg' % (calibration_path, i))
-        except:
-            print('error taking photo')
-            pass
+    def run_calibration(self, motor: StepperMotor):
+        motor.enable()
+        steps = 30
+        degrees = 2.5
+        motor.rotate(35, True)
         time.sleep(0.8)
+        camera.set_config('save')
+        for i in range(0, steps):
+            if i > 0:
+                motor.rotate(degrees, False)
 
-    motor.rotate(37.5, True)
-    motor.disable()
-    camera_configuration.determine_calibration()
+            try:
+                camera.capture_file_cam(f'%s/calibration_%04d.jpg' % (calibration_path, i))
+                print('captured', f'%s/calibration_%04d.jpg' % (calibration_path, i))
+            except:
+                print('error taking photo')
+                pass
+            time.sleep(0.8)
 
+        motor.rotate(37.5, True)
+        motor.disable()
+        ret = self.determine_calibration()
+        if not ret:
+            print('configuration failed.')
 
-camera_configuration = CameraConfiguration()

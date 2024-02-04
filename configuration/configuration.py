@@ -1,6 +1,6 @@
 import os
 import pickle
-from camera import camera_configuration, CameraConfiguration
+from camera import CameraConfiguration
 from scanner_paths import config_path
 
 default_step_size = 1.8

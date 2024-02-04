@@ -38,9 +38,14 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/setup')
+@app.route('/setup', methods=['POST', 'GET'])
 def setup_frame():
-    return render_template('setup.html', config=scanner_config)
+    error = None
+    if request.method == 'POST':
+        scanner_config.camera.f = request.form['input_f_px']
+        scanner_config.save()
+
+    return render_template('setup.html', config=scanner_config, error=error)
 
 
 @app.route('/video_feed')

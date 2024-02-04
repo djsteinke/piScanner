@@ -4,7 +4,7 @@ from configuration.camera import CameraConfiguration
 from scanner_paths import config_path
 
 default_step_size = 1.8
-default_micro_steps = 2.0
+default_micro_steps = 2
 
 pickle_file = 'configuration.p'
 

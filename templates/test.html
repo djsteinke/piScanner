@@ -5,6 +5,9 @@
     <title>Test</title>
 </head>
 <body>
-<span>test.value</span>
+{% if test %}
+    <span>{{ test['value'] }}</span>
+{% else %}
+    <span>Still doesn't work.</span>
 </body>
 </html>

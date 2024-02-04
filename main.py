@@ -43,7 +43,9 @@ def setup_frame():
     error = None
     if request.method == 'POST':
         scanner_config.camera.f = request.form['input_f_px']
-        scanner_config.save()
+    else:
+        var = 1
+    scanner_config.save()
 
     return render_template('setup.html', config=scanner_config, error=error)
 

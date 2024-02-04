@@ -2,7 +2,7 @@ from flask import Flask, render_template, Response, jsonify, request
 from time import sleep
 import json
 from accessories.camera import camera, get_jpg_buffer
-import calibration.camera as camera_calibration
+import configuration.camera as camera_calibration
 from accessories.stepper_motor import stepper
 
 app = Flask(__name__)
@@ -22,6 +22,17 @@ def gen_frames():
             yield b''
 
 
+class Test(object):
+    def __init__(self):
+        self.value = 'Some Value.'
+
+
+@app.route('/test')
+def test():
+    t = Test()
+    return render_template('test.html', test=t)
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -39,7 +50,7 @@ def video_feed():
 
 @app.route('/load_setup', methods=["GET"])
 def setup_load_setup():
-    return jsonify(message=json.dumps(camera_calibration.calibration.configuration), statusCode=200), 200
+    return jsonify(message=json.dumps(camera_calibration.camera_configuration.configuration), statusCode=200), 200
 
 
 @app.route('/save_setup', methods=["POST"])
@@ -47,12 +58,12 @@ def setup_save_click():
     content_type = request.headers.get('Content-Type')
     if content_type == 'application/json':
         setup = request.json
-        camera_calibration.calibration.configuration['f'] = setup['f']
-        camera_calibration.calibration.configuration['cx'] = setup['cx']
-        camera_calibration.calibration.configuration['cy'] = setup['cy']
-        camera_calibration.calibration.configuration['cz'] = setup['cz']
-        camera_calibration.calibration.configuration['f_mm'] = setup['f_mm']
-        camera_calibration.calibration.save_calibration()
+        camera_calibration.camera_configuration.configuration['f'] = setup['f']
+        camera_calibration.camera_configuration.configuration['cx'] = setup['cx']
+        camera_calibration.camera_configuration.configuration['cy'] = setup['cy']
+        camera_calibration.camera_configuration.configuration['cz'] = setup['cz']
+        camera_calibration.camera_configuration.configuration['f_mm'] = setup['f_mm']
+        camera_calibration.camera_configuration.save_calibration()
         # save_file('setup.json', json.dumps(setup))
         return jsonify(message='Success', statusCode=200), 200
     else:
@@ -62,7 +73,7 @@ def setup_save_click():
 @app.route('/run_calibration', methods=["GET"])
 def run_calibration():
     camera_calibration.run_calibration(stepper)
-    return jsonify(message=json.dumps(camera_calibration.calibration.configuration), statusCode=200), 200
+    return jsonify(message=json.dumps(camera_calibration.camera_configuration.configuration), statusCode=200), 200
 
 
 @app.route('/scripts/<filename>')

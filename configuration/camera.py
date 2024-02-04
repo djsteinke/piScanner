@@ -9,7 +9,7 @@ import time
 from accessories.stepper_motor import StepperMotor
 from scanner_paths import calibration_path
 
-pickle_file = 'calibration.p'
+pickle_file = 'configuration.p'
 
 grid_size = 14.7
 nx = 6              # nx: number of grids in x-axis
@@ -23,7 +23,7 @@ out = True
 printed = False
 
 
-class CameraCalibration(object):
+class CameraConfiguration(object):
     def __init__(self, calculate=False):
         self._config = {
             "rx": 0.0,
@@ -116,7 +116,7 @@ class CameraCalibration(object):
                 pdt = 0
 
                 x_a = []
-                # print(calibration.corners_ret)
+                # print(configuration.corners_ret)
                 for y in range(0, ny - 1):
                     for x in range(0, nx - 1):
                         pdt += 1
@@ -158,7 +158,7 @@ class CameraCalibration(object):
         if calculate:
             ret = self.determine_calibration()
             if not ret:
-                print('calibration failed.')
+                print('configuration failed.')
         else:
             with open(source, 'rb') as file:
                 data = pickle.load(file)
@@ -239,7 +239,7 @@ def run_calibration(motor: StepperMotor):
 
     motor.rotate(37.5, True)
     motor.disable()
-    calibration.determine_calibration()
+    camera_configuration.determine_calibration()
 
 
-calibration = CameraCalibration()
+camera_configuration = CameraConfiguration()

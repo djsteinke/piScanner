@@ -81,7 +81,7 @@ class PatternMaker:
 
 def main():
     # parse command line options
-    parser = argparse.ArgumentParser(description="generate camera-calibration pattern", add_help=False)
+    parser = argparse.ArgumentParser(description="generate camera-configuration pattern", add_help=False)
     parser.add_argument("-H", "--help", help="show help", action="store_true", dest="show_help")
     parser.add_argument("-o", "--output", help="output file", default="out.svg", action="store", dest="output")
     parser.add_argument("-c", "--columns", help="pattern columns", default="8", action="store", dest="columns",

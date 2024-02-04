@@ -9,19 +9,38 @@
         * {
             font-family: 'Montserrat', sans-serif;
         }
-        .label {
-            width: 100px;
+        .container {
+            display: inline;
+        }
+        .row {
+            margin-bottom: 5px;
+        }
+        label {
+            display: inline-block;
             padding-left: 10px;
         }
         .label-short {
-            width: 20px;
+            width: 30px;
+            margin-right: 10px;
+        }
+        .label {
+            display: inline-block;
+            width: 100px;
             padding-left: 10px;
         }
-        .input {
-            width: 125px;
+        .label-med {
+            width: 50px;
+            margin-right: 10px;
+        }
+        .label-lg {
+            width: 100px;
+            margin-right: 10px;
         }
         .input-short {
-            width: 85px;
+            width: 50px;
+        }
+        .right {
+            margin-left: 20px;
         }
         .label-title {
             font-weight: bold;
@@ -33,6 +52,7 @@
             padding-bottom: 5px;
         }
         .btn {
+            margin-left: 10px;
             padding: 5px 10px;
             font-size: 16px;
             width: 100px;
@@ -153,100 +173,90 @@
     </script>
 </head>
 <body>
-    <table>
-        <tr>
-            <td class="label-title">Camera</td>
-        </tr>
-        <tr>
-            <td class="label-short">f</td>
-            <td class="input-short"><input id="input_f_px" style="width: 50px;" value="{{ config.camera.f }}"/> px</td>
-            <td class="label-short right"></td>
-            <td class="input"><input id="input_f_mm" style="width: 50px;" value="{{ config.camera.f_mm }}"/> mm</td>
-        </tr>
-        <tr>
-            <td class="label-short">Cx</td>
-            <td class="input-short"><input id="input_cx" style="width: 50px;" value="{{ config.camera.cx }}"/> px</td>
-        </tr>
-        <tr>
-            <td class="label-short">Cy</td>
-            <td class="input-short"><input id="input_cy" style="width: 50px;" value="{{ config.camera.cy }}"/> px</td>
-        </tr>
-        <tr>
-            <td class="label-short">Cz</td>
-            <td class="input-short"><input id="input_cz" style="width: 50px;" value="{{ config.camera.cz }}"/> px</td>
-        </tr>
-    </table>
-    <div class="label-title-next">Lasers</div>
-    <table>
-        <tr>
-            <th class="">Left</th>
-            <th></th>
-            <th>Right</th>
-        </tr>
-        <tr>
-            <td class="label">Pin:</td>
-            <td class="input-short"><input id="input_left_pin" style="width: 50px;"/></td>
-            <td class="label right">Pin:</td>
-            <td class="input"><input id="input_right_pin" style="width: 50px;"/> deg</td>
-        </tr>
-        <tr>
-            <td class="label">Angle:</td>
-            <td class="input-short"><input id="input_left_angle" style="width: 50px;"/></td>
-            <td class="label right">Angle:</td>
-            <td class="input"><input id="input_right_angle" style="width: 50px;"/> deg</td>
-        </tr>
-    </table>
-    <table>
-        <tr>
-            <td class="label-title-next">Pattern</td>
-        </tr>
-        <tr>
-            <td class="label">Block Size:</td>
-            <td class="input"><input id="input_block_size" style="width: 50px;"/> mm</td>
-        </tr>
-        <tr>
-            <td class="label">X Count:</td>
-            <td class="input"><input id="input_x_count" style="width: 50px;"/></td>
-        </tr>
-        <tr>
-            <td class="label right">Y Count:</td>
-            <td class="input"><input id="input_y_count" style="width: 50px;"/></td>
-        </tr>
-    </table>
-    <div class="label-title-next">Stepper Motor</div>
-    <table>
-        <tr>
-            <th class="">Pins</th>
-            <th></th>
-            <th>Config</th>
-        </tr>
-        <tr>
-            <td class="label">Enable:</td>
-            <td class="input-short"><input id="input_enable_pin" style="width: 50px;"/></td>
-            <td class="label">Step Size:</td>
-            <td class="input"><input id="input_step_size" style="width: 50px;"/> deg</td>
-        </tr>
-        <tr>
-            <td class="label">Direction:</td>
-            <td class="input-short"><input id="input_dir_pin" style="width: 50px;"/></td>
-            <td class="label">Micro Steps:</td>
-            <td class="input"><input id="input_micro_steps" style="width: 50px;"/></td>
-        </tr>
-        <tr>
-            <td class="label">Pulse:</td>
-            <td class="input-short"><input id="input_pulse_pin" style="width: 50px;"/></td>
-        </tr>
-    </table>
+    <form>
+        <div class="label-title">Camera</div>
+        <div class="row">
+            <label class="label-short" for="input_f_px">f</label>
+            <input class="input-short" name="input_f_px" id="input_f_px" value="{{ config.camera.f }}"/><span> px</span>
+            <input class="input-short right" id="input_f_mm" value="{{ config.camera.f_mm }}"/><span> mm</span>
+        </div>
+        <div class="row">
+            <label class="label-short" for="input_cx">Cx</label>
+            <input class="input-short" name="camera_center_x" id="input_cx" value="{{ config.camera.cx }}"/><span> px</span>
+        </div>
+        <div class="row">
+            <label class="label-short" for="input_cy">Cy</label>
+            <input class="input-short" name="camera_center_x" id="input_cy" value="{{ config.camera.cx }}"/><span> px</span>
+        </div>
+        <div class="row">
+            <label class="label-short" for="input_cz">Cz</label>
+            <input class="input-short" name="camera_center_x" id="input_cz" value="{{ config.camera.cz }}"/><span> mm</span>
+        </div>
 
-    <table>
-        <tr>
-            <td class="label-title-next">&nbsp;</td>
-        </tr>
-        <tr>
-            <!--<td class="label"><button id="btn_photo" class="btn">Photo</button></td>-->
-            <td class="label"><button id="btn_calibrate" class="btn" onclick="calibrate()">Calibrate</button></td>
-            <td class="label"><button id="btn_save" class="btn" onclick="save()">Save</button></td>
-        </tr>
-    </table>
+        <div class="label-title-next">Lasers</div>
+        <div>
+            <div class="row" style="display: inline-block;">
+                <div style="margin-left: 85px;">
+                    <span>Left</span><span style="margin-left: 45px;">Right</span>
+                </div>
+            </div>
+            <div class="row">
+                <label class="label-med" for="input_left_pin">Pin:</label>
+                <input class="input-short" name="input_left_pin" id="input_left_pin"/>
+                <input class="input-short right" name="input_right_pin" id="input_right_pin"/>
+            </div>
+            <div class="row">
+                <label class="label-med" for="input_left_angle">Angle:</label>
+                <input class="input-short" name="input_left_angle" id="input_left_angle"/>
+                <input class="input-short right" name="input_right_angle" id="input_right_angle"/><span style="margin-left: 15px;">deg</span>
+            </div>
+        </div>
+
+        <div class="label-title-next">Pattern</div>
+        <div>
+            <div class="row">
+                <label class="label-lg" for="input_block_size">Block Size:</label>
+                <input class="input-short" name="input_block_size" id="input_block_size"/><span> mm</span>
+            </div>
+            <div class="row">
+                <label class="label-lg" for="input_x_cnt">X Count:</label>
+                <input class="input-short" name="input_x_cnt" id="input_x_cnt"/>
+            </div>
+            <div class="row">
+                <label class="label-lg" for="input_y_cnt">X Count:</label>
+                <input class="input-short" name="input_y_cnt" id="input_y_cnt"/>
+            </div>
+        </div>
+
+        <div class="label-title-next">Stepper Motor</div>
+        <div>
+            <div class="row">
+                <label class="label-lg" for="input_step_size">Step Size:</label>
+                <input class="input-short" name="input_step_size" id="input_step_size"/><span> deg</span>
+            </div>
+            <div class="row">
+                <label class="label-lg" for="input_micro_steps">Micro Steps:</label>
+                <input class="input-short" name="input_micro_steps" id="input_micro_steps"/>
+            </div>
+            <div style="margin-left: 135px; margin-top: 10px;">Pin</div>
+            <div class="row">
+                <label class="label-lg" for="input_enable">Enable:</label>
+                <input class="input-short" name="input_enable" id="input_enable"/>
+            </div>
+            <div class="row">
+                <label class="label-lg" for="input_direction">Direction:</label>
+                <input class="input-short" name="input_direction" id="input_direction"/>
+            </div>
+            <div class="row">
+                <label class="label-lg" for="input_pulse">Pulse:</label>
+                <input class="input-short" name="input_pulse" id="input_pulse"/>
+            </div>
+        </div>
+        <div class="label-title-next"></div>
+        <div>
+            <input class="btn" type="button" value="Calibrate" onclick="calibrate()"/>
+            <input class="btn" type="submit" value="Save"/>
+        </div>
+    </form>
 </body>
 </html>

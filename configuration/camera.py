@@ -160,19 +160,22 @@ class CameraConfiguration(object):
             if not ret:
                 print('configuration failed.')
         else:
-            with open(source, 'rb') as file:
-                data = pickle.load(file)
-                self._config = {
-                    "rx": data['rx'],
-                    "ry": data['ry'],
-                    "f": data['f'],
-                    "cx": data['cx'],
-                    "cy": data['cy'],
-                    "cz": data['cz'],
-                    "mtx": data['mtx'],
-                    "dist": data['dist']
-                }
-                print(self._config)
+            try:
+                with open(source, 'rb') as file:
+                    data = pickle.load(file)
+                    self._config = {
+                        "rx": data['rx'],
+                        "ry": data['ry'],
+                        "f": data['f'],
+                        "cx": data['cx'],
+                        "cy": data['cy'],
+                        "cz": data['cz'],
+                        "mtx": data['mtx'],
+                        "dist": data['dist']
+                    }
+            except:
+                pass
+            print(self._config)
 
     def save_calibration(self):
         source = os.path.join(calibration_path, pickle_file)

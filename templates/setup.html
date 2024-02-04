@@ -202,13 +202,13 @@
             </div>
             <div class="row">
                 <label class="label-med" for="input_left_pin">Pin:</label>
-                <input class="input-short" name="input_left_pin" id="input_left_pin"/>
-                <input class="input-short right" name="input_right_pin" id="input_right_pin"/>
+                <input class="input-short" name="input_left_pin" id="input_left_pin" value="{{ config.left_laser.pin }}"/>
+                <input class="input-short right" name="input_right_pin" id="input_right_pin" value="{{ config.right_laser.pin }}"/>
             </div>
             <div class="row">
                 <label class="label-med" for="input_left_angle">Angle:</label>
-                <input class="input-short" name="input_left_angle" id="input_left_angle"/>
-                <input class="input-short right" name="input_right_angle" id="input_right_angle"/><span style="margin-left: 15px;">deg</span>
+                <input class="input-short" name="input_left_angle" id="input_left_angle" value="{{ config.left_laser.angle }}"/>
+                <input class="input-short right" name="input_right_angle" id="input_right_angle" value="{{ config.right_laser.angle }}"/><span style="margin-left: 15px;">deg</span>
             </div>
         </div>
 
@@ -216,15 +216,15 @@
         <div>
             <div class="row">
                 <label class="label-lg" for="input_block_size">Block Size:</label>
-                <input class="input-short" name="input_block_size" id="input_block_size"/><span> mm</span>
+                <input class="input-short" name="input_block_size" id="input_block_size" value="{{ config.camera.grid_size }}"/><span> mm</span>
             </div>
             <div class="row">
                 <label class="label-lg" for="input_x_cnt">X Count:</label>
-                <input class="input-short" name="input_x_cnt" id="input_x_cnt"/>
+                <input class="input-short" name="input_x_cnt" id="input_x_cnt" value="{{ config.camera.nx }}"/>
             </div>
             <div class="row">
                 <label class="label-lg" for="input_y_cnt">X Count:</label>
-                <input class="input-short" name="input_y_cnt" id="input_y_cnt"/>
+                <input class="input-short" name="input_y_cnt" id="input_y_cnt" value="{{ config.camera.ny }}"/>
             </div>
         </div>
 
@@ -232,24 +232,24 @@
         <div>
             <div class="row">
                 <label class="label-lg" for="input_step_size">Step Size:</label>
-                <input class="input-short" name="input_step_size" id="input_step_size"/><span> deg</span>
+                <input class="input-short" name="input_step_size" id="input_step_size" value="{{ config.stepper_motor.step_size }}"/><span> deg</span>
             </div>
             <div class="row">
                 <label class="label-lg" for="input_micro_steps">Micro Steps:</label>
-                <input class="input-short" name="input_micro_steps" id="input_micro_steps"/>
+                <input class="input-short" name="input_micro_steps" id="input_micro_steps" value="{{ config.stepper_motor.micro_steps }}"/>
             </div>
             <div style="margin-left: 135px; margin-top: 10px;">Pin</div>
             <div class="row">
                 <label class="label-lg" for="input_enable">Enable:</label>
-                <input class="input-short" name="input_enable" id="input_enable"/>
+                <input class="input-short" name="input_enable" id="input_enable" value="{{ config.stepper_motor.enable_pin }}"/>
             </div>
             <div class="row">
                 <label class="label-lg" for="input_direction">Direction:</label>
-                <input class="input-short" name="input_direction" id="input_direction"/>
+                <input class="input-short" name="input_direction" id="input_direction" value="{{ config.stepper_motor.dir_pin }}"/>
             </div>
             <div class="row">
                 <label class="label-lg" for="input_pulse">Pulse:</label>
-                <input class="input-short" name="input_pulse" id="input_pulse"/>
+                <input class="input-short" name="input_pulse" id="input_pulse" value="{{ config.stepper_motor.pulse_pin }}"/>
             </div>
         </div>
         <div class="label-title-next"></div>

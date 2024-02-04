@@ -39,7 +39,7 @@
         }
     </style>
     <!--
-    <script type="text/scripts">
+    <script type="text/static">
         $.ajax({
           url: "/_getStatus",
           data: {},
@@ -50,7 +50,7 @@
     </script>
     -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script type="text/javascript" src="scripts/API.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='API.js') }}"></script>
     <script type=text/javascript>
         var SetupData = {};
         var Setup = {

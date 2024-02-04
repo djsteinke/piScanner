@@ -76,11 +76,12 @@ def run_calibration():
     return jsonify(message=json.dumps(camera_calibration.camera_configuration.configuration), statusCode=200), 200
 
 
-@app.route('/scripts/<filename>')
+"""
+@app.route('/static/<filename>')
 def scripts(filename):
-    f = open('scripts/' + filename, 'r')
+    f = open('static/' + filename, 'r')
     return f.read()
-
+"""
 
 def save_file(file_path, data):
     f = open(file_path, 'w')

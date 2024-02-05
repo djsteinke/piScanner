@@ -239,3 +239,21 @@ class CameraConfiguration(object):
             pdx /= pdt
             pdy /= pdt
             print('corners', pdt, pdx, pdy)
+
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
+        if ret:
+            corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
+            pdy = 0
+            pdx = 0
+            pdt = 0
+            for y in range(0, self.ny - 1):
+                for x in range(0, self.nx - 1):
+                    pdt += 1
+                    p = y * self.nx + x
+                    # print(abs(corners2[p + 1][0][0] - corners2[p][0][0]), abs(corners2[p + nx][0][1] - corners2[p][0][1]))
+                    pdx += abs(corners2[p + 1][0][0] - corners2[p][0][0])
+                    pdy += abs(corners2[p + self.nx][0][1] - corners2[p][0][1])
+            pdx /= pdt
+            pdy /= pdt
+            print('corners', pdt, pdx, pdy)

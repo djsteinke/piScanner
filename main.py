@@ -42,7 +42,7 @@ def index():
 def setup_frame():
     error = None
     if request.method == 'POST':
-        scanner_config.camera.f = float(request.form['input_f_px'])
+        scanner_config.camera.f = request.form['input_f_px']
         scanner_config.camera.f_mm = float(request.form['input_f_mm'])
         scanner_config.camera.cx = int(request.form['input_cx'])
         scanner_config.camera.cy = int(request.form['input_cy'])

@@ -136,8 +136,8 @@ class CameraConfiguration(object):
                         pdt += 1
                         p = y * nx + x
                         #print(abs(corners2[p + 1][0][0] - corners2[p][0][0]), abs(corners2[p + nx][0][1] - corners2[p][0][1]))
-                        pdx += abs(corners2[p + 1][0][0] - corners2[p][0][0])
-                        pdy += abs(corners2[p + nx][0][1] - corners2[p][0][1])
+                        pdx += abs(corners2[p + nx][0][0] - corners2[p][0][0])
+                        pdy += abs(corners2[p + 1][0][1] - corners2[p][0][1])
                 pdx /= pdt
                 pdy /= pdt
                 x_a.append(pdx)
@@ -160,8 +160,8 @@ class CameraConfiguration(object):
             self.r = round(self.grid_size * f, 1)
             self.rx = rx
             self.ry = ry
-            self.cx = round(mtx[1][2])
-            self.cy = round(mtx[0][2])
+            self.cx = round(mtx[0][2])
+            self.cy = round(mtx[1][2])
             #self.cz = round(self.f / f, 1)
             self.mtx = mtx
             self.dist = dist

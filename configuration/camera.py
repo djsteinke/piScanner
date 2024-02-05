@@ -17,17 +17,17 @@ printed = False
 
 class CameraConfiguration(object):
     def __init__(self, calculate=False):
-        self.rx = 0.0
-        self.ry = 0.0
-        self.r = 0.0
-        self.f = 0.0
-        self.f_mm = 0.0
-        self.cx = 0.0
-        self.cy = 0.0
-        self.cz = 0.0
-        self.grid_size = 15
-        self.nx = 6
-        self.ny = 9
+        self.rx: float = 0.0
+        self.ry: float = 0.0
+        self.r: float = 0.0
+        self.f: float = 0.0
+        self.f_mm: float = 0.0
+        self.cx: int = 0
+        self.cy: int = 0
+        self.cz: float = 0.0
+        self.grid_size: float = 15
+        self.nx: int = 6
+        self.ny: int = 9
         self.mtx = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
         self.dist = []
 

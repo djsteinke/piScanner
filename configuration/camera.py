@@ -169,9 +169,9 @@ class CameraConfiguration(object):
 
     def run_calibration(self, motor: StepperMotor):
         motor.enable()
-        steps = 30
-        degrees = 2.5
-        motor.rotate(35, True)
+        steps = 18
+        degrees = 5
+        motor.rotate(45, True)
         time.sleep(0.8)
         camera.set_config('save')
         for i in range(0, steps):
@@ -186,7 +186,7 @@ class CameraConfiguration(object):
                 pass
             time.sleep(0.8)
 
-        motor.rotate(37.5, True)
+        motor.rotate(50, True)
         motor.disable()
         ret = self.determine_calibration()
         if not ret:

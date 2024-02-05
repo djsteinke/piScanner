@@ -88,7 +88,7 @@ class CameraConfiguration(object):
             # Find the chess board corners
             ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
 
-            # print(f_name, "found chessboard", ret)
+            print(f_name, "found chessboard", ret)
             if ret:
                 if h == 0:
                     h, w = img.shape[:2]

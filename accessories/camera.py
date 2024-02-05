@@ -50,13 +50,13 @@ def get_rotated_buffer():
 def get_jpg_buffer(x, y):
     img = get_rotated_buffer()
     h, w = img.shape[:2]
-    #x = int(x / 3)
-    #y = int(y / 3)
+    x = int(x / 3)
+    y = int(y / 3)
     img = cv2.line(img, (x, 0), (x, h), (0, 0, 255), 3)
     img = cv2.line(img, (0, y), (w, y), (0, 0, 255), 3)
-    h /= 3
-    w /= 3
-    img = cv2.resize(img, (int(w), int(h)), interpolation=cv2.INTER_AREA)
+    #h /= 3
+    #w /= 3
+    #img = cv2.resize(img, (int(w), int(h)), interpolation=cv2.INTER_AREA)
     ret, buffer = cv2.imencode('.jpg', img)
     if ret:
         return buffer

@@ -222,7 +222,7 @@ class CameraConfiguration(object):
         gray = cv2.undistort(gray, self.mtx, self.dist, None, new_camera_mtx)
         x, y, w, h = roi
         gray = gray[y:y + h, x:x + w]
-
+        cv2.imwrite('ratio_crop.jpg', gray)
         ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
         if ret:
             corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)

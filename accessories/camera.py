@@ -80,7 +80,7 @@ class Camera(object):
 
     def create_configs(self):
         preview_config = self.picam2.create_still_configuration(main={"size": (640, 360), "format": "XBGR8888"})
-        save_config = self.picam2.create_still_configuration(main={"size": (1920, 1080), "format": "XBGR8888"})
+        save_config = self.picam2.create_still_configuration(main={"size": (1920, 1080), "format": "BGR888"}, lores={"size": (640, 360)})
         self.configs['save'] = save_config
         self.configs['preview'] = preview_config
 
@@ -99,12 +99,8 @@ class Camera(object):
     def capture_file(self, f_name):
         self.picam2.capture_file(f_name)
 
-    def capture_cam_buffer(self):
-        data = io.BytesIO()
-        self.picam2.capture_file(data, format='jpeg')
-
     def get_buffer(self):
-        img = self.picam2.capture_array("main")
+        img = self.picam2.capture_array("lores")
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         return img
 

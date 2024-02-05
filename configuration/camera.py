@@ -61,9 +61,10 @@ class CameraConfiguration(object):
     def determine_calibration(self):
         obj_points = []  # 3d point in real world space
         img_points = []  # 2d points in image plane.
-
-        objp = np.zeros((self.nx * self.ny, 3), np.float32)
-        objp[:, :2] = np.mgrid[0:self.nx, 0:self.ny].T.reshape(-1, 2)
+        nx = int(self.nx)
+        ny = int(self.ny)
+        objp = np.zeros((nx * ny, 3), np.float32)
+        objp[:, :2] = np.mgrid[0:nx, 0:ny].T.reshape(-1, 2)
 
         p = calibration_path
 
@@ -85,7 +86,7 @@ class CameraConfiguration(object):
             if gray_pic is None:
                 gray_pic = gray
             # Find the chess board corners
-            ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
+            ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
 
             # print(f_name, "found chessboard", ret)
             if ret:
@@ -114,22 +115,22 @@ class CameraConfiguration(object):
             # gray = cv2.undistort(gray, mtx, dist, None, new_camera_mtx)
 
             # Find the chess board corners
-            ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
+            ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
             if ret:
                 corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
-                px = corners2[(self.ny - 1) * self.nx][0][0]
+                px = corners2[(ny - 1) * nx][0][0]
                 pdx = 0
                 pdy = 0
                 pdt = 0
 
                 x_a = []
                 # print(configuration.corners_ret)
-                for y in range(0, self.ny - 1):
-                    for x in range(0, self.nx - 1):
+                for y in range(0, ny - 1):
+                    for x in range(0, nx - 1):
                         pdt += 1
-                        p = y * self.nx + x
+                        p = y * nx + x
                         pdx += abs(corners2[p + 1][0][0] - corners2[p][0][0])
-                        pdy += abs(corners2[p + self.nx][0][1] - corners2[p][0][1])
+                        pdy += abs(corners2[p + nx][0][1] - corners2[p][0][1])
                 pdx /= pdt
                 pdy /= pdt
                 x_a.append(pdx)
@@ -137,8 +138,8 @@ class CameraConfiguration(object):
                 # Rx, Ry, f, Cx, Cy, Cz
                 if abs(pdx-pdy) < r_diff:
                     r_diff = abs(pdx-pdy)
-                    self.rx = round(pdx, 2)
-                    self.ry = round(pdy, 2)
+                    rx = round(pdx, 2)
+                    ry = round(pdy, 2)
                 print('corners', i, px, pdx, pdy)
 
         if mtx is not None or dist is not None:

@@ -80,7 +80,7 @@ class CameraConfiguration(object):
 
             h, w = img.shape[:2]
             if h < w:
-                img = cv2.rotate(img, cv2.ROTATE_90_CLOCKWISE)
+                img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
                 h, w = img.shape[:2]
 
             if gray_pic is None:

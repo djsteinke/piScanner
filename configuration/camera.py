@@ -88,8 +88,6 @@ class CameraConfiguration(object):
             ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
 
             if ret:
-                if h == 0:
-                    h, w = img.shape[:2]
                 obj_points.append(objp)
 
                 corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
@@ -105,6 +103,8 @@ class CameraConfiguration(object):
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, gray_pic.shape[::-1], None, None)
         #print(mtx, dist, rvecs, tvecs)
         new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w, h), 1, (w, h))
+        self.mtx = mtx
+        self.dist = dist
         cv2.imwrite('corrected.jpg', self.correct_distortion(gray_pic, False))
         cv2.imwrite('corrected_crop.jpg', self.correct_distortion(gray_pic))
         print('calibrationMatrixValues-mtx', cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 3.6288, 6.4512))

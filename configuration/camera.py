@@ -127,6 +127,8 @@ class CameraConfiguration(object):
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             # Should we correct distortion??
             gray = cv2.undistort(gray, mtx, dist, None, new_camera_mtx)
+            x, y, w, h = roi
+            gray = gray[y:y + h, x:x + w]
 
             # Find the chess board corners
             ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)

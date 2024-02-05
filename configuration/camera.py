@@ -89,7 +89,6 @@ class CameraConfiguration(object):
             # Find the chess board corners
             ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
 
-            print(f_name, "found chessboard", ret)
             if ret:
                 if h == 0:
                     h, w = img.shape[:2]
@@ -98,6 +97,7 @@ class CameraConfiguration(object):
                 corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
                 img_points.append(corners2)
 
+            print(f_name, "found chessboard", ret, h, w)
         if gray_pic is None:
             raise Exception('Calibration failed. Chessboard corners could not be found in any image.')
 
@@ -131,7 +131,7 @@ class CameraConfiguration(object):
                     for x in range(0, nx - 1):
                         pdt += 1
                         p = y * nx + x
-                        print(abs(corners2[p + 1][0][0] - corners2[p][0][0]), abs(corners2[p + nx][0][1] - corners2[p][0][1]))
+                        #print(abs(corners2[p + 1][0][0] - corners2[p][0][0]), abs(corners2[p + nx][0][1] - corners2[p][0][1]))
                         pdx += abs(corners2[p + 1][0][0] - corners2[p][0][0])
                         pdy += abs(corners2[p + nx][0][1] - corners2[p][0][1])
                 pdx /= pdt

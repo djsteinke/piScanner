@@ -74,7 +74,7 @@ class Camera(object):
             self.picam2 = Picamera2()
         self.create_configs()
         self.picam2.start_preview(Preview.NULL)
-        self.set_config('preview')
+        self.set_config('save')
         self.picam2.start()
         sleep(1)
 

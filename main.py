@@ -11,7 +11,7 @@ app = Flask(__name__)
 def gen_frames():
     while True:
         try:
-            buffer = get_jpg_buffer(535, 964)
+            buffer = get_jpg_buffer(scanner_config.camera.cx, scanner_config.camera.cy)
             frame = buffer.tobytes()
             yield(b'--frame\r\n'
                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')

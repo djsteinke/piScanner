@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 def gen_frames():
     camera.set_focus_mm(350.0)
-    camera.set_config('main')
+    camera.set_config('save')
     while True:
         try:
             buffer = get_jpg_buffer(535, 964)

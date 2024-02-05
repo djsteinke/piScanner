@@ -50,10 +50,13 @@ def get_rotated_buffer():
 def get_jpg_buffer(x, y):
     img = get_rotated_buffer()
     h, w = img.shape[:2]
-    x = int(x / 3)
-    y = int(y / 3)
-    img = cv2.line(img, (x, 0), (x, h), (0, 0, 255), 1)
-    img = cv2.line(img, (0, y), (w, y), (0, 0, 255), 1)
+    #x = int(x / 3)
+    #y = int(y / 3)
+    img = cv2.line(img, (x, 0), (x, h), (0, 0, 255), 3)
+    img = cv2.line(img, (0, y), (w, y), (0, 0, 255), 3)
+    h /= 3
+    w /= 3
+    cv2.resize(img, (int(w), int(h)), interpolation=cv2.INTER_AREA)
     ret, buffer = cv2.imencode('.jpg', img)
     if ret:
         return buffer
@@ -71,7 +74,7 @@ class Camera(object):
             self.picam2 = Picamera2()
         self.create_configs()
         self.picam2.start_preview(Preview.NULL)
-        self.picam2.align_configuration(self.configs['preview'])
+        self.picam2.align_configuration(self.configs['save_config'])
         self.picam2.start()
         sleep(1)
 

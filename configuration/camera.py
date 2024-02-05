@@ -218,6 +218,7 @@ class CameraConfiguration(object):
             h, w = img.shape[:2]
         print(self.mtx)
         new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(self.mtx, self.dist, (w, h), 1, (w, h))
+        print(new_camera_mtx)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         gray = cv2.undistort(gray, self.mtx, self.dist, None, new_camera_mtx)
         x, y, w, h = roi

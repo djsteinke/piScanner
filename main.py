@@ -76,7 +76,7 @@ def setup_load_setup():
 
 @app.route('/run_calibration', methods=["GET"])
 def run_calibration():
-    scanner_config.camera.run_calibration(stepper)
+    #scanner_config.camera.run_calibration(stepper)
     return jsonify(message=scanner_config.camera.calibration_values(), statusCode=200), 200
 
 

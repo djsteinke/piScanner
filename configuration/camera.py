@@ -73,16 +73,17 @@ class CameraConfiguration(object):
         print(len(images))
 
         gray_pic = None
+        orig_pic = None
         i = 0
         h, w, rx, ry = 0, 0, 0.0, 0.0
         for f_name in images:
             img = cv2.imread(f_name)
-            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-            h, w = gray.shape[:2]
+            h, w = img.shape[:2]
             if h < w:
-                gray = cv2.rotate(gray, cv2.ROTATE_90_COUNTERCLOCKWISE)
-                h, w = gray.shape[:2]
+                img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
+                h, w = img.shape[:2]
+
+            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
             # Find the chess board corners
             ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
@@ -94,6 +95,7 @@ class CameraConfiguration(object):
                 img_points.append(corners2)
                 if gray_pic is None:
                     gray_pic = gray
+                    orig_pic = img
                     #print(corners2)
 
             print(f_name, "found chessboard", ret, h, w)
@@ -106,7 +108,7 @@ class CameraConfiguration(object):
         self.mtx = mtx
         self.dist = dist
 
-        c_img = cv2.line(gray_pic, (round(mtx[0][2]), 0), (round(mtx[0][2]), h), (0, 0, 255), 2)
+        c_img = cv2.line(orig_pic, (round(mtx[0][2]), 0), (round(mtx[0][2]), h), (0, 0, 255), 2)
         c_img = cv2.line(c_img, (0, round(mtx[1][2])), (w, round(mtx[1][2])), (0, 0, 255), 2)
         c_img = self.correct_distortion(c_img, False)
         c_img = cv2.line(c_img, (round(new_camera_mtx[0][2]), 0), (round(new_camera_mtx[0][2]), h), (0, 255, 0), 1)

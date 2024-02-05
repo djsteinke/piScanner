@@ -61,8 +61,9 @@ class CameraConfiguration(object):
     def determine_calibration(self):
         obj_points = []  # 3d point in real world space
         img_points = []  # 2d points in image plane.
-        nx = int(self.nx)
-        ny = int(self.ny)
+        nx = self.nx
+        ny = self.ny
+        print(nx, ny)
         objp = np.zeros((nx * ny, 3), np.float32)
         objp[:, :2] = np.mgrid[0:nx, 0:ny].T.reshape(-1, 2)
 
@@ -130,6 +131,7 @@ class CameraConfiguration(object):
                     for x in range(0, nx - 1):
                         pdt += 1
                         p = y * nx + x
+                        print(abs(corners2[p + 1][0][0] - corners2[p][0][0]), abs(corners2[p + nx][0][1] - corners2[p][0][1]))
                         pdx += abs(corners2[p + 1][0][0] - corners2[p][0][0])
                         pdy += abs(corners2[p + nx][0][1] - corners2[p][0][1])
                 pdx /= pdt
@@ -152,8 +154,8 @@ class CameraConfiguration(object):
             self.f = round((mtx[0][0] + mtx[1][1])/2.0, 2)
             self.f_mm = f
             self.r = round(self.grid_size * f, 1)
-            self.cx = round(mtx[0][2])
-            self.cy = round(mtx[1][2])
+            self.cx = round(mtx[1][2])
+            self.cy = round(mtx[0][2])
             # self.cz = round(self.f / f, 1)
             self.mtx = mtx
             self.dist = dist

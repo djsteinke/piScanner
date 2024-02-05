@@ -216,13 +216,13 @@ class CameraConfiguration(object):
         if h < w:
             img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
             h, w = img.shape[:2]
-        print(self.mtx)
+        print(w, h, self.mtx)
         new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(self.mtx, self.dist, (w, h), 1, (w, h))
-        print(new_camera_mtx)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         gray = cv2.undistort(gray, self.mtx, self.dist, None, new_camera_mtx)
         x, y, w, h = roi
         gray = gray[y:y + h, x:x + w]
+        print(w, h, new_camera_mtx)
         cv2.imwrite('ratio_crop.jpg', gray)
         ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
         if ret:

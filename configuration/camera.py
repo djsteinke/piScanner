@@ -122,13 +122,16 @@ class CameraConfiguration(object):
         #fov_x, fov_y, f, pp, ar = cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 6.4512, 3.6288)
         fov_x, fov_y, f, pp, ar = cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 3.6288, 6.4512)
         r_diff = 100.0
+        r_x, r_y, r_w, r_h = roi
         for f_name in images:
             img = cv2.imread(f_name)
+            h, w = img.shape[:2]
+            if h < w:
+                img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             # Should we correct distortion??
             gray = cv2.undistort(gray, mtx, dist, None, new_camera_mtx)
-            x, y, w, h = roi
-            gray = gray[y:y + h, x:x + w]
+            gray = gray[r_y:r_y + r_h, r_x:r_x + r_w]
 
             # Find the chess board corners
             ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)

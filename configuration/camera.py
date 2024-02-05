@@ -96,13 +96,14 @@ class CameraConfiguration(object):
                 img_points.append(corners2)
                 if gray_pic is None:
                     gray_pic = gray
-                    print(corners2)
+                    #print(corners2)
 
             print(f_name, "found chessboard", ret, h, w)
         if gray_pic is None:
             raise Exception('Calibration failed. Chessboard corners could not be found in any image.')
 
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, gray_pic.shape[::-1], None, None)
+        print(mtx, dist, rvecs, tvecs)
         new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w, h), 1, (w, h))
 
         print('calibrationMatrixValues-mtx', cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 6.4512, 3.6288))

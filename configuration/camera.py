@@ -151,8 +151,8 @@ class CameraConfiguration(object):
             self.f = round((mtx[0][0] + mtx[1][1])/2.0, 2)
             self.f_mm = f
             self.r = round(self.grid_size * f, 1)
-            self.cx = round(mtx[0][2], 2)
-            self.cy = round(mtx[1][2], 2)
+            self.cx = round(mtx[0][2])
+            self.cy = round(mtx[1][2])
             # self.cz = round(self.f / f, 1)
             self.mtx = mtx
             self.dist = dist

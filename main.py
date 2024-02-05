@@ -1,7 +1,7 @@
 from flask import Flask, render_template, Response, jsonify, request
 from time import sleep
 import json
-from accessories.camera import camera, get_jpg_buffer
+from accessories.camera import camera, get_jpg_buffer, get_full_jpg_buffer
 from configuration.configuration import ScannerConfiguration
 from accessories.stepper_motor import stepper
 
@@ -13,6 +13,18 @@ def gen_frames():
     while True:
         try:
             buffer = get_jpg_buffer(scanner_config.camera.cx, scanner_config.camera.cy)
+            frame = buffer.tobytes()
+            yield(b'--frame\r\n'
+                  b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+        except:
+            sleep(1)
+            yield b''
+
+
+def gen_full_frames():
+    while True:
+        try:
+            buffer = get_full_jpg_buffer(scanner_config.camera.cx, scanner_config.camera.cy)
             frame = buffer.tobytes()
             yield(b'--frame\r\n'
                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
@@ -66,6 +78,11 @@ def setup_frame():
 @app.route('/video_feed')
 def video_feed():
     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
+@app.route('/video_feed_full')
+def video_feed_full():
+    return Response(gen_full_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 @app.route('/load_setup', methods=["GET"])

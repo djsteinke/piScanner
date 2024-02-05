@@ -37,10 +37,19 @@ def capture_file_cam(f_name):
     camera.capture_file(f_name)
 
 
-def get_rotated_buffer():
+def get_rotated_buffer(profile="lores"):
     img = camera.get_buffer()
     img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
     return img
+
+
+def get_full_jpg_buffer(x, y):
+    img = get_rotated_buffer("main")
+    h, w = img.shape[:2]
+    img = cv2.line(img, (x, 0), (x, h), (0, 0, 255), 1)
+    img = cv2.line(img, (0, y), (w, y), (0, 0, 255), 1)
+    ret, buffer = cv2.imencode('.jpg', img)
+    return buffer
 
 
 def get_jpg_buffer(x, y):
@@ -96,8 +105,8 @@ class Camera(object):
     def capture_file(self, f_name):
         self.picam2.capture_file(f_name)
 
-    def get_buffer(self):
-        img = self.picam2.capture_array("lores")
+    def get_buffer(self, profile="lores"):
+        img = self.picam2.capture_array(profile)
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         return img
 

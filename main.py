@@ -74,7 +74,7 @@ def setup_load_setup():
     return jsonify(message=json.dumps({}), statusCode=200), 200
 
 
-@app.route('/run_calibration', methods=["GET"])
+@app.route('/run_calibration', methods=["GET", "POST"])
 def run_calibration():
     #scanner_config.camera.run_calibration(stepper)
     return jsonify(message=scanner_config.camera.calibration_values(), statusCode=200), 200

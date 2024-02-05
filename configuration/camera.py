@@ -216,7 +216,7 @@ class CameraConfiguration(object):
         if h < w:
             img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
             h, w = img.shape[:2]
-
+        print(self.mtx)
         new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(self.mtx, self.dist, (w, h), 1, (w, h))
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         gray = cv2.undistort(gray, self.mtx, self.dist, None, new_camera_mtx)
@@ -234,8 +234,8 @@ class CameraConfiguration(object):
                     pdt += 1
                     p = y * self.nx + x
                     # print(abs(corners2[p + 1][0][0] - corners2[p][0][0]), abs(corners2[p + nx][0][1] - corners2[p][0][1]))
-                    pdx += abs(corners2[p + self.nx][0][0] - corners2[p][0][0])
-                    pdy += abs(corners2[p + 1][0][1] - corners2[p][0][1])
+                    pdx += abs(corners2[p + 1][0][0] - corners2[p][0][0])
+                    pdy += abs(corners2[p + self.nx][0][1] - corners2[p][0][1])
             pdx /= pdt
             pdy /= pdt
             print('corners', pdt, pdx, pdy)

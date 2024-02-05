@@ -103,12 +103,13 @@ class CameraConfiguration(object):
             raise Exception('Calibration failed. Chessboard corners could not be found in any image.')
 
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, gray_pic.shape[::-1], None, None)
-        print(mtx, dist, rvecs, tvecs)
+        #print(mtx, dist, rvecs, tvecs)
         new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w, h), 1, (w, h))
 
         print('calibrationMatrixValues-mtx', cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 6.4512, 3.6288))
         print('calibrationMatrixValues-new_cam', cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 6.4512, 3.6288))
-        print(mtx, new_camera_mtx)
+        print(mtx)
+        print(roi, new_camera_mtx)
         #fov_x, fov_y, f, pp, ar = cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 6.4512, 3.6288)
         fov_x, fov_y, f, pp, ar = cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 6.4512, 3.6288)
         r_diff = 100.0

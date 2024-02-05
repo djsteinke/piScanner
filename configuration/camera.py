@@ -105,14 +105,20 @@ class CameraConfiguration(object):
         new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w, h), 1, (w, h))
         self.mtx = mtx
         self.dist = dist
-        cv2.imwrite('corrected.jpg', self.correct_distortion(gray_pic, False))
+
+        c_img = cv2.line(gray_pic, (mtx[0][2], 0), (mtx[0][2], h), (0, 0, 255), 2)
+        c_img = cv2.line(c_img, (0, mtx[1][2]), (w, mtx[1][2]), (0, 0, 255), 2)
+        c_img = self.correct_distortion(c_img, False)
+        c_img = cv2.line(c_img, (new_camera_mtx[0][2], 0), (new_camera_mtx[0][2], h), (0, 255, 0), 1)
+        c_img = cv2.line(c_img, (0, new_camera_mtx[1][2]), (w, new_camera_mtx[1][2]), (0, 255, 0), 1)
+        cv2.imwrite('corrected.jpg', c_img)
         cv2.imwrite('corrected_crop.jpg', self.correct_distortion(gray_pic))
         print('calibrationMatrixValues-mtx', cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 3.6288, 6.4512))
         print('calibrationMatrixValues-new_cam', cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 3.6288, 6.4512))
         print(mtx)
         print(roi, new_camera_mtx)
         #fov_x, fov_y, f, pp, ar = cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 6.4512, 3.6288)
-        fov_x, fov_y, f, pp, ar = cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 6.4512, 3.6288)
+        fov_x, fov_y, f, pp, ar = cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 3.6288, 6.4512)
         r_diff = 100.0
         for f_name in images:
             img = cv2.imread(f_name)

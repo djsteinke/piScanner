@@ -106,7 +106,8 @@ class CameraConfiguration(object):
         print('calibrationMatrixValues-mtx', cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 6.4512, 3.6288))
         print('calibrationMatrixValues-new_cam', cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 6.4512, 3.6288))
         print(mtx, new_camera_mtx)
-        fov_x, fov_y, f, pp, ar = cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 6.4512, 3.6288)
+        #fov_x, fov_y, f, pp, ar = cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 6.4512, 3.6288)
+        fov_x, fov_y, f, pp, ar = cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 6.4512, 3.6288)
         r_diff = 100.0
         for f_name in images:
             img = cv2.imread(f_name)
@@ -140,7 +141,7 @@ class CameraConfiguration(object):
                     r_diff = abs(pdx-pdy)
                     rx = round(pdx, 2)
                     ry = round(pdy, 2)
-                print('corners', i, px, pdx, pdy)
+                print('corners', i, pdt, pdx, pdy)
 
         if mtx is not None or dist is not None:
             """

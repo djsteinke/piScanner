@@ -38,7 +38,7 @@ def capture_file_cam(f_name):
 
 
 def get_rotated_buffer(profile="lores"):
-    img = camera.get_buffer()
+    img = camera.get_buffer(profile)
     img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
     return img
 

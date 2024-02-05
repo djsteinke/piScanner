@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 
 def gen_frames():
-    camera.set_focus_mm(350.0)
+    camera.set_focus_mm(scanner_config.camera.cz)
     camera.set_config('save')
     while True:
         try:
@@ -77,6 +77,7 @@ def setup_load_setup():
 @app.route('/run_calibration', methods=["GET", "POST"])
 def run_calibration():
     scanner_config.camera.run_calibration(stepper)
+    scanner_config.save()
     return jsonify(message=scanner_config.camera.calibration_values(), statusCode=200), 200
 
 

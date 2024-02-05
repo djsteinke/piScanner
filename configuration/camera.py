@@ -153,7 +153,7 @@ class CameraConfiguration(object):
             self.r = round(self.grid_size * f, 1)
             self.cx = round(mtx[0][2], 2)
             self.cy = round(mtx[1][2], 2)
-            self.cz = round(self.f / f, 1)
+            # self.cz = round(self.f / f, 1)
             self.mtx = mtx
             self.dist = dist
             print(self.calibration_values())

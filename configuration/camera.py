@@ -74,7 +74,7 @@ class CameraConfiguration(object):
 
         gray_pic = None
         i = 0
-        h, w = 0, 0
+        h, w, rx, ry = 0, 0, 0.0, 0.0
         for f_name in images:
             img = cv2.imread(f_name)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -155,6 +155,8 @@ class CameraConfiguration(object):
             self.f = round((mtx[0][0] + mtx[1][1])/2.0, 2)
             self.f_mm = f
             self.r = round(self.grid_size * f, 1)
+            self.rx = rx
+            self.ry = ry
             self.cx = round(mtx[1][2])
             self.cy = round(mtx[0][2])
             # self.cz = round(self.f / f, 1)

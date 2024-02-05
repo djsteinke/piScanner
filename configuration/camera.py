@@ -156,6 +156,7 @@ class CameraConfiguration(object):
             self.cz = round(self.f / f, 1)
             self.mtx = mtx
             self.dist = dist
+            print(self.calibration_values())
             return True
         return False
 

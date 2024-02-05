@@ -1,3 +1,4 @@
+import io
 import subprocess
 import cv2
 from time import sleep
@@ -96,8 +97,12 @@ class Camera(object):
     def capture_file(self, f_name):
         self.picam2.capture_file(f_name)
 
+    def capture_cam_buffer(self):
+        data = io.BytesIO()
+        self.picam2.capture_file(data, format='jpeg')
+
     def get_buffer(self):
-        img = self.picam2.capture_array()
+        img = self.picam2.capture_array("main")
         img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         return img
 

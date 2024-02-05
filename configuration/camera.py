@@ -9,14 +9,6 @@ import time
 from accessories.stepper_motor import StepperMotor
 from scanner_paths import calibration_path
 
-pickle_file = 'configuration.p'
-
-grid_size = 14.7
-nx = 6              # nx: number of grids in x-axis
-ny = 9              # ny: number of grids in y-axis
-
-objp = np.zeros((nx * ny, 3), np.float32)
-objp[:, :2] = np.mgrid[0:nx, 0:ny].T.reshape(-1, 2)
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
 out = True
@@ -33,11 +25,23 @@ class CameraConfiguration(object):
         self.cx = 0.0
         self.cy = 0.0
         self.cz = 0.0
-        self.grid_size = grid_size
-        self.nx = nx
-        self.ny = ny
+        self.grid_size = 15
+        self.nx = 6
+        self.ny = 9
         self.mtx = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
         self.dist = []
+
+    def calibration_values(self):
+        return {
+            "rx": self.rx,
+            "ry": self.ry,
+            "r": self.r,
+            "f": self.f,
+            "f_mm": self.f_mm,
+            "cx": self.cx,
+            "cy": self.cy,
+            "cz": self.cz
+        }
 
     def correct_distortion(self, img, crop=True):
         h, w = img.shape[:2]
@@ -57,6 +61,9 @@ class CameraConfiguration(object):
     def determine_calibration(self):
         obj_points = []  # 3d point in real world space
         img_points = []  # 2d points in image plane.
+
+        objp = np.zeros((self.nx * self.ny, 3), np.float32)
+        objp[:, :2] = np.mgrid[0:self.nx, 0:self.ny].T.reshape(-1, 2)
 
         p = calibration_path
 
@@ -78,7 +85,7 @@ class CameraConfiguration(object):
             if gray_pic is None:
                 gray_pic = gray
             # Find the chess board corners
-            ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
+            ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
 
             # print(f_name, "found chessboard", ret)
             if ret:
@@ -107,22 +114,22 @@ class CameraConfiguration(object):
             # gray = cv2.undistort(gray, mtx, dist, None, new_camera_mtx)
 
             # Find the chess board corners
-            ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
+            ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
             if ret:
                 corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
-                px = corners2[(ny - 1) * nx][0][0]
+                px = corners2[(self.ny - 1) * self.nx][0][0]
                 pdx = 0
                 pdy = 0
                 pdt = 0
 
                 x_a = []
                 # print(configuration.corners_ret)
-                for y in range(0, ny - 1):
-                    for x in range(0, nx - 1):
+                for y in range(0, self.ny - 1):
+                    for x in range(0, self.nx - 1):
                         pdt += 1
-                        p = y * nx + x
+                        p = y * self.nx + x
                         pdx += abs(corners2[p + 1][0][0] - corners2[p][0][0])
-                        pdy += abs(corners2[p + nx][0][1] - corners2[p][0][1])
+                        pdy += abs(corners2[p + self.nx][0][1] - corners2[p][0][1])
                 pdx /= pdt
                 pdy /= pdt
                 x_a.append(pdx)
@@ -142,19 +149,14 @@ class CameraConfiguration(object):
             """
             self.f = round((mtx[0][0] + mtx[1][1])/2.0, 2)
             self.f_mm = f
-            self.r = round(grid_size * f, 1)
+            self.r = round(self.grid_size * f, 1)
             self.cx = round(mtx[0][2], 2)
             self.cy = round(mtx[1][2], 2)
             self.cz = round(self.f / f, 1)
             self.mtx = mtx
             self.dist = dist
-            self.save_calibration()
             return True
         return False
-
-    def save_calibration(self):
-        source = os.path.join(calibration_path, pickle_file)
-        pickle.dump(self, open(source, "wb"))
 
     def run_calibration(self, motor: StepperMotor):
         motor.enable()

@@ -59,9 +59,7 @@ def setup_frame():
         scanner_config.stepper_motor.enable_pin = request.form['input_enable']
         scanner_config.stepper_motor.dir_pin = request.form['input_direction']
         scanner_config.stepper_motor.pulse_pin = request.form['input_pulse']
-    else:
-        var = 1
-    scanner_config.save()
+        scanner_config.save()
 
     return render_template('setup.html', config=scanner_config, error=error)
 
@@ -76,29 +74,10 @@ def setup_load_setup():
     return jsonify(message=json.dumps({}), statusCode=200), 200
 
 
-@app.route('/save_setup', methods=["POST"])
-def setup_save_click():
-    content_type = request.headers.get('Content-Type')
-    if content_type == 'application/json':
-        setup = request.json
-        scanner_config.camera.f = setup['f']
-        scanner_config.camera.cx = setup['cx']
-        scanner_config.camera.cy = setup['cy']
-        scanner_config.camera.cz = setup['cz']
-        scanner_config.camera.f_mm = setup['f_mm']
-        scanner_config.camera.save_calibration()
-        # save_file('setup.json', json.dumps(setup))
-        return jsonify(message='Success', statusCode=200), 200
-    else:
-        return jsonify(message='Content-Type not supported!', statusCode=400), 400
-
-
 @app.route('/run_calibration', methods=["GET"])
 def run_calibration():
     scanner_config.camera.run_calibration(stepper)
-    # TODO postback to set all updated values
-    return jsonify(message={}, statusCode=200), 200
-
+    return jsonify(message=scanner_config.camera.calibration_values(), statusCode=200), 200
 
 
 def save_file(file_path, data):

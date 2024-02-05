@@ -82,7 +82,7 @@ class CameraConfiguration(object):
             h, w = gray.shape[:2]
             if h < w:
                 gray = cv2.rotate(gray, cv2.ROTATE_90_COUNTERCLOCKWISE)
-                h, w = img.shape[:2]
+                h, w = gray.shape[:2]
 
             # Find the chess board corners
             ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
@@ -107,8 +107,8 @@ class CameraConfiguration(object):
         new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w, h), 1, (w, h))
         cv2.imwrite('corrected.jpg', self.correct_distortion(gray_pic, False))
         cv2.imwrite('corrected_crop.jpg', self.correct_distortion(gray_pic))
-        print('calibrationMatrixValues-mtx', cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 6.4512, 3.6288))
-        print('calibrationMatrixValues-new_cam', cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 6.4512, 3.6288))
+        print('calibrationMatrixValues-mtx', cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 3.6288, 6.4512))
+        print('calibrationMatrixValues-new_cam', cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 3.6288, 6.4512))
         print(mtx)
         print(roi, new_camera_mtx)
         #fov_x, fov_y, f, pp, ar = cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 6.4512, 3.6288)

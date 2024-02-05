@@ -9,6 +9,7 @@ app = Flask(__name__)
 
 
 def gen_frames():
+    camera.set_focus_mm(scanner_config.camera.cz)
     while True:
         try:
             buffer = get_jpg_buffer(scanner_config.camera.cx, scanner_config.camera.cy)
@@ -96,6 +97,5 @@ def load_setup():
 if __name__ == '__main__':
     scanner_config = ScannerConfiguration.load()
     camera.start()
-    camera.set_focus_mm(scanner_config.camera.cz)
     app.run(debug=False, host="192.168.0.154", port=3100)
 

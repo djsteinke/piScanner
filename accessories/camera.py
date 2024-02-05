@@ -24,10 +24,6 @@ def _hdr(enable):
     subprocess.run(['v4l2-ctl', '--set-ctrl', f'wide_dynamic_range={enable}', '-d', '/dev/v4l-subdev0'])
 
 
-def set_focus_mm(distance):
-    camera.set_focus_mm(distance)
-
-
 def set_config(value):
     camera.set_config(value)
 

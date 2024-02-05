@@ -84,8 +84,6 @@ class CameraConfiguration(object):
                 img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
                 h, w = img.shape[:2]
 
-            if gray_pic is None:
-                gray_pic = gray
             # Find the chess board corners
             ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
 
@@ -96,6 +94,9 @@ class CameraConfiguration(object):
 
                 corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
                 img_points.append(corners2)
+                if gray_pic is None:
+                    gray_pic = gray
+                    print(corners2)
 
             print(f_name, "found chessboard", ret, h, w)
         if gray_pic is None:

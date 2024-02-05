@@ -42,23 +42,23 @@ def index():
 def setup_frame():
     error = None
     if request.method == 'POST':
-        scanner_config.camera.f = request.form['input_f_px']
-        scanner_config.camera.f_mm = request.form['input_f_mm']
-        scanner_config.camera.cx = request.form['input_cx']
-        scanner_config.camera.cy = request.form['input_cy']
-        scanner_config.camera.cz = request.form['input_cz']
-        scanner_config.right_laser.pin = request.form['input_right_pin']
-        scanner_config.right_laser.angle = request.form['input_right_angle']
-        scanner_config.left_laser.pin = request.form['input_left_pin']
-        scanner_config.left_laser.angle = request.form['input_left_angle']
-        scanner_config.camera.grid_size = request.form['input_block_size']
-        scanner_config.camera.nx = request.form['input_x_cnt']
-        scanner_config.camera.ny = request.form['input_y_cnt']
-        scanner_config.stepper_motor.micro_steps = request.form['input_micro_steps']
-        scanner_config.stepper_motor.step_size = request.form['input_step_size']
-        scanner_config.stepper_motor.enable_pin = request.form['input_enable']
-        scanner_config.stepper_motor.dir_pin = request.form['input_direction']
-        scanner_config.stepper_motor.pulse_pin = request.form['input_pulse']
+        scanner_config.camera.f = float(request.form['input_f_px'])
+        scanner_config.camera.f_mm = float(request.form['input_f_mm'])
+        scanner_config.camera.cx = int(request.form['input_cx'])
+        scanner_config.camera.cy = int(request.form['input_cy'])
+        scanner_config.camera.cz = float(request.form['input_cz'])
+        scanner_config.right_laser.pin = int(request.form['input_right_pin'])
+        scanner_config.right_laser.angle = float(request.form['input_right_angle'])
+        scanner_config.left_laser.pin = int(request.form['input_left_pin'])
+        scanner_config.left_laser.angle = float(request.form['input_left_angle'])
+        scanner_config.camera.grid_size = float(request.form['input_block_size'])
+        scanner_config.camera.nx = int(request.form['input_x_cnt'])
+        scanner_config.camera.ny = int(request.form['input_y_cnt'])
+        scanner_config.stepper_motor.micro_steps = int(request.form['input_micro_steps'])
+        scanner_config.stepper_motor.step_size = float(request.form['input_step_size'])
+        scanner_config.stepper_motor.enable_pin = int(request.form['input_enable'])
+        scanner_config.stepper_motor.dir_pin = int(request.form['input_direction'])
+        scanner_config.stepper_motor.pulse_pin = int(request.form['input_pulse'])
         scanner_config.save()
 
     return render_template('setup.html', config=scanner_config, error=error)

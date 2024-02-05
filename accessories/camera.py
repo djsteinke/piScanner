@@ -76,8 +76,7 @@ class Camera(object):
         sleep(1)
 
     def create_configs(self):
-        preview_config = self.picam2.create_still_configuration(main={"size": (640, 360), "format": "XBGR8888"},
-                                                                lores={"size": (320, 180)}, display="main")
+        preview_config = self.picam2.create_still_configuration(main={"size": (640, 360), "format": "XBGR8888"})
         save_config = self.picam2.create_still_configuration(main={"size": (1920, 1080), "format": "XBGR8888"})
         self.configs['save'] = save_config
         self.configs['preview'] = preview_config

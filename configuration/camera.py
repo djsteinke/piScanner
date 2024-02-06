@@ -159,11 +159,11 @@ class CameraConfiguration(object):
         """
 
         if mtx is not None or dist is not None and new_camera_mtx is not None:
-            self.fx = round(new_camera_mtx[0][0], 3)
-            self.fy = round(new_camera_mtx[1][1], 3)
+            self.fx = round(new_camera_mtx[0][0], 2)
+            self.fy = round(new_camera_mtx[1][1], 2)
             self.f = round(f, 3)
-            self.cx = round(new_camera_mtx[0][2], 3)
-            self.cy = round(new_camera_mtx[1][2], 3)
+            self.cx = round(new_camera_mtx[0][2], 2)
+            self.cy = round(new_camera_mtx[1][2], 2)
 
             self.mtx = mtx
             self.dist = dist

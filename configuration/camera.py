@@ -7,7 +7,7 @@ import accessories.camera as camera
 import time
 import math
 
-from accessories.stepper_motor import StepperMotor
+from accessories.stepper_motor import StepperMotor, stepper as motor
 from scanner_paths import calibration_path
 
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
@@ -181,7 +181,7 @@ class CameraConfiguration(object):
 
     def run_calibration(self, motor: StepperMotor):
         motor.enable()
-        steps = 18
+        steps = 19
         degrees = 5
         motor.rotate(45, True)
         time.sleep(0.8)
@@ -204,13 +204,14 @@ class CameraConfiguration(object):
         if not ret:
             print('configuration failed.')
 
-    def determine_c_z(self, motor: StepperMotor):
+    def determine_c_z(self):
         camera.capture_file_cam(f'%s/cz_01.jpg' % calibration_path)
         print('pic 1 captured')
         motor.rotate(45, False)
         print('rotated')
         camera.capture_file_cam(f'%s/cz_02.jpg' % calibration_path)
         print('pic 2 captured')
+        motor.rotate(45, True)
 
         img = cv2.imread(f'%s/cz_01.jpg' % calibration_path)
         h, w = img.shape[:2]

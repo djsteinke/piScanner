@@ -315,3 +315,14 @@ class CameraConfiguration(object):
             self.rx = pdx
             self.ry = pdy
             print('corners', pdt, pdx, pdy)
+
+    def processing_file(self, file_name):
+        img = cv2.imread(file_name)
+        h, w = img.shape[:2]
+        if h < w:
+            img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
+            h, w = img.shape[:2]
+        new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(self.mtx, self.dist, (w, h), 1, (w, h))
+        img = cv2.undistort(img, self.mtx, self.dist, None, new_camera_mtx)
+        cv2.imwrite(file_name, img)
+        print(roi)

@@ -72,26 +72,33 @@
             margin: 15px 0px 0px 0px !important;
         }
     </style>
-
+    <script type=text/javascript>
+        function switch_to_scan() {
+            $('#setup_iframe').hide()
+            $('#scan_iframe).show()
+        }
+        function switch_to_setup() {
+            $('#scan_iframe).hide()
+            $('#setup_iframe').show()
+        }
+    </script>
 </head>
 <body>
     <div class="base" style="text-align: center;">
         <h1>Pi Scanner</h1>
     </div>
     <div id="div-tabs" class="tabs">
-        <button id="btn-camera-setup" class="tab first active">
+        <button id="btn-camera-setup" class="tab first active" onclick="switch_to_setup()">
             Setup
         </button>
-        <button id="btn-scanner" class="tab other">
+        <button id="btn-scanner" class="tab other" onclick="switch_to_scan()">
             Scan
         </button>
     </div>
     <div class="main-container">
         <div class="container setup" style="">
-            <iframe src="{{ url_for('setup_frame') }}" title="Setup" style="width: 100%; height: 100%; border: 1px none gray;"></iframe>
-            <div class="results">
-                Results
-            </div>
+            <iframe id="setup_iframe" src="{{ url_for('setup_frame') }}" title="Setup" style="width: 100%; height: 100%; border: 1px none gray;"></iframe>
+            <iframe id="scan_iframe" src="{{ url_for('scan_frame') }}" title="Setup" style="display: none; width: 100%; height: 100%; border: 1px none gray;"></iframe>
         </div>
         <div class="container video" style="float: right;">
             <div class="row">

@@ -48,6 +48,11 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/scan', methods=['POST', 'GET'])
+def scan_frame():
+    return render_template('scan.html', config=scanner_config)
+
+
 @app.route('/setup', methods=['POST', 'GET'])
 def setup_frame():
     error = None

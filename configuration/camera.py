@@ -5,6 +5,7 @@ import cv2
 import glob
 import accessories.camera as camera
 import time
+import math
 
 from accessories.stepper_motor import StepperMotor
 from scanner_paths import calibration_path
@@ -123,6 +124,7 @@ class CameraConfiguration(object):
         #fov_x, fov_y, f, pp, ar = cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 6.4512, 3.6288)
         fov_x, fov_y, f, pp, ar = cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 3.6288, 6.4512)
         r_diff = 100.0
+        r_x, r_y, r_w, r_h = roi
         for f_name in images:
             img = cv2.imread(f_name)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)

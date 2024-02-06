@@ -253,7 +253,6 @@ class CameraConfiguration(object):
                 for x in range(0, self.nx - 1):
                     pdt += 1
                     p = y * self.nx + x
-                    # print(abs(corners2[p + 1][0][0] - corners2[p][0][0]), abs(corners2[p + nx][0][1] - corners2[p][0][1]))
                     pdx += abs(corners2[p + 1][0][0] - corners2[p][0][0])
                     pdy += abs(corners2[p + self.nx][0][1] - corners2[p][0][1])
             pdx /= pdt

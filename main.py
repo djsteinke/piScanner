@@ -1,7 +1,7 @@
 from flask import Flask, render_template, Response, jsonify, request
 from time import sleep
 import json
-from accessories.camera import camera, get_jpg_buffer
+from accessories.camera import camera, get_jpg_buffer, get_full_jpg_buffer
 from configuration.configuration import ScannerConfiguration
 from accessories.stepper_motor import stepper
 
@@ -9,11 +9,22 @@ app = Flask(__name__)
 
 
 def gen_frames():
-    camera.set_focus_mm(350.0)
-    camera.set_config('preview')
+    camera.set_focus_mm(scanner_config.camera.cz)
     while True:
         try:
-            buffer = get_jpg_buffer(535, 964)
+            buffer = get_jpg_buffer(scanner_config.camera.cx, scanner_config.camera.cy)
+            frame = buffer.tobytes()
+            yield(b'--frame\r\n'
+                  b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+        except:
+            sleep(1)
+            yield b''
+
+
+def gen_full_frames():
+    while True:
+        try:
+            buffer = get_full_jpg_buffer(scanner_config.camera.cx, scanner_config.camera.cy)
             frame = buffer.tobytes()
             yield(b'--frame\r\n'
                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
@@ -69,6 +80,11 @@ def video_feed():
     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
+@app.route('/video_feed_full')
+def video_feed_full():
+    return Response(gen_full_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
 @app.route('/load_setup', methods=["GET"])
 def setup_load_setup():
     return jsonify(message=json.dumps({}), statusCode=200), 200
@@ -76,7 +92,8 @@ def setup_load_setup():
 
 @app.route('/run_calibration', methods=["GET", "POST"])
 def run_calibration():
-    #scanner_config.camera.run_calibration(stepper)
+    scanner_config.camera.run_calibration(stepper)
+    scanner_config.save()
     return jsonify(message=scanner_config.camera.calibration_values(), statusCode=200), 200
 
 

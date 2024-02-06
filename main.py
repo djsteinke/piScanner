@@ -3,7 +3,6 @@ from time import sleep
 import json
 from accessories.camera import camera, get_jpg_buffer, get_full_jpg_buffer
 from configuration.configuration import ScannerConfiguration
-from accessories.stepper_motor import stepper
 
 app = Flask(__name__)
 
@@ -53,11 +52,12 @@ def index():
 def setup_frame():
     error = None
     if request.method == 'POST':
-        scanner_config.camera.f = float(request.form['input_f_px'])
-        scanner_config.camera.f_mm = float(request.form['input_f_mm'])
+        scanner_config.camera.f = float(request.form['input_f_mm'])
+        #scanner_config.camera.fx = float(request.form['input_f_mm'])
+        #scanner_config.camera.fy = float(request.form['input_f_mm'])
         scanner_config.camera.cx = int(request.form['input_cx'])
         scanner_config.camera.cy = int(request.form['input_cy'])
-        scanner_config.camera.cz = float(request.form['input_cz'])
+        #scanner_config.camera.cz = float(request.form['input_cz'])
         scanner_config.right_laser.pin = int(request.form['input_right_pin'])
         scanner_config.right_laser.angle = float(request.form['input_right_angle'])
         scanner_config.left_laser.pin = int(request.form['input_left_pin'])

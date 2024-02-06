@@ -18,44 +18,41 @@ printed = False
 
 class CameraConfiguration(object):
     def __init__(self, calculate=False):
-        self.rx: float = 0.0
-        self.ry: float = 0.0
-        self.r: float = 0.0
+        #self.rx: float = 0.0
+        #self.ry: float = 0.0
+        #self.r: float = 0.0
+        #self.f: float = 0.0
+        self.fx: float = 0.0
+        self.fy: float = 0.0
         self.f: float = 0.0
-        self.f_mm: float = 0.0
-        self.cx: int = 0
-        self.cy: int = 0
-        self.cz: float = 0.0
+        self.cx: float = 0.0
+        self.cy: float = 0.0
+        #self.cz: float = 0.0
         self.grid_size: float = 15
         self.nx: int = 6
         self.ny: int = 9
         self.mtx = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
         self.dist = []
+        self.new_camera_mtx = []
+        self.roi = []
 
     def calibration_values(self):
         return {
-            "rx": self.rx,
-            "ry": self.ry,
-            "r": self.r,
+            "fx": self.fx,
+            "fy": self.fy,
             "f": self.f,
-            "f_mm": self.f_mm,
             "cx": self.cx,
-            "cy": self.cy,
-            "cz": self.cz
+            "cy": self.cy
         }
 
-    def correct_distortion(self, img, crop=True):
-        h, w = img.shape[:2]
-
-        new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(self.mtx, self.dist, (w, h), 1, (w, h))
-        undistorted_img = cv2.undistort(img, self.mtx, self.dist, None, new_camera_mtx)
-
-        if crop:
-            x, y, w, h = roi
+    def correct_distortion(self, img, crop=False):
+        undistorted_img = cv2.undistort(img, self.mtx, self.dist, None, self.new_camera_mtx)
+        if crop and len(self.roi) == 4:
+            x, y, w, h = self.roi
             undistorted_img = undistorted_img[y:y + h, x:x + w]
         return undistorted_img
 
-    def correct_distortion_file(self, img_path, crop=True):
+    def correct_crop_file(self, img_path, crop=True):
         img = cv2.imread(img_path)
         return self.correct_distortion(img, crop)
 
@@ -74,8 +71,6 @@ class CameraConfiguration(object):
         print(len(images))
 
         gray_pic = None
-        orig_pic = None
-        i = 0
         h, w, rx, ry = 0, 0, 0.0, 0.0
         for f_name in images:
             img = cv2.imread(f_name)
@@ -86,10 +81,8 @@ class CameraConfiguration(object):
 
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-            # Find the chess board corners
             ret, corners = cv2.findChessboardCorners(gray, (nx, ny), None)
 
-            # print(f_name, "found chessboard", ret)
             if ret:
                 obj_points.append(objp)
 
@@ -97,9 +90,6 @@ class CameraConfiguration(object):
                 img_points.append(corners2)
                 if gray_pic is None:
                     gray_pic = gray
-                    orig_pic = img
-                    #print(corners2)
-
             print(f_name, "found chessboard", ret, h, w)
         if gray_pic is None:
             raise Exception('Calibration failed. Chessboard corners could not be found in any image.')
@@ -107,6 +97,9 @@ class CameraConfiguration(object):
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, gray_pic.shape[::-1], None, None)
         new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w, h), 1, (w, h))
 
+        fov_x, fov_y, f, pp, ar = cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 3.6288, 6.4512)
+
+        """
         c_img = cv2.line(orig_pic, (round(mtx[0][2]), 0), (round(mtx[0][2]), h), (0, 0, 255), 2)
         c_img = cv2.line(c_img, (0, round(mtx[1][2])), (w, round(mtx[1][2])), (0, 0, 255), 2)
         c_img = self.correct_distortion(c_img, False)
@@ -156,23 +149,19 @@ class CameraConfiguration(object):
                     self.rx = round(pdx, 2)
                     self.ry = round(pdy, 2)
                     print('new rx ry', pdx, pdy)
+        """
 
-        if mtx is not None or dist is not None:
-            """
-            self._config['f'] = round((new_camera_mtx[0][0] + new_camera_mtx[1][1])/2.0, 2)
-            self._config['cx'] = round(new_camera_mtx[0][2], 2)
-            self._config['cy'] = round(new_camera_mtx[1][2], 2)
-            """
-            self.f = round((mtx[0][0] + mtx[1][1])/2.0, 2)
-            self.f_mm = f
-            self.r = round(self.grid_size * f, 1)
-            #self.rx = rx
-            #self.ry = ry
-            self.cx = round(mtx[0][2])
-            self.cy = round(mtx[1][2])
-            #self.cz = round(self.f / f, 1)
+        if mtx is not None or dist is not None and new_camera_mtx is not None:
+            self.fx = new_camera_mtx[0][0]
+            self.fy = new_camera_mtx[1][1]
+            self.f = f
+            self.cx = new_camera_mtx[0][2]
+            self.cy = new_camera_mtx[1][2]
+
             self.mtx = mtx
             self.dist = dist
+            self.new_camera_mtx = new_camera_mtx
+            self.roi = roi
             return True
         return False
 
@@ -201,6 +190,7 @@ class CameraConfiguration(object):
         if not ret:
             print('configuration failed.')
 
+    """
     def determine_c_z(self):
         print(self.calibration_values())
         motor.enable()
@@ -262,6 +252,7 @@ class CameraConfiguration(object):
         Z2 = X1*math.sin(math.radians(45))
         cz = Z2 * (self.cy - p2[1]) / (p2[1] - p1[1])
         print(cz)
+    """
 
     def calibrate_single_shot(self):
         camera.capture_file_cam(f'%s/ratio.jpg' % calibration_path)
@@ -312,18 +303,4 @@ class CameraConfiguration(object):
                     pdy += abs(corners2[p + self.nx][0][1] - corners2[p][0][1])
             pdx /= pdt
             pdy /= pdt
-            self.rx = pdx
-            self.ry = pdy
             print('corners', pdt, pdx, pdy)
-
-    def processing_file(self, file_name):
-        img = cv2.imread(file_name)
-        h, w = img.shape[:2]
-        if h < w:
-            img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
-            h, w = img.shape[:2]
-        new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(self.mtx, self.dist, (w, h), 1, (w, h))
-        print(new_camera_mtx)
-        img = cv2.undistort(img, self.mtx, self.dist, None, new_camera_mtx)
-        cv2.imwrite(file_name, img)
-        print(roi)

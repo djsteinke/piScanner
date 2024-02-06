@@ -76,8 +76,8 @@
                 BLOCK_SIZE: "BlockSize",
                 BLOCK_X_COUNT: "BlockXCount",
                 BLOCK_Y_COUNT: "BlockYCount",
-                CAM_F_PX: "f",
-                CAM_F_MM: "f_mm",
+                CAM_F_PX: "fx",
+                CAM_F_MM: "f",
                 CAM_CX: "cx",
                 CAM_CY: "cy",
                 CAM_CZ: "cz",
@@ -125,7 +125,7 @@
             $('#input_f_mm').val(SetupData[Setup.FIELDS.CAM_F_MM]);
             $('#input_cx').val(SetupData[Setup.FIELDS.CAM_CX]);
             $('#input_cy').val(SetupData[Setup.FIELDS.CAM_CY]);
-            $('#input_cz').val(SetupData[Setup.FIELDS.CAM_CZ]);
+            //$('#input_cz').val(SetupData[Setup.FIELDS.CAM_CZ]);
             //$('#input_left_pin').val(SetupData[Setup.FIELDS.LASER_L_PIN]);
             //$('#input_right_pin').val(SetupData[Setup.FIELDS.LASER_R_PIN]);
             //$('#input_left_angle').val(SetupData[Setup.FIELDS.LASER_L_ANGLE]);
@@ -166,8 +166,8 @@
         <div class="label-title">Camera</div>
         <div class="row">
             <label class="label-short" for="input_f_px">f</label>
-            <input class="input-short" name="input_f_px" id="input_f_px" value="{{ config.camera.f }}"/><span> px</span>
-            <input class="input-short right" name="input_f_mm" id="input_f_mm" value="{{ config.camera.f_mm }}"/><span> mm</span>
+            <input class="input-short" name="input_f_px" id="input_f_px" value="{{ config.camera.fx }}"/><span> px</span>
+            <input class="input-short right" name="input_f_mm" id="input_f_mm" value="{{ config.camera.f }}"/><span> mm</span>
         </div>
         <div class="row">
             <label class="label-short" for="input_cx">Cx</label>
@@ -177,10 +177,12 @@
             <label class="label-short" for="input_cy">Cy</label>
             <input class="input-short" name="input_cy" id="input_cy" value="{{ config.camera.cy }}"/><span> px</span>
         </div>
+        <!--
         <div class="row">
             <label class="label-short" for="input_cz">Cz</label>
             <input class="input-short" name="input_cz" id="input_cz" value="{{ config.camera.cz }}"/><span> mm</span>
         </div>
+        -->
 
         <div class="label-title-next">Lasers</div>
         <div>

@@ -104,6 +104,8 @@ class CameraConfiguration(object):
         print(mtx)
         print(w, h, new_camera_mtx, roi)
 
+        correct = self.correct_distortion(gray_pic)
+        cv2.imwrite('corrected.jpg', correct)
         """
         c_img = cv2.line(orig_pic, (round(mtx[0][2]), 0), (round(mtx[0][2]), h), (0, 0, 255), 2)
         c_img = cv2.line(c_img, (0, round(mtx[1][2])), (w, round(mtx[1][2])), (0, 0, 255), 2)

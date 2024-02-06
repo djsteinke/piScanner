@@ -206,8 +206,11 @@ class CameraConfiguration(object):
 
     def determine_c_z(self, motor: StepperMotor):
         camera.capture_file_cam(f'%s/cz_01.jpg' % calibration_path)
+        print('pic 1 captured')
         motor.rotate(45, False)
+        print('rotated')
         camera.capture_file_cam(f'%s/cz_02.jpg' % calibration_path)
+        print('pic 2 captured')
 
         img = cv2.imread(f'%s/cz_01.jpg' % calibration_path)
         h, w = img.shape[:2]
@@ -220,6 +223,7 @@ class CameraConfiguration(object):
         ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
         p = (self.nx - 1) * (self.ny - 1) - 1
         p1 = corners[p]
+        print('p1', p1)
 
         img = cv2.imread(f'%s/cz_01.jpg' % calibration_path)
         h, w = img.shape[:2]
@@ -230,6 +234,8 @@ class CameraConfiguration(object):
         gray = cv2.undistort(gray, self.mtx, self.dist, None, new_camera_mtx)
         ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
         p2 = corners[p]
+
+        print('p2', p2)
         X1 = (p1[0]-self.cx)/self.rx*self.grid_size
         Z2 = X1*math.sin(math.radians(45))
         cz = Z2 * (self.cy - p2[1]) / (p2[1] - p1[1])

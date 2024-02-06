@@ -27,7 +27,7 @@ class CameraConfiguration(object):
         self.f: float = 0.0
         self.cx: float = 0.0
         self.cy: float = 0.0
-        #self.cz: float = 0.0
+        self.cz: int = 0
         self.grid_size: float = 15
         self.nx: int = 6
         self.ny: int = 9
@@ -42,7 +42,8 @@ class CameraConfiguration(object):
             "fy": self.fy,
             "f": self.f,
             "cx": self.cx,
-            "cy": self.cy
+            "cy": self.cy,
+            "cz": self.cz
         }
 
     def correct_distortion(self, img, crop=False):
@@ -156,11 +157,11 @@ class CameraConfiguration(object):
         """
 
         if mtx is not None or dist is not None and new_camera_mtx is not None:
-            self.fx = new_camera_mtx[0][0]
-            self.fy = new_camera_mtx[1][1]
-            self.f = f
-            self.cx = new_camera_mtx[0][2]
-            self.cy = new_camera_mtx[1][2]
+            self.fx = round(new_camera_mtx[0][0], 3)
+            self.fy = round(new_camera_mtx[1][1], 3)
+            self.f = round(f, 3)
+            self.cx = round(new_camera_mtx[0][2], 3)
+            self.cy = round(new_camera_mtx[1][2], 3)
 
             self.mtx = mtx
             self.dist = dist

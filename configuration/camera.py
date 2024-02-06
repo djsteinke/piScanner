@@ -179,7 +179,7 @@ class CameraConfiguration(object):
             return True
         return False
 
-    def run_calibration(self, motor: StepperMotor):
+    def run_calibration(self):
         motor.enable()
         steps = 19
         degrees = 5
@@ -205,6 +205,7 @@ class CameraConfiguration(object):
             print('configuration failed.')
 
     def determine_c_z(self):
+        motor.enable()
         camera.capture_file_cam(f'%s/cz_01.jpg' % calibration_path)
         print('pic 1 captured')
         motor.rotate(45, False)

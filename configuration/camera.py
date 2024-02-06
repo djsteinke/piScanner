@@ -205,10 +205,12 @@ class CameraConfiguration(object):
             print('configuration failed.')
 
     def determine_c_z(self):
+        print(self.calibration_values())
         motor.enable()
         camera.capture_file_cam(f'%s/cz_01.jpg' % calibration_path)
         print('pic 1 captured')
         motor.rotate(45, False)
+        time.sleep(1)
         print('rotated')
         camera.capture_file_cam(f'%s/cz_02.jpg' % calibration_path)
         print('pic 2 captured')
@@ -227,7 +229,7 @@ class CameraConfiguration(object):
         p1 = corners[p][0]
         print('p1', p1)
 
-        img = cv2.imread(f'%s/cz_01.jpg' % calibration_path)
+        img = cv2.imread(f'%s/cz_02.jpg' % calibration_path)
         h, w = img.shape[:2]
         if h < w:
             img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
@@ -274,7 +276,7 @@ class CameraConfiguration(object):
                     pdy += abs(corners2[p + self.nx][0][1] - corners2[p][0][1])
             pdx /= pdt
             pdy /= pdt
-            print('corners', pdt, pdx, pdy)
+            print('corners undistort crop', pdt, pdx, pdy)
 
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)

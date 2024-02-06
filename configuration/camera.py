@@ -210,8 +210,11 @@ class CameraConfiguration(object):
         camera.capture_file_cam(f'%s/cz_02.jpg' % calibration_path)
 
         img = cv2.imread(f'%s/cz_01.jpg' % calibration_path)
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         h, w = img.shape[:2]
+        if h < w:
+            img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
+            h, w = img.shape[:2]
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(self.mtx, self.dist, (w, h), 1, (w, h))
         gray = cv2.undistort(gray, self.mtx, self.dist, None, new_camera_mtx)
         ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
@@ -219,6 +222,10 @@ class CameraConfiguration(object):
         p1 = corners[p]
 
         img = cv2.imread(f'%s/cz_01.jpg' % calibration_path)
+        h, w = img.shape[:2]
+        if h < w:
+            img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
+            h, w = img.shape[:2]
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         gray = cv2.undistort(gray, self.mtx, self.dist, None, new_camera_mtx)
         ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)

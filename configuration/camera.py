@@ -222,7 +222,7 @@ class CameraConfiguration(object):
         gray = cv2.undistort(gray, self.mtx, self.dist, None, new_camera_mtx)
         ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
         p = (self.nx - 1) * (self.ny - 1) - 1
-        p1 = corners[p]
+        p1 = corners[p][0]
         print('p1', p1)
 
         img = cv2.imread(f'%s/cz_01.jpg' % calibration_path)
@@ -233,7 +233,7 @@ class CameraConfiguration(object):
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         gray = cv2.undistort(gray, self.mtx, self.dist, None, new_camera_mtx)
         ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
-        p2 = corners[p]
+        p2 = corners[p][0]
 
         print('p2', p2)
         X1 = (p1[0]-self.cx)/self.rx*self.grid_size

@@ -74,12 +74,11 @@ class CameraConfiguration(object):
         print(len(images))
 
         gray_pic = None
+        orig_pic = None
         i = 0
         h, w, rx, ry = 0, 0, 0.0, 0.0
         for f_name in images:
             img = cv2.imread(f_name)
-            gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
             h, w = img.shape[:2]
             if h < w:
                 img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
@@ -92,8 +91,6 @@ class CameraConfiguration(object):
 
             # print(f_name, "found chessboard", ret)
             if ret:
-                if h == 0:
-                    h, w = img.shape[:2]
                 obj_points.append(objp)
 
                 corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)

@@ -323,6 +323,7 @@ class CameraConfiguration(object):
             img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
             h, w = img.shape[:2]
         new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(self.mtx, self.dist, (w, h), 1, (w, h))
+        print(new_camera_mtx)
         img = cv2.undistort(img, self.mtx, self.dist, None, new_camera_mtx)
         cv2.imwrite(file_name, img)
         print(roi)

@@ -5,6 +5,7 @@ import cv2
 import glob
 import accessories.camera as camera
 import time
+import math
 
 from accessories.stepper_motor import StepperMotor
 from scanner_paths import calibration_path
@@ -138,8 +139,8 @@ class CameraConfiguration(object):
                 # Rx, Ry, f, Cx, Cy, Cz
                 if abs(pdx-pdy) < r_diff:
                     r_diff = abs(pdx-pdy)
-                    rx = round(pdx, 2)
-                    ry = round(pdy, 2)
+                    self.rx = round(pdx, 2)
+                    self.ry = round(pdy, 2)
                 print('corners', i, px, pdx, pdy)
 
         if mtx is not None or dist is not None:
@@ -184,3 +185,26 @@ class CameraConfiguration(object):
         if not ret:
             print('configuration failed.')
 
+    def determine_c_z(self, motor: StepperMotor):
+        camera.capture_file_cam(f'%s/cz_01.jpg' % calibration_path)
+        motor.rotate(45, False)
+        camera.capture_file_cam(f'%s/cz_02.jpg' % calibration_path)
+
+        img = cv2.imread(f'%s/cz_01.jpg' % calibration_path)
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        h, w = img.shape[:2]
+        new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(self.mtx, self.dist, (w, h), 1, (w, h))
+        gray = cv2.undistort(gray, self.mtx, self.dist, None, new_camera_mtx)
+        ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
+        p = (self.nx - 1) * (self.ny - 1) - 1
+        p1 = corners[p]
+
+        img = cv2.imread(f'%s/cz_01.jpg' % calibration_path)
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        gray = cv2.undistort(gray, self.mtx, self.dist, None, new_camera_mtx)
+        ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
+        p2 = corners[p]
+        X1 = (p1[0]-self.cx)/self.rx*self.grid_size
+        Z2 = X1*math.sin(math.radians(45))
+        cz = Z2 * (self.cy - p2[1]) / (p2[1] - p1[1])
+        print(cz)

@@ -292,4 +292,6 @@ class CameraConfiguration(object):
                     pdy += abs(corners2[p + self.nx][0][1] - corners2[p][0][1])
             pdx /= pdt
             pdy /= pdt
+            self.rx = pdx
+            self.ry = pdy
             print('corners', pdt, pdx, pdy)

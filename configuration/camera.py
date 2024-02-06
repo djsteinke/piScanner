@@ -153,9 +153,9 @@ class CameraConfiguration(object):
                 # Rx, Ry, f, Cx, Cy, Cz
                 if abs(pdx-pdy) < r_diff:
                     r_diff = abs(pdx-pdy)
-                    rx = round(pdx, 2)
-                    ry = round(pdy, 2)
-                print('corners', i, px, pdx, pdy)
+                    self.rx = round(pdx, 2)
+                    self.ry = round(pdy, 2)
+                    print('new rx ry', pdx, pdy)
 
         if mtx is not None or dist is not None:
             """
@@ -166,8 +166,8 @@ class CameraConfiguration(object):
             self.f = round((mtx[0][0] + mtx[1][1])/2.0, 2)
             self.f_mm = f
             self.r = round(self.grid_size * f, 1)
-            self.rx = rx
-            self.ry = ry
+            #self.rx = rx
+            #self.ry = ry
             self.cx = round(mtx[0][2])
             self.cy = round(mtx[1][2])
             #self.cz = round(self.f / f, 1)
@@ -222,8 +222,26 @@ class CameraConfiguration(object):
         new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(self.mtx, self.dist, (w, h), 1, (w, h))
         gray = cv2.undistort(gray, self.mtx, self.dist, None, new_camera_mtx)
         ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
+        corners2 = corners
+        if ret:
+            corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
+            pdy = 0
+            pdx = 0
+            pdt = 0
+            for y in range(0, self.ny - 1):
+                for x in range(0, self.nx - 1):
+                    pdt += 1
+                    p = y * self.nx + x
+                    pdx += abs(corners2[p + 1][0][0] - corners2[p][0][0])
+                    pdy += abs(corners2[p + self.nx][0][1] - corners2[p][0][1])
+            pdx /= pdt
+            pdy /= pdt
+            print('corners undistort crop', pdt, pdx, pdy)
+            self.rx = pdx
+            self.ry = pdy
+
         p = (self.nx - 1) * (self.ny - 1) - 1
-        p1 = corners[p][0]
+        p1 = corners2[p][0]
         print('p1', p1)
 
         img = cv2.imread(f'%s/cz_02.jpg' % calibration_path)
@@ -234,7 +252,10 @@ class CameraConfiguration(object):
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         gray = cv2.undistort(gray, self.mtx, self.dist, None, new_camera_mtx)
         ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
-        p2 = corners[p][0]
+        corners2 = corners
+        if ret:
+            corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
+        p2 = corners2[p][0]
 
         print('p2', p2)
         X1 = (p1[0]-self.cx)/self.rx*self.grid_size

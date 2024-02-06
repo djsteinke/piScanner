@@ -25,12 +25,13 @@ class ScannerConfiguration(object):
         source = os.path.join(config_path, pickle_file)
         try:
             with open(source, 'rb') as file:
-                return pickle.load(file)
+                config = pickle.load(file)
         except:
-            scanner_config = ScannerConfiguration(CameraConfiguration(), StepperMotorConfiguration(3, 5, 7),
-                                                  LaserConfiguration(11), LaserConfiguration(13))
-            scanner_config.save()
-            return scanner_config
+            config = ScannerConfiguration(CameraConfiguration(), StepperMotorConfiguration(3, 5, 7),
+                                          LaserConfiguration(11), LaserConfiguration(13))
+            config.save()
+        print(config.camera.new_camera_mtx)
+        return config
 
 
 class LaserConfiguration(object):

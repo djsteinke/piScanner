@@ -30,7 +30,7 @@ class ScannerConfiguration(object):
             config = ScannerConfiguration(CameraConfiguration(), StepperMotorConfiguration(3, 5, 7),
                                           LaserConfiguration(11), LaserConfiguration(13))
             config.save()
-        print(config.camera.new_camera_mtx)
+        # print(config.camera.new_camera_mtx)
         return config
 
 

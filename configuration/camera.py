@@ -47,6 +47,10 @@ class CameraConfiguration(object):
         }
 
     def correct_distortion(self, img, crop=False):
+        h, w = img.shape[:2]
+        if h < w:
+            img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
+            h, w = img.shape[:2]
         undistorted_img = cv2.undistort(img, self.mtx, self.dist, None, self.new_camera_mtx)
         if crop and len(self.roi) == 4:
             x, y, w, h = self.roi

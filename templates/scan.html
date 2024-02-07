@@ -19,6 +19,10 @@
     <div>
         <div class="label-title">Lasers</div>
         <div>
+            <label class="label-med" for="color">Color:</label>
+            <input type="checkbox" name="color" id="color" onclick="laser_checked()"/>
+        </div>
+        <div>
             <label class="label-med" for="left_laser">Left:</label>
             <input type="checkbox" name="left_laser" id="left_laser" onclick="laser_checked()"/>
             <input type="range" name="left_laser_val" id="left_laser_val" min="0" max="100" value="90" step="10" disabled/>

@@ -1,4 +1,8 @@
 
+* {
+    font-family: 'Montserrat', sans-serif;
+}
+
 label {
   display: inline-block;
   padding-left: 10px;

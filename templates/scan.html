@@ -6,6 +6,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script type="text/javascript">
+        function laser_checked() {
+            $('#left_laser_val').prop('disabled', $('#left_laser).prop('checked'));
+            $('#right_laser_val').prop('disabled', $('#right_laser).prop('checked'));
+        }
+    </script>
 </head>
 <body>
 <form method="post">
@@ -13,13 +19,13 @@
         <div class="label-title">Lasers</div>
         <div>
             <label class="label-med" for="left_laser">Left:</label>
-            <input type="checkbox" name="left_laser" id="left_laser"/>
-            <input type="range" name="left_laser_val" id="left_laser_val" min="0" max="100" value="90" step="5"/>
+            <input type="checkbox" name="left_laser" id="left_laser" onclick="laser_checked()"/>
+            <input type="range" name="left_laser_val" id="left_laser_val" min="0" max="100" value="90" step="5" list="markers" disabled/>
         </div>
         <div>
             <label class="label-med" for="right_laser">Right:</label>
-            <input type="checkbox" name="right_laser" id="right_laser"/>
-            <input type="range" name="right_laser_val" id="right_laser_val" min="0" max="100" value="90" step="5"/>
+            <input type="checkbox" name="right_laser" id="right_laser" onclick="laser_checked()" checked/>
+            <input type="range" name="right_laser_val" id="right_laser_val" min="0" max="100" value="90" step="5" list="markers"/>
         </div>
     </div>
     <div>
@@ -37,6 +43,13 @@
     <div>
         <input class="btn" type="submit" value="Scan"/>
     </div>
+    <datalist id="markers">
+        <option value="0"></option>
+        <option value="25"></option>
+        <option value="50"></option>
+        <option value="75"></option>
+        <option value="100"></option>
+    </datalist>
 </form>
 </body>
 </html>

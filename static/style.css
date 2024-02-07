@@ -6,6 +6,7 @@
 label {
   display: inline-block;
   padding-left: 10px;
+  padding-top: 5px;
 }
 .label-short {
   width: 30px;

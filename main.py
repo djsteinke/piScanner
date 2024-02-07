@@ -50,6 +50,7 @@ def index():
 
 @app.route('/scan', methods=['POST', 'GET'])
 def scan_frame():
+    print(request.form)
     return render_template('scan.html', config=scanner_config)
 
 

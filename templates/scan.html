@@ -10,6 +10,34 @@
 <body>
 <form method="post">
     <div class="label-title">Scan</div>
+    <div>
+        <div>Lasers</div>
+        <div>
+            <label class="label-med" for="left_laser">Left:</label>
+            <input type="checkbox" name="left_laser" id="left_laser"/>
+            <input type="range" name="left_laser_val" id="left_laser_val" min="0" max="100" value="90" step="5"/>
+        </div>
+        <div>
+            <label class="label-med right" for="right_laser">Right:</label>
+            <input type="checkbox" name="right_laser" id="right_laser"/>
+            <input type="range" name="right_laser_val" id="right_laser_val" min="0" max="100" value="90" step="5"/>
+        </div>
+    </div>
+    <div>
+        <div>Scan</div>
+        <div>
+            <label class="label" for="deg_per_step">Step:</label>
+            <input class="input-short" type="number" name="deg_per_step" id="deg_per_step"/><span> deg</span>
+        </div>
+        <div>
+            <label class="label" for="deg_total">Total:</label>
+            <input class="input-short" type="number" name="deg_total" id="deg_total"/><span> deg</span>
+        </div>
+    </div>
+    <div class="label-title-next"></div>
+    <div>
+        <input class="btn" type="submit" value="Scan"/>
+    </div>
 </form>
 </body>
 </html>

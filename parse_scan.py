@@ -58,9 +58,6 @@ class ScanParser(object):
         else:
             color.sort()
 
-
-        print("I: processing %d steps" % details['steps'])
-
         if len(right) > 0:
             right.sort()
             # points = points_process_images(right, color=color, right=True)

@@ -122,7 +122,7 @@ class CameraConfiguration(object):
         print('calibrationMatrixValues-new_cam', cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 3.6288, 6.4512))
         print(mtx)
         print(roi, new_camera_mtx)
-        #fov_x, fov_y, f, pp, ar = cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 6.4512, 3.6288)
+        # fov_x, fov_y, f, pp, ar = cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 6.4512, 3.6288)
         fov_x, fov_y, f, pp, ar = cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 3.6288, 6.4512)
         r_diff = 100.0
         r_x, r_y, r_w, r_h = roi
@@ -212,6 +212,8 @@ class CameraConfiguration(object):
         print('rotated')
         camera.capture_file_cam(f'%s/cz_02.jpg' % calibration_path)
         print('pic 2 captured')
+        motor.rotate(45, True)
+
         motor.rotate(45, True)
 
         img = cv2.imread(f'%s/cz_01.jpg' % calibration_path)

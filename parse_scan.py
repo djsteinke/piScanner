@@ -9,8 +9,10 @@ class ScanParser(object):
         self.path = os.path.join(scanner_paths.scans_path, path)
 
     def parse(self):
-        print(f'parsing {self.path}')
-
+        if os.path.exists(self.path):
+            print(f'parsing {self.path}')
+        else:
+            print(f'No scan found at {self.path}')
 
 def main():
     # parse command line options

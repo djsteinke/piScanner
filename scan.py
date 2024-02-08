@@ -1,10 +1,30 @@
 import threading
 import os
+import pickle
 from time import strftime, sleep
 from scanner_paths import scans_path
 from configuration.configuration import ScannerConfiguration
 from accessories.laser import Laser
 from accessories.camera import Camera
+
+class ScanDetails(object):
+    def __init__(self, degrees_per_step, dir_name):
+        self.name = dir_name
+        self.dps = degrees_per_step
+
+    def save(self, path):
+        source = os.path.join(path, 'details.p')
+        pickle.dump(self, open(source, "wb"))
+
+    @staticmethod
+    def load(path):
+        source = os.path.join(path, 'details.p')
+        try:
+            with open(source, 'rb') as file:
+                return pickle.load(file)
+        except:
+            print(f'No details.p file found in {path}')
+            raise Exception('File not found.')
 
 class Scan(object):
     def __init__(self, config: ScannerConfiguration, camera: Camera, right_laser=True, left_laser=False, color=False, degrees_per_step=10, degrees=360, callback=None):
@@ -31,6 +51,7 @@ class Scan(object):
         os.makedirs(self.path)
         self.path = os.path.join(self.path, "images")
         os.makedirs(self.path)
+        ScanDetails(degrees_per_step=self.degrees_per_step, dir_name=self.timestamp).save(self.path)
 
     def start(self):
         print('started', self.__dict__)

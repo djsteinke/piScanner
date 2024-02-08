@@ -106,6 +106,11 @@ class ScanParser(object):
                 img_c = cv2.imread(i_path)
                 c = None
                 max_cols_c = True
+
+                h, w = img_c.shape[:2]
+                if h < w:
+                    img_c = cv2.rotate(img_c, cv2.ROTATE_90_COUNTERCLOCKWISE)
+
                 if color is not None and i < len(color):
                     # max_cols_c = False
                     c = cv2.imread(color[i])
@@ -122,7 +127,7 @@ class ScanParser(object):
                     c = cv2.resize(c, (w_tmp, h_tmp), interpolation=cv2.INTER_AREA)
                     h, w = img.shape
                 """
-                roi = [[0, 1079], [0, 1919]]
+                roi = [[200, 879], [200, 1719]]
                 xy = points_max_cols(img_c, threshold=(60, 255), c=max_cols_c, roi=roi, right=right)
                 # xy = remove_noise(xy, w)
 

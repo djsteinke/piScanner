@@ -9,4 +9,4 @@ class Scan(object):
         self.degrees = degrees
 
     def start(self):
-        print('started')
+        print('started', self.__dict__)

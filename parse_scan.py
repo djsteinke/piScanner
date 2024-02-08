@@ -122,7 +122,7 @@ class ScanParser(object):
                     c = cv2.resize(c, (w_tmp, h_tmp), interpolation=cv2.INTER_AREA)
                     h, w = img.shape
                 """
-                roi = [[0, 1080], [0, 1920]]
+                roi = [[0, 1079], [0, 1919]]
                 xy = points_max_cols(img_c, threshold=(60, 255), c=max_cols_c, roi=roi, right=right)
                 # xy = remove_noise(xy, w)
 

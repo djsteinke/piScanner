@@ -3,6 +3,7 @@ from time import sleep
 import json
 from accessories.camera import camera, get_jpg_buffer, get_full_jpg_buffer
 from configuration.configuration import ScannerConfiguration
+from scan import Scan
 
 app = Flask(__name__)
 
@@ -50,7 +51,17 @@ def index():
 
 @app.route('/scan', methods=['POST', 'GET'])
 def scan_frame():
-    print(request.form)
+    if request.method == 'POST':
+        left_laser = request.form['left_laser'] == 'on' if 'left_laser' in request.form else False
+        right_laser = request.form['right_laser'] == 'on' if 'right_laser' in request.form else False
+        left_laser_val = int(request.form['left_laser_val']) if 'left_laser_val' in request.form else 0
+        right_laser_val = int(request.form['right_laser_val']) if 'right_laser_val' in request.form else 0
+        deg_per_stp = int(request.form['deg_per_stp']) if 'deg_per_stp' in request.form else 10
+        degrees = int(request.form['deg_total']) if 'deg_total' in request.form else 360
+
+        scan = Scan(right_laser, left_laser, False, deg_per_stp, degrees)
+        scan.start()
+
     return render_template('scan.html', config=scanner_config)
 
 

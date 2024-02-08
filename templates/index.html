@@ -23,13 +23,29 @@
         .tab {
             text-align: center;
             font-size: 20px;
-            border: 1px solid gray;
+            border-top: 1px solid gray;
+            border-left: 1px solid gray;
+            border-right: 1px solid gray;
+            border-bottom: 1px solid gray;
+            margin-bottom: -1px;
             display: inline;
             padding: 5px;
-            border-style: solid solid none solid;
             border-radius: 5px 5px 0px 0px;
-            background: white;
+            background: #e5e4e2;
             width: 100px;
+        }
+        .dummy-tab {
+            border-top: 1px solid gray;
+            border-left: 1px solid transparent;
+            border-right: 1px solid gray;
+            border-bottom: 1px solid gray;
+            margin-bottom: -1px;
+            display: inline;
+            border-radius: 0px 5px 0px 0px;
+            padding: 5px 5px 5px 0px;
+            font-size: 20px;
+            background: #e5e4e2;
+            color: #e5e4e2;
         }
         .first {
         }
@@ -37,19 +53,20 @@
             margin-left: -5px;
         }
         .tab:hover {
-            font-weight: bold;
+            font-weight: normal;
             cursor: pointer;
             background: #91a3b0 ;
         }
         .other:hover {
         }
         .active {
-            background: #e5e4e2;
+            background: white;
+            border-bottom: 1px solid white;
         }
         .active:hover {
             font-weight: normal;
             cursor: initial;
-            background: #e5e4e2 ;
+            background: white ;
         }
         .main-container {
             width: 100%;
@@ -89,7 +106,8 @@
         <h1>Pi Scanner</h1>
     </div>
     <div id="div-tabs" class="tabs">
-        <button id="btn-camera-setup" class="tab first active" onclick="switch_to_setup()">
+        <button class="dummy-tab" disabled>a</button>
+        <button id="btn-camera-setup" class="tab other active" onclick="switch_to_setup()">
             Setup
         </button>
         <button id="btn-scanner" class="tab other" onclick="switch_to_scan()">

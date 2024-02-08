@@ -2,6 +2,7 @@ import os
 import pickle
 from configuration.camera import CameraConfiguration
 from scanner_paths import config_path
+from accessories.stepper_motor import StepperMotor
 
 default_step_size = 1.8
 default_micro_steps = 2
@@ -15,6 +16,10 @@ class ScannerConfiguration(object):
         self.stepper_motor: StepperMotorConfiguration = stepper_config
         self.right_laser: LaserConfiguration = right_laser_config
         self.left_laser: LaserConfiguration = left_laser_config
+
+    def get_stepper_motor(self):
+        return StepperMotor(self.stepper_motor.enable_pin, self.stepper_motor.dir_pin, self.stepper_motor.pulse_pin)
+
 
     def save(self):
         source = os.path.join(config_path, pickle_file)

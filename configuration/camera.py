@@ -1,13 +1,9 @@
-import os.path
-import pickle
 import numpy as np
 import cv2
 import glob
 import accessories.camera as camera
 import time
-import math
 
-from accessories.stepper_motor import StepperMotor, stepper as motor
 from scanner_paths import calibration_path
 
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
@@ -176,7 +172,7 @@ class CameraConfiguration(object):
             return True
         return False
 
-    def run_calibration(self):
+    def run_calibration(self, motor):
         motor.enable()
         steps = 19
         degrees = 5

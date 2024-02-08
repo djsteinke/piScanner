@@ -5,7 +5,6 @@ from scanner_paths import scans_path
 from configuration.configuration import ScannerConfiguration
 from accessories.laser import Laser
 from accessories.camera import Camera
-from accessories.stepper_motor import StepperMotor
 
 class Scan(object):
     def __init__(self, config: ScannerConfiguration, camera: Camera, right_laser=True, left_laser=False, color=False, degrees_per_step=10, degrees=360, callback=None):
@@ -17,7 +16,7 @@ class Scan(object):
         self.callback = callback
         self.config = config
         self.camera = camera
-        self.motor = StepperMotor.from_config(config)
+        self.motor = config.get_stepper_motor()
         self.motor.enable()
         self.ll = Laser(config.left_laser.pin, right=False)
         self.rl = Laser(config.right_laser.pin)

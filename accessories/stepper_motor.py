@@ -1,24 +1,12 @@
 import RPi.GPIO as GPIO
 import time
 
+from configuration.configuration import ScannerConfiguration
 from accessories.pin import Pin
+from static.common import get_us_as_sec, sleep_us
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
-
-
-def get_us_as_sec(val):
-    return val / 1000000.0
-
-
-def get_sec_as_us(val):
-    return val * 1000000.0
-
-
-def sleep_us(val):
-    us = get_us_as_sec(val)
-    time.sleep(us)
-
 
 pulse_w = 20    # us
 ppr = 400.0       # pulse/rot
@@ -42,6 +30,10 @@ class StepperMotor(object):
         self._steps_to_full = 0
         self._enabled = False
         self.disable()
+
+    @staticmethod
+    def from_config(config: ScannerConfiguration):
+        return StepperMotor(config.stepper_motor.enable_pin, config.stepper_motor.dir_pin, config.stepper_motor.pulse_pin)
 
     def enable(self):
         self.ENB.on()

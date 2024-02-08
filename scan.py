@@ -8,7 +8,7 @@ from accessories.camera import Camera
 from accessories.stepper_motor import StepperMotor
 
 class Scan(object):
-    def __init__(self, config: ScannerConfiguration, camera: Camera, motor: StepperMotor, right_laser=True, left_laser=False, color=False, degrees_per_step=10, degrees=360, callback=None):
+    def __init__(self, config: ScannerConfiguration, camera: Camera, right_laser=True, left_laser=False, color=False, degrees_per_step=10, degrees=360, callback=None):
         self.right_laser = right_laser
         self.left_laser = left_laser
         self.color = color
@@ -17,8 +17,8 @@ class Scan(object):
         self.callback = callback
         self.config = config
         self.camera = camera
-        motor.enable()
-        self.motor = motor
+        self.motor = StepperMotor.from_config(config)
+        self.motor.enable()
         self.ll = Laser(config.left_laser.pin, right=False)
         self.rl = Laser(config.right_laser.pin)
         self.ll.off()

@@ -1,6 +1,5 @@
 import RPi.GPIO as GPIO
-from accessories.stepper_motor import sleep_us
-
+from static.common import sleep_us
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)

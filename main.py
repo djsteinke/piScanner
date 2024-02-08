@@ -59,7 +59,7 @@ def scan_frame():
         deg_per_stp = int(request.form['deg_per_stp']) if 'deg_per_stp' in request.form else 10
         degrees = int(request.form['deg_total']) if 'deg_total' in request.form else 360
 
-        scan = Scan(right_laser, left_laser, False, deg_per_stp, degrees)
+        scan = Scan(scanner_config, camera, right_laser, left_laser, False, deg_per_stp, degrees)
         scan.start()
 
     return render_template('scan.html', config=scanner_config)

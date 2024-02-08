@@ -164,11 +164,12 @@ def main():
     if len(path) == 0:
         print('-p / --path is required.')
         return
-    try:
-        parser = ScanParser(path)
-        parser.parse()
-    except:
-        print("Parse failed.")
+    ScanParser(path).parse()
+    #try:
+    #    parser = ScanParser(path)
+    #    parser.parse()
+    #except:
+    #    print("Parse failed.")
 
 
 if __name__ == "__main__":

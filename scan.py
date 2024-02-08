@@ -17,6 +17,7 @@ class Scan(object):
         self.callback = callback
         self.config = config
         self.camera = camera
+        motor.enable()
         self.motor = motor
         self.ll = Laser(config.left_laser.pin, right=False)
         self.rl = Laser(config.right_laser.pin)

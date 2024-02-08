@@ -24,7 +24,7 @@ class ScanDetails(object):
                 return pickle.load(file)
         except:
             print(f'No details.p file found in {path}')
-            raise Exception('File not found.')
+            raise Exception()
 
 class Scan(object):
     def __init__(self, config: ScannerConfiguration, camera: Camera, right_laser=True, left_laser=False, color=False, degrees_per_step=10, degrees=360, callback=None):

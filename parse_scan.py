@@ -41,7 +41,11 @@ class ScanParser(object):
             print(f'No scan found at {self.path}')
             return
 
-        details = ScanDetails.load(self.path)
+        try:
+            details = ScanDetails.load(self.path)
+        except Exception as e:
+            return
+
         image_path = os.path.join(self.path, 'images')
         points = []
         right = glob.glob("%s/right*" % image_path.rstrip('/'))

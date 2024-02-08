@@ -49,8 +49,8 @@ class Scan(object):
     def create_dir(self):
         self.path = os.path.join(scans_path, f"{self.timestamp}")  # create scans dir
         os.makedirs(self.path)
-        self.path = os.path.join(self.path, "images")
-        os.makedirs(self.path)
+        image_path = os.path.join(self.path, "images")
+        os.makedirs(image_path)
         ScanDetails(degrees_per_step=self.degrees_per_step, dir_name=self.timestamp).save(self.path)
 
     def start(self):
@@ -58,6 +58,7 @@ class Scan(object):
         threading.Timer(0.1, self.run).start()
 
     def run(self):
+        image_path = os.path.join(self.path, "images")
         steps = int(self.degrees / self.degrees_per_step) + 1
         print(f'Scanning with {steps} steps.')
         for s in range(0, steps):
@@ -66,14 +67,14 @@ class Scan(object):
             sleep(0.5)
             if self.color:
                 # TODO turn on light
-                self.camera.capture_file(os.path.join(self.path, f'color_%04d.jpg' % s))
+                self.camera.capture_file(os.path.join(image_path, f'color_%04d.jpg' % s))
             if self.left_laser:
                 self.ll.on()
                 sleep(0.2)
-                self.camera.capture_file(os.path.join(self.path, f'left_%04d.jpg' % s))
+                self.camera.capture_file(os.path.join(image_path, f'left_%04d.jpg' % s))
                 self.ll.off()
             if self.right_laser:
                 self.rl.on()
                 sleep(0.2)
-                self.camera.capture_file(os.path.join(self.path, f'right_%04d.jpg' % s))
+                self.camera.capture_file(os.path.join(image_path, f'right_%04d.jpg' % s))
                 self.rl.off()

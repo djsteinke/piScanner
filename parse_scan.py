@@ -70,12 +70,12 @@ class ScanParser(object):
 
         if len(right) > 0:
             right.sort()
-            # points = points_process_images(right, color=color, right=True)
+            points = self.points_process_images(right, color=color, right=True)
 
         if len(left) > 0:
             left.sort()
-            # left = points_process_images(left, color=color, right=False)
-            # points.extend(left)
+            left = self.points_process_images(left, color=color, right=False)
+            points.extend(left)
 
         # draw x, z axis
         """

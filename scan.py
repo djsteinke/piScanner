@@ -45,14 +45,14 @@ class Scan(object):
             sleep(0.5)
             if self.color:
                 # TODO turn on light
-                self.camera.capture_file(f'%s\\color_%04d.jpg' % (self.path, s))
+                self.camera.capture_file(os.path.join(self.path, f'color_%04d.jpg' % s))
             if self.left_laser:
                 self.ll.on()
                 sleep(0.2)
-                self.camera.capture_file(f'%s\\left_%04d.jpg' % (self.path, s))
+                self.camera.capture_file(os.path.join(self.path, f'left_%04d.jpg' % s))
                 self.ll.off()
             if self.right_laser:
                 self.rl.on()
                 sleep(0.2)
-                self.camera.capture_file(f'%s\\right_%04d.jpg' % (self.path, s))
+                self.camera.capture_file(os.path.join(self.path, f'right_%04d.jpg' % s))
                 self.rl.off()

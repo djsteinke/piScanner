@@ -8,6 +8,7 @@ from scan import ScanDetails
 from configuration.configuration import ScannerConfiguration
 from parser_util import *
 
+
 def output_asc_pointset(filename, points, pointset_type='xyz'):
     """
     Write pointset to disk in raw ASCII format .asc

@@ -23,6 +23,8 @@ def vector_normal(p1, p2, p3):
 def calculate_normal_vector(xyz, xyz2, flip=False):
     length = len(xyz)
     l2 = len(xyz2)
+    if l2 <= 1:
+        return xyz
     r = 8
     for i in range(0, length-r, 1):
         if flip:

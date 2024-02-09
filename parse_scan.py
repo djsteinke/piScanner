@@ -159,10 +159,12 @@ class ScanParser(object):
                 # xy = remove_noise(xy, w)
 
                 offset = pic_num * float(self.details.dps)
-                if offset == 60 and right:
-                    self.xy_r = xy
-                if offset == 0 and not right:
-                    self.xy_l = xy
+                if right:
+                    for x, y in xy:
+                        self.xy_r.append([x, y])
+                else:
+                    for x, y in xy:
+                        self.xy_l.append([x, y])
 
                 print("%s: %03d/%03d" % (side, pic_num + 1, s), round(offset, 1))
                 xyz = []

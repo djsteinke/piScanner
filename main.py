@@ -52,6 +52,7 @@ def index():
 @app.route('/scan', methods=['POST', 'GET'])
 def scan_frame():
     if request.method == 'POST':
+        color = request.form['color'] == 'on' if 'color' in request.form else False
         left_laser = request.form['left_laser'] == 'on' if 'left_laser' in request.form else False
         right_laser = request.form['right_laser'] == 'on' if 'right_laser' in request.form else False
         left_laser_val = int(request.form['left_laser_val']) if 'left_laser_val' in request.form else 0
@@ -59,7 +60,7 @@ def scan_frame():
         deg_per_stp = int(request.form['deg_per_stp']) if 'deg_per_stp' in request.form else 10
         degrees = int(request.form['deg_total']) if 'deg_total' in request.form else 360
 
-        scan = Scan(scanner_config, camera, right_laser, left_laser, False, deg_per_stp, degrees)
+        scan = Scan(scanner_config, camera, right_laser, left_laser, color, deg_per_stp, degrees)
         scan.start()
 
     return render_template('scan.html', config=scanner_config)

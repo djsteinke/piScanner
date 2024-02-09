@@ -297,6 +297,7 @@ class CameraConfiguration(object):
             pdx /= pdt
             pdy /= pdt
             print('corners undistort crop', pdt, pdx, pdy)
+            print('cz', round(new_camera_mtx[0][0]/(pdx/self.grid_size), 2), round(new_camera_mtx[1][1]/(pdy/self.grid_size), 2))
 
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
@@ -315,4 +316,4 @@ class CameraConfiguration(object):
             pdx /= pdt
             pdy /= pdt
             print('corners', pdt, pdx, pdy)
-            print('cz', round(new_camera_mtx[0][0]/(pdx/self.grid_size), 2), round(new_camera_mtx[1][1]/(pdy/self.grid_size), 2))
+            print('cz', round(self.mtx[0][0]/(pdx/self.grid_size), 2), round(self.mtx[1][1]/(pdy/self.grid_size), 2))

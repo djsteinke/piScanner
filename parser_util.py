@@ -47,17 +47,21 @@ def points_triangulate(config: ScannerConfiguration, points, offset, color=None,
     if right:
         cam_degree = config.right_laser.angle
     else:
-        cam_degree = -config.left_laser.angle
-        left_offset = config.right_laser.angle + config.left_laser.angle
+        cam_degree = config.left_laser.angle
+        left_offset = -(config.right_laser.angle + config.left_laser.angle)
 
     px, py = points
 
     bgr = [147, 201, 3]
-    if color is not None:
-        bgr = color[round(py), round(px)]
+    if color is not None and right:
+        bgr = [0, 0, 255]
+        #bgr = color[round(py), round(px)]
 
     cx = config.camera.cx
     cy = config.camera.cy
+    calc_x = (float(px)-cx)/config.camera.f if right else (cx - float(px))/config.camera.f
+    flip = calc_x < 0.0
+    """
     if right:
         calc_x = (float(px)-cx)/config.camera.f
         flip = calc_x < 0.0
@@ -69,8 +73,11 @@ def points_triangulate(config: ScannerConfiguration, points, offset, color=None,
         calc_z = -calc_x / math.tan(math.radians(cam_degree))
     else:
         calc_z = calc_x / math.tan(math.radians(cam_degree))
-
-    calc_y = (float(py)-cy)/config.camera.f
+    """
+    calc_z = -calc_x / math.tan(math.radians(cam_degree))
+    a = config.camera.new_camera_mtx[1][1] / config.camera.f
+    r = (a - calc_z) / a * config.camera.f
+    calc_y = (float(py)-cy)/r
 
     if not right:
         offset += left_offset

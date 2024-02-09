@@ -264,6 +264,8 @@ class CameraConfiguration(object):
     """
 
     def calibrate_single_shot(self):
+        camera.camera.start()
+        camera.camera.set_focus_mm(350.0)
         camera.capture_file_cam(f'%s/ratio.jpg' % calibration_path)
 
         img = cv2.imread(f'%s/ratio.jpg' % calibration_path)

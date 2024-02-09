@@ -33,6 +33,12 @@ def output_asc_pointset(filename, points, pointset_type='xyz'):
     out.close()
 
 
+def rotate(img):
+    h, w = img.shape[:2]
+    if h < w:
+        return cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
+
+
 class ScanParser(object):
     def __init__(self, path):
         self.path = os.path.join(scanner_paths.scans_path, path)
@@ -94,6 +100,8 @@ class ScanParser(object):
         # images = images[1:]
         s = len(images)
         xyz_all = []
+        print(self.config.camera.f)
+        print(self.config.camera.new_camera_mtx)
         for i, i_path in enumerate(images):
             if i <= s:
                 if right:
@@ -102,22 +110,22 @@ class ScanParser(object):
                     pic_num = i_path.split('left_')
                 pic_num = int(pic_num[1].split('.')[0])
                 side = "RIGHT" if right else "LEFT"
-                img = cv2.imread(i_path, 0)
-                img_c = cv2.imread(i_path)
+                # img = cv2.imread(i_path, 0)
+                # img_c = cv2.imread(i_path)
                 c = None
                 max_cols_c = True
 
-                h, w = img_c.shape[:2]
-                if h < w:
-                    img_c = cv2.rotate(img_c, cv2.ROTATE_90_COUNTERCLOCKWISE)
+                img = rotate(cv2.imread(i_path))
+                img = self.config.camera.correct_distortion(img)
+                #cv2.imshow('a', img)
 
                 if color is not None and i < len(color):
                     # max_cols_c = False
-                    c = cv2.imread(color[i])
-                    c_gray = cv2.imread(color[i], 0)
-                    img = cv2.subtract(img, c_gray)
+                    img_c = rotate(cv2.imread(color[i]))
+                    img_c = self.config.camera.correct_distortion(img_c)
+                    #cv2.imshow('c', img_c)
+                    img = cv2.subtract(img, img_c)
 
-                h, w = img.shape
                 """
                 # if we want to resize the images to parse quicker
                 if ratio > 1:
@@ -128,7 +136,7 @@ class ScanParser(object):
                     h, w = img.shape
                 """
                 roi = [[200, 879], [200, 1719]]
-                xy = points_max_cols(img_c, threshold=(60, 255), c=max_cols_c, roi=roi, right=right)
+                xy = points_max_cols(img, threshold=(60, 255), c=max_cols_c, roi=roi, right=right)
                 # xy = remove_noise(xy, w)
 
                 offset = pic_num * float(self.details.dps)
@@ -136,7 +144,7 @@ class ScanParser(object):
                 print("%s: %03d/%03d" % (side, pic_num + 1, s), round(offset, 1))
                 xyz = []
                 for x, y in xy:
-                    p = points_triangulate(self.config, (x, y), offset, color=c, right=right)
+                    p = points_triangulate(self.config, (x, y), offset, color=img_c, right=right)
                     r = math.sqrt(math.pow(p[0], 2) + math.pow(p[2], 2))
                     # Remove points larger than the scan table
                     if r < 110:

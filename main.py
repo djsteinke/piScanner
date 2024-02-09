@@ -57,7 +57,7 @@ def scan_frame():
         right_laser = request.form['right_laser'] == 'on' if 'right_laser' in request.form else False
         left_laser_val = int(request.form['left_laser_val']) if 'left_laser_val' in request.form else 0
         right_laser_val = int(request.form['right_laser_val']) if 'right_laser_val' in request.form else 0
-        deg_per_stp = int(request.form['deg_per_stp']) if 'deg_per_stp' in request.form else 10
+        deg_per_stp = int(request.form['deg_per_step']) if 'deg_per_step' in request.form else 10
         degrees = int(request.form['deg_total']) if 'deg_total' in request.form else 360
 
         scan = Scan(scanner_config, camera, right_laser, left_laser, color, deg_per_stp, degrees)

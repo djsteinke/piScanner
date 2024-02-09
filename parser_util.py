@@ -46,9 +46,12 @@ def points_triangulate(config: ScannerConfiguration, points, offset, color=None,
     left_offset = 0
     if right:
         cam_degree = config.right_laser.angle
+        #cam_degree = 30.0
     else:
-        cam_degree = config.left_laser.angle
-        left_offset = -(config.right_laser.angle + config.left_laser.angle)
+        cam_degree = -config.left_laser.angle
+        #cam_degree = -30.0
+        left_offset = 0.0
+        #left_offset = -(config.right_laser.angle + config.left_laser.angle)
 
     px, py = points
 
@@ -57,9 +60,10 @@ def points_triangulate(config: ScannerConfiguration, points, offset, color=None,
         bgr = [0, 0, 255]
         #bgr = color[round(py), round(px)]
 
-    cx = config.camera.cx
+    cx = config.camera.cx-2.5
     cy = config.camera.cy
-    calc_x = (float(px)-cx)/config.camera.f if right else (cx - float(px))/config.camera.f
+    #calc_x = (float(px)-cx)/config.camera.f + 0.75 if right else (cx - float(px))/config.camera.f - 0.75
+    calc_x = (float(px)-cx)/config.camera.f
     flip = calc_x < 0.0
     """
     if right:
@@ -75,9 +79,9 @@ def points_triangulate(config: ScannerConfiguration, points, offset, color=None,
         calc_z = calc_x / math.tan(math.radians(cam_degree))
     """
     calc_z = -calc_x / math.tan(math.radians(cam_degree))
-    a = config.camera.new_camera_mtx[1][1] / config.camera.f
-    r = (a - calc_z) / a * config.camera.f
-    calc_y = (float(py)-cy)/r
+    #a =  / config.camera.f
+    f = config.camera.new_camera_mtx[1][1]/(355.65 + calc_z)
+    calc_y = (float(py)-cy) / f
 
     if not right:
         offset += left_offset
@@ -108,9 +112,9 @@ def points_max_cols(img, threshold=(60, 255), c=False, roi=None, right=True):
         # contour, hierarchy = cv2.findContours(bin_img, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         h, w = bin_img.shape
         c = cv2.resize(bin_img, (360, 640), interpolation=cv2.INTER_AREA)
-        cv2.imshow("pic", c)
-        cv2.waitKey()
-        cv2.destroyAllWindows()
+        #cv2.imshow("pic", c)
+        #cv2.waitKey()
+        #cv2.destroyAllWindows()
     else:
         bin_img = cv2.inRange(img, lower, upper)
         h, w, _ = img.shape

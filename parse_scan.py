@@ -34,6 +34,20 @@ def output_asc_pointset(filename, points, pointset_type='xyz'):
     out.close()
 
 
+def avg_x(xy):
+    x = 0.0
+    y = 0.0
+    i = 0
+    for p in xy:
+        x += p[0] - 526
+        y += p[1] - 956
+        i += 1
+    if i > 0:
+        return float(x)/float(i), float(y)/float(i)
+    else:
+        return 0.0
+
+
 def rotate(img):
     h, w = img.shape[:2]
     if h < w:
@@ -48,6 +62,8 @@ class ScanParser(object):
         self.details = None
         self.config = ScannerConfiguration.load()
         self.load_details()
+        self.xy_r = []
+        self.xy_l = []
 
     def load_details(self):
         try:
@@ -84,6 +100,7 @@ class ScanParser(object):
             left = self.points_process_images(left, color=color, right=False)
             points.extend(left)
 
+        print(avg_x(self.xy_r), avg_x(self.xy_l))
         # draw x, z axis
         """
         xyz = [[x, 0, 0, 255, 0, 0, 0, 0, 0] for x in range(0, 100, 5)]
@@ -101,8 +118,8 @@ class ScanParser(object):
         # images = images[1:]
         s = len(images)
         xyz_all = []
-        print(self.config.camera.f)
-        print(self.config.camera.new_camera_mtx)
+        #print(self.config.camera.f)
+        #print(self.config.camera.new_camera_mtx)
         for i, i_path in enumerate(images):
             if i <= s:
                 if right:
@@ -120,6 +137,7 @@ class ScanParser(object):
                 img = self.config.camera.correct_distortion(img)
                 #cv2.imshow('a', img)
 
+                img_c = None
                 if color is not None and i < len(color):
                     # max_cols_c = False
                     img_c = rotate(cv2.imread(color[i]))
@@ -141,6 +159,10 @@ class ScanParser(object):
                 # xy = remove_noise(xy, w)
 
                 offset = pic_num * float(self.details.dps)
+                if offset == 60 and right:
+                    self.xy_r = xy
+                if offset == 0 and not right:
+                    self.xy_l = xy
 
                 print("%s: %03d/%03d" % (side, pic_num + 1, s), round(offset, 1))
                 xyz = []

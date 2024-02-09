@@ -315,3 +315,4 @@ class CameraConfiguration(object):
             pdx /= pdt
             pdy /= pdt
             print('corners', pdt, pdx, pdy)
+            print('cz', round(new_camera_mtx[0][0]/(pdx/self.grid_size), 2), round(new_camera_mtx[1][1]/(pdy/self.grid_size), 2))

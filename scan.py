@@ -78,3 +78,4 @@ class Scan(object):
                 sleep(0.2)
                 self.camera.capture_file(os.path.join(image_path, f'right_%04d.jpg' % s))
                 self.rl.off()
+        self.motor.disable()

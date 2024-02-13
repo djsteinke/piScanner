@@ -49,7 +49,10 @@ def get_full_jpg_buffer(x, y):
     img = cv2.line(img, (x, 0), (x, h), (0, 0, 255), 1)
     img = cv2.line(img, (0, y), (w, y), (0, 0, 255), 1)
     ret, buffer = cv2.imencode('.jpg', img)
-    return buffer
+    if ret:
+        return buffer
+    else:
+        raise Exception()
 
 
 def get_jpg_buffer(x, y):

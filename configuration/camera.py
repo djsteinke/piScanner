@@ -25,7 +25,7 @@ def arrary_avg(arr):
     x /= i
     y /= i
     z /= i
-    print([x, y, z])
+    print(np.array([[x], [y], [z]], dtype=np.float32))
 
 class CameraConfiguration(object):
     def __init__(self, calculate=False):

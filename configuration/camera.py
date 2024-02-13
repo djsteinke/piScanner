@@ -275,17 +275,17 @@ class CameraConfiguration(object):
             h, w = img.shape[:2]
         print(w, h, self.mtx)
         new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(self.mtx, self.dist, (w, h), 1, (w, h))
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        gray = cv2.undistort(gray, self.mtx, self.dist, None, new_camera_mtx)
+        img = cv2.undistort(img, self.mtx, self.dist, None, new_camera_mtx)
         print('calibrationMatrixValues-new_cam', cv2.calibrationMatrixValues(new_camera_mtx, gray.shape[::-1], 3.6288, 6.4512))
         x, y, w, h = roi
         # gray = gray[y:y + h, x:x + w]
         print(x, y, w, h, new_camera_mtx)
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
         if ret:
             corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
             print(corners2)
-            img = cv2.drawChessboardCorners(gray, (self.nx, self.ny), corners2, ret)
+            img = cv2.drawChessboardCorners(img, (self.nx, self.ny), corners2, ret)
             cv2.imwrite('ratio_corr.jpg', gray)
             pdy = 0
             pdx = 0

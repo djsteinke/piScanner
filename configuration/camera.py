@@ -280,12 +280,12 @@ class CameraConfiguration(object):
         print(cz)
     """
 
-    def calibrate_single_shot(self):
+    def calibrate_single_shot(self, file_name):
         camera.camera.start()
         camera.camera.set_focus_mm(350.0)
-        camera.capture_file_cam(f'%s/ratio_orig.jpg' % calibration_path)
+        camera.capture_file_cam(f'%s/%s.jpg' % (calibration_path, file_name))
 
-        img = cv2.imread(f'%s/ratio_orig.jpg' % calibration_path)
+        img = cv2.imread(f'%s/%s.jpg' % (calibration_path, file_name))
         h, w = img.shape[:2]
         if h < w:
             img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
@@ -303,7 +303,7 @@ class CameraConfiguration(object):
             corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
             print(corners2)
             img = cv2.drawChessboardCorners(img, (self.nx, self.ny), corners2, ret)
-            cv2.imwrite('ratio_corr.jpg', img)
+            cv2.imwrite(file_name + '_corr.jpg', img)
             pdy = 0
             pdx = 0
             pdt = 0
@@ -318,6 +318,7 @@ class CameraConfiguration(object):
             print('corners undistort crop', pdt, pdx, pdy)
             print('cz', round(new_camera_mtx[0][0]/(pdx/self.grid_size), 2), round(new_camera_mtx[1][1]/(pdy/self.grid_size), 2))
 
+        """
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
         if ret:
@@ -336,3 +337,4 @@ class CameraConfiguration(object):
             pdy /= pdt
             print('corners', pdt, pdx, pdy)
             print('cz', round(self.mtx[0][0]/(pdx/self.grid_size), 2), round(self.mtx[1][1]/(pdy/self.grid_size), 2))
+        """

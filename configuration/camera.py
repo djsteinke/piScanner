@@ -286,7 +286,7 @@ class CameraConfiguration(object):
             corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
             print(corners2)
             img = cv2.drawChessboardCorners(img, (self.nx, self.ny), corners2, ret)
-            cv2.imwrite('ratio_corr.jpg', gray)
+            cv2.imwrite('ratio_corr.jpg', img)
             pdy = 0
             pdx = 0
             pdt = 0

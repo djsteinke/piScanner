@@ -281,11 +281,12 @@ class CameraConfiguration(object):
         x, y, w, h = roi
         # gray = gray[y:y + h, x:x + w]
         print(x, y, w, h, new_camera_mtx)
-        cv2.imwrite('ratio_corr.jpg', gray)
         ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
         if ret:
             corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
             print(corners2)
+            img = cv2.drawChessboardCorners(gray, (self.nx, self.ny), corners2, ret)
+            cv2.imwrite('ratio_corr.jpg', gray)
             pdy = 0
             pdx = 0
             pdt = 0

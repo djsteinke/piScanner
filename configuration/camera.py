@@ -97,8 +97,11 @@ class CameraConfiguration(object):
 
         ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, gray_pic.shape[::-1], None, None)
         new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (w, h), 1, (w, h))
-        print('rvecs', rvecs)
-        print('tvecs', tvecs)
+        rt = np.array([rvecs, tvecs])
+        res_orig = np.dot(mtx, rt)
+        res_new = np.dot(new_camera_mtx, rt)
+        print('orig', res_orig)
+        print('new', res_new)
         print('calibrationMatrixValues-mtx', cv2.calibrationMatrixValues(mtx, gray_pic.shape[::-1], 3.6288, 6.4512))
         print('calibrationMatrixValues-new_cam', cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 3.6288, 6.4512))
         fov_x, fov_y, f, pp, ar = cv2.calibrationMatrixValues(new_camera_mtx, gray_pic.shape[::-1], 3.6288, 6.4512)

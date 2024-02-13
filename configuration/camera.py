@@ -276,7 +276,7 @@ class CameraConfiguration(object):
         print(w, h, self.mtx)
         new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(self.mtx, self.dist, (w, h), 1, (w, h))
         img = cv2.undistort(img, self.mtx, self.dist, None, new_camera_mtx)
-        print('calibrationMatrixValues-new_cam', cv2.calibrationMatrixValues(new_camera_mtx, gray.shape[::-1], 3.6288, 6.4512))
+        print('calibrationMatrixValues-new_cam', cv2.calibrationMatrixValues(new_camera_mtx, img.shape[::-1], 3.6288, 6.4512))
         x, y, w, h = roi
         # gray = gray[y:y + h, x:x + w]
         print(x, y, w, h, new_camera_mtx)

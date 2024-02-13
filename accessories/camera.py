@@ -46,6 +46,10 @@ def get_rotated_buffer(profile="lores"):
 def get_full_jpg_buffer(x, y):
     img = get_rotated_buffer("main")
     h, w = img.shape[:2]
+    h /= 2
+    w /= 2
+    x /= 2
+    y /= 2
     img = cv2.line(img, (x, 0), (x, h), (0, 0, 255), 1)
     img = cv2.line(img, (0, y), (w, y), (0, 0, 255), 1)
     ret, buffer = cv2.imencode('.jpg', img)

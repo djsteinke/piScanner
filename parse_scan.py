@@ -61,6 +61,7 @@ class ScanParser(object):
         self.first_xyz = []
         self.details = None
         self.config = ScannerConfiguration.load()
+        print(self.config.camera.cx, self.config.camera.cy)
         self.load_details()
         self.xy_r = []
         self.xy_l = []
@@ -163,7 +164,9 @@ class ScanParser(object):
                     c = cv2.resize(c, (w_tmp, h_tmp), interpolation=cv2.INTER_AREA)
                     h, w = img.shape
                 """
-                roi = [[540, 712], [290, 1615]] if right else [[368, 540], [290, 1615]]
+                roi = [[200, 880], [1200, 1700]] if right else [[200, 880], [1200, 1700]]
+                #cv2.imshow('img', img)
+                #cv2.waitKey()
 
                 xy = points_max_cols(img, threshold=(60, 255), c=max_cols_c, roi=roi, right=right)
                 # xy = remove_noise(xy, w)

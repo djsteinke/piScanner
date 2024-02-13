@@ -43,8 +43,9 @@ def calculate_normal_vector(xyz, xyz2, flip=False):
         xyz[i][8] = n[2]
     return xyz
 
-l_mat = [-94428.45999999989, -503.3500000000075, 213635.99999999985, 77584099.43260004]
-r_mat = [-93623.10000000011, 302.0100000000027, -205005.00000000017, -74590189.81380011]
+
+l_mat = [-86292.12000000004, 5228.740000000004, 240025.00000000006, 86485394.38600005]
+r_mat = [-84719.8000000001, -5288.400000000016, -227610.00000000006, -82752286.21999995]
 
 def points_triangulate(config: ScannerConfiguration, points, offset, color=None, right=True):
     left_offset = 0
@@ -66,8 +67,8 @@ def points_triangulate(config: ScannerConfiguration, points, offset, color=None,
         bgr = [0, 0, 255]
         #bgr = color[round(py), round(px)]
 
-    cx = config.camera.cx
-    cy = config.camera.cy
+    cx = config.camera.new_camera_mtx[0][2]
+    cy = config.camera.new_camera_mtx[1][2]
     #calc_x = (float(px)-cx)/config.camera.f + 0.75 if right else (cx - float(px))/config.camera.f - 0.75
     #calc_x = (float(px)-cx)/config.camera.f
     px = px - cx
@@ -75,7 +76,7 @@ def points_triangulate(config: ScannerConfiguration, points, offset, color=None,
     calc_z = (mat[0]*px - mat[1]*py - mat[3]) / - mat[2]
     calc_x = px * calc_z / config.camera.new_camera_mtx[0][0]
     calc_y = py * calc_z / config.camera.new_camera_mtx[1][1]
-    calc_z -= 357.2
+    calc_z -= 355.5
     #print(calc_x, calc_y, calc_z)
     flip = calc_x < 0.0
     """
@@ -96,12 +97,15 @@ def points_triangulate(config: ScannerConfiguration, points, offset, color=None,
     #f = config.camera.new_camera_mtx[1][1]/(355.65 + calc_z)
     #calc_y = (float(py)-cy) / f
 
+    off_angle = math.radians(offset)
     if not right:
         offset += left_offset
-    angle = math.radians(offset)
+        off_angle = math.radians(offset+60)
 
-    orig_x = calc_x - 2.5
-    orig_z = calc_z
+    angle = math.radians(offset)
+    #off = 2.2*abs(float(angle)-270.0)/360.0
+    orig_x = calc_x #- 2.0*abs(math.sin(off_angle)) #2.2*abs(float(angle)-270.0)/360.0
+    orig_z = calc_z #+ 2.0*abs(math.cos(off_angle))
     calc_x = orig_x*math.cos(angle) - orig_z*math.sin(angle)
     calc_z = orig_x*math.sin(angle) + orig_z*math.cos(angle)
 

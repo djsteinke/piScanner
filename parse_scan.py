@@ -81,6 +81,8 @@ class ScanParser(object):
     def parse(self):
         image_path = os.path.join(self.path, 'images')
         points = []
+        points_l = []
+        points_r = []
         right = glob.glob("%s/right*" % image_path.rstrip('/'))
         left = glob.glob("%s/left*" % image_path.rstrip('/'))
         color = glob.glob("%s/color*" % image_path.rstrip('/'))
@@ -93,12 +95,13 @@ class ScanParser(object):
 
         if len(right) > 0:
             right.sort()
-            points = self.points_process_images(right, color=color, right=True)
+            points_r = self.points_process_images(right, color=color, right=True)
+            points.extend(points_r)
 
         if len(left) > 0:
             left.sort()
-            left = self.points_process_images(left, color=color, right=False)
-            points.extend(left)
+            points_l = self.points_process_images(left, color=color, right=False)
+            points.extend(points_l)
 
         print(avg_x(self.xy_r), avg_x(self.xy_l))
         # draw x, z axis
@@ -110,8 +113,14 @@ class ScanParser(object):
         """
 
         filename = os.path.join(self.path, 'points.xyz')
-        print("I: Writing pointcloud to %s" % filename)
         output_asc_pointset(filename, points, 'xyzcn')
+        print("I: Writing pointcloud to %s" % filename)
+        if len(points_l) > 0 and len(points_r) > 0:
+            filename = os.path.join(self.path, 'points_r.xyz')
+            output_asc_pointset(filename, points_r, 'xyzcn')
+            filename = os.path.join(self.path, 'points_l.xyz')
+            output_asc_pointset(filename, points_l, 'xyzcn')
+
 
     def points_process_images(self, images, color=None, right=True):
         points = []
@@ -154,7 +163,8 @@ class ScanParser(object):
                     c = cv2.resize(c, (w_tmp, h_tmp), interpolation=cv2.INTER_AREA)
                     h, w = img.shape
                 """
-                roi = [[200, 879], [200, 1719]]
+                roi = [[540, 712], [290, 1615]] if right else [[368, 540], [290, 1615]]
+
                 xy = points_max_cols(img, threshold=(60, 255), c=max_cols_c, roi=roi, right=right)
                 # xy = remove_noise(xy, w)
 

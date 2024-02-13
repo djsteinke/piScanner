@@ -62,7 +62,7 @@ def points_triangulate(config: ScannerConfiguration, points, offset, color=None,
         bgr = [0, 0, 255]
         #bgr = color[round(py), round(px)]
 
-    cx = config.camera.cx-2.5
+    cx = config.camera.cx
     cy = config.camera.cy
     #calc_x = (float(px)-cx)/config.camera.f + 0.75 if right else (cx - float(px))/config.camera.f - 0.75
     calc_x = (float(px)-cx)/config.camera.f

@@ -266,9 +266,9 @@ class CameraConfiguration(object):
     def calibrate_single_shot(self):
         camera.camera.start()
         camera.camera.set_focus_mm(350.0)
-        camera.capture_file_cam(f'%s/ratio.jpg' % calibration_path)
+        camera.capture_file_cam(f'%s/ratio_orig.jpg' % calibration_path)
 
-        img = cv2.imread(f'%s/ratio.jpg' % calibration_path)
+        img = cv2.imread(f'%s/ratio_orig.jpg' % calibration_path)
         h, w = img.shape[:2]
         if h < w:
             img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
@@ -279,12 +279,13 @@ class CameraConfiguration(object):
         gray = cv2.undistort(gray, self.mtx, self.dist, None, new_camera_mtx)
         print('calibrationMatrixValues-new_cam', cv2.calibrationMatrixValues(new_camera_mtx, gray.shape[::-1], 3.6288, 6.4512))
         x, y, w, h = roi
-        gray = gray[y:y + h, x:x + w]
+        # gray = gray[y:y + h, x:x + w]
         print(x, y, w, h, new_camera_mtx)
-        cv2.imwrite('ratio_crop.jpg', gray)
+        cv2.imwrite('ratio_corr.jpg', gray)
         ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
         if ret:
             corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
+            print(corners2)
             pdy = 0
             pdx = 0
             pdt = 0

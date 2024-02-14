@@ -305,19 +305,34 @@ class CameraConfiguration(object):
             print(corners2[0], corners2[self.nx * self.ny - 1])
             img = cv2.drawChessboardCorners(img, (self.nx, self.ny), corners2, ret)
             cv2.imwrite(file_name + '_corr.jpg', img)
-            pdy = 0
             pdx = 0
+            pdy = 0
+            pdy_a = 0
+            pdx_a = 0
+            pdx_b = 0
+            pdy_b = 0
             pdt = 0
             for y in range(0, self.ny - 1):
+                pdt_i = 0
                 for x in range(0, self.nx - 1):
                     pdt += 1
+                    pdt_i += 1
                     p = y * self.nx + x
                     pdx += abs(corners2[p + 1][0][0] - corners2[p][0][0])
                     pdy += abs(corners2[p + self.nx][0][1] - corners2[p][0][1])
-                pdx /= pdt
-                pdy /= pdt
-                print('corners undistort crop', pdt, pdx, pdy)
-            print('cz', round(new_camera_mtx[0][0]/(pdx/self.grid_size), 2), round(new_camera_mtx[1][1]/(pdy/self.grid_size), 2))
+                    pdx_a += abs(corners2[p + 1][0][0] - corners2[p][0][0])
+                    pdy_a += abs(corners2[p + self.nx][0][1] - corners2[p][0][1])
+                    pdy_b += abs(corners2[p + 1][0][1] - corners2[p][0][1])
+                    pdx_b += abs(corners2[p + self.nx][0][0] - corners2[p][0][0])
+                pdx_a /= pdt_i
+                pdy_a /= pdt_i
+                pdx_b /= pdt_i
+                pdy_b /= pdt_i
+                print('corners undistort crop', pdt_i, pdx_a, pdy_a)
+            pdx /= pdt
+            pdy /= pdt
+            print('corners undistort crop', pdt, pdx, pdy)
+            print('cz', round(new_camera_mtx[0][0]/(pdx_a/self.grid_size), 2), round(new_camera_mtx[1][1]/(pdy_a/self.grid_size), 2))
 
         """
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)

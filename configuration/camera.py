@@ -280,9 +280,10 @@ class CameraConfiguration(object):
         print(cz)
     """
 
-    def calibrate_single_shot(self, file_name):
-        camera.camera.start()
-        camera.camera.set_focus_mm(350.0)
+    def calibrate_single_shot(self, file_name, started=False):
+        if not started:
+            camera.camera.start()
+            camera.camera.set_focus_mm(350.0)
         camera.capture_file_cam(f'%s/%s.jpg' % (calibration_path, file_name))
 
         img = cv2.imread(f'%s/%s.jpg' % (calibration_path, file_name))

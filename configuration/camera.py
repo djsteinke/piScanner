@@ -328,7 +328,7 @@ class CameraConfiguration(object):
                 pdy_a /= pdt_i
                 pdx_b /= pdt_i
                 pdy_b /= pdt_i
-                print('corners undistort crop', pdt_i, pdx_a, pdy_a)
+                print('pts', pdt_i, pdx_a, pdy_a, pdx_b, pdy_b)
             pdx /= pdt
             pdy /= pdt
             print('corners undistort crop', pdt, pdx, pdy)

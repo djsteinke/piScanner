@@ -307,32 +307,37 @@ class CameraConfiguration(object):
             cv2.imwrite(file_name + '_corr.jpg', img)
             pdx = 0
             pdy = 0
-            pdy_a = 0
-            pdx_a = 0
-            pdx_b = 0
-            pdy_b = 0
+            pdy_x = 0
+            pdx_x = 0
+            pdx_y = 0
+            pdy_y = 0
             pdt = 0
+            pdt_x = 0
+            pdt_y = 0
             for y in range(0, self.ny - 1):
-                pdt_i = 0
+                pdt_x = 0
+                pdt_y += 1
                 for x in range(0, self.nx - 1):
                     pdt += 1
-                    pdt_i += 1
+                    pdt_x += 1
                     p = y * self.nx + x
                     pdx += abs(corners2[p + 1][0][0] - corners2[p][0][0])
                     pdy += abs(corners2[p + self.nx][0][1] - corners2[p][0][1])
-                    pdx_a += abs(corners2[p + 1][0][0] - corners2[p][0][0])
-                    pdy_a += abs(corners2[p + self.nx][0][1] - corners2[p][0][1])
-                    pdy_b += abs(corners2[p + 1][0][1] - corners2[p][0][1])
-                    pdx_b += abs(corners2[p + self.nx][0][0] - corners2[p][0][0])
-                pdx_a /= pdt_i
-                pdy_a /= pdt_i
-                pdx_b /= pdt_i
-                pdy_b /= pdt_i
-                print('pts', pdt_i, pdx_a, pdy_a, pdx_b, pdy_b)
+                    pdx_x += abs(corners2[p + 1][0][0] - corners2[p][0][0])
+                    pdy_x += abs(corners2[p + self.nx][0][1] - corners2[p][0][1])
+
+                p = y * self.nx
+                pdy_y += abs(corners2[p + 1][0][1] - corners2[p][0][1])
+                pdx_y += abs(corners2[p + self.nx][0][0] - corners2[p][0][0])
+                pdx_x /= pdt_x
+                pdy_x /= pdt_x
+                pdx_y /= pdt_y
+                pdy_y /= pdt_y
+                print('pts', pdt_x, pdx_x, pdy_x, pdt_y, pdx_y, pdy_y)
             pdx /= pdt
             pdy /= pdt
             print('corners undistort crop', pdt, pdx, pdy)
-            print('cz', round(new_camera_mtx[0][0]/(pdx_a/self.grid_size), 2), round(new_camera_mtx[1][1]/(pdy_a/self.grid_size), 2))
+            print('cz', round(new_camera_mtx[0][0]/(pdx/self.grid_size), 2), round(new_camera_mtx[1][1]/(pdy/self.grid_size), 2))
 
         """
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)

@@ -302,7 +302,7 @@ class CameraConfiguration(object):
         ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
         if ret:
             corners2 = cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
-            print(corners2[0], corners2[self.nx * self.ny - 1])
+            print(corners2[0], corners2[self.nx * self.ny - 1], corners2[self.nx-1], corners2[self.nx * self.ny - self.nx])
             img = cv2.drawChessboardCorners(img, (self.nx, self.ny), corners2, ret)
             cv2.imwrite(file_name + '_corr.jpg', img)
             pdx = 0
@@ -312,7 +312,6 @@ class CameraConfiguration(object):
             pdx_y = 0
             pdy_y = 0
             pdt = 0
-            pdt_x = 0
             pdt_y = 0
             for y in range(0, self.ny - 1):
                 pdt_x = 0

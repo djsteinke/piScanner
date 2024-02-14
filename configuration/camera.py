@@ -72,6 +72,12 @@ class CameraConfiguration(object):
         img = cv2.imread(img_path)
         return self.correct_distortion(img, crop)
 
+    def take_correct_pic(self, file_name):
+        path = f'%s/%s.jpg' % (calibration_path, file_name)
+        camera.capture_file_cam(f'%s/%s.jpg' % (calibration_path, file_name))
+        img = self.correct_crop_file(path, False)
+        cv2.imwrite(path, img)
+
     def determine_calibration(self):
         obj_points = []  # 3d point in real world space
         img_points = []  # 2d points in image plane.

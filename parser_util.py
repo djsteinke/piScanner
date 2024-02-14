@@ -73,9 +73,9 @@ def points_triangulate(config: ScannerConfiguration, points, offset, color=None,
     #calc_x = (float(px)-cx)/config.camera.f
     px = px - cx
     py = py - cy
-    calc_z = (mat[0]*px - mat[1]*py - mat[3]) / - mat[2]
+    calc_z = (mat[0]*px - mat[1]*py - mat[3]) / - mat[2] + 0.6
     calc_x = px * calc_z / config.camera.new_camera_mtx[0][0]
-    calc_y = py * calc_z / config.camera.new_camera_mtx[1][1]
+    calc_y = - py * calc_z / config.camera.new_camera_mtx[1][1]
     calc_z -= 355.5
     #print(calc_x, calc_y, calc_z)
     flip = calc_x < 0.0
@@ -104,7 +104,7 @@ def points_triangulate(config: ScannerConfiguration, points, offset, color=None,
 
     angle = math.radians(offset)
     #off = 2.2*abs(float(angle)-270.0)/360.0
-    orig_x = calc_x #- 2.0*abs(math.sin(off_angle)) #2.2*abs(float(angle)-270.0)/360.0
+    orig_x = calc_x - 0.96#- 2.0*abs(math.sin(off_angle)) #2.2*abs(float(angle)-270.0)/360.0
     orig_z = calc_z #+ 2.0*abs(math.cos(off_angle))
     calc_x = orig_x*math.cos(angle) - orig_z*math.sin(angle)
     calc_z = orig_x*math.sin(angle) + orig_z*math.cos(angle)

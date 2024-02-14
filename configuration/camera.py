@@ -291,13 +291,13 @@ class CameraConfiguration(object):
         if h < w:
             img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
             h, w = img.shape[:2]
-        print(w, h, self.mtx)
+        # print(w, h, self.mtx)
         new_camera_mtx, roi = cv2.getOptimalNewCameraMatrix(self.mtx, self.dist, (w, h), 1, (w, h))
         img = cv2.undistort(img, self.mtx, self.dist, None, new_camera_mtx)
-        print('calibrationMatrixValues-new_cam', cv2.calibrationMatrixValues(new_camera_mtx, img.shape[:2], 3.6288, 6.4512))
+        # print('calibrationMatrixValues-new_cam', cv2.calibrationMatrixValues(new_camera_mtx, img.shape[:2], 3.6288, 6.4512))
         x, y, w, h = roi
         # gray = gray[y:y + h, x:x + w]
-        print(x, y, w, h, new_camera_mtx)
+        # print(x, y, w, h, new_camera_mtx)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         ret, corners = cv2.findChessboardCorners(gray, (self.nx, self.ny), None)
         if ret:
@@ -314,9 +314,9 @@ class CameraConfiguration(object):
                     p = y * self.nx + x
                     pdx += abs(corners2[p + 1][0][0] - corners2[p][0][0])
                     pdy += abs(corners2[p + self.nx][0][1] - corners2[p][0][1])
-            pdx /= pdt
-            pdy /= pdt
-            print('corners undistort crop', pdt, pdx, pdy)
+                pdx /= pdt
+                pdy /= pdt
+                print('corners undistort crop', pdt, pdx, pdy)
             print('cz', round(new_camera_mtx[0][0]/(pdx/self.grid_size), 2), round(new_camera_mtx[1][1]/(pdy/self.grid_size), 2))
 
         """

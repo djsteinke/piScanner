@@ -47,25 +47,35 @@ def calculate_normal_vector(xyz, xyz2, flip=False):
 l_mat = [-86292.12000000004, 5228.740000000004, 240025.00000000006, 86485394.38600005]
 r_mat = [-84719.8000000001, -5288.400000000016, -227610.00000000006, -82752286.21999995]
 
+r_quad = [0.00046, -0.48, 362.5]
+l_quad = [0.00043, 0.46, 357.3]
+
+f_quad = [0.00004094, -0.0397, 12.61]
+
 def points_triangulate(config: ScannerConfiguration, points, offset, color=None, right=True):
     left_offset = 0
     if right:
         cam_degree = config.right_laser.angle
         #cam_degree = 30.0
         mat = r_mat
+        quad = r_quad
     else:
         cam_degree = -config.left_laser.angle
         #cam_degree = -30.0
         left_offset = 0.0
         mat = l_mat
+        quad = l_quad
         #left_offset = -(config.right_laser.angle + config.left_laser.angle)
 
     px, py = points
 
+    lr_color = False
     bgr = [147, 201, 3]
-    if color is not None and right:
-        bgr = [0, 0, 255]
-        #bgr = color[round(py), round(px)]
+    if color is not None:
+        if lr_color and right:
+            bgr = [0, 0, 255]
+        if not lr_color:
+            bgr = color[round(py), round(px)]
 
     cx = config.camera.new_camera_mtx[0][2]
     cy = config.camera.new_camera_mtx[1][2]
@@ -73,10 +83,14 @@ def points_triangulate(config: ScannerConfiguration, points, offset, color=None,
     #calc_x = (float(px)-cx)/config.camera.f
     px = px - cx
     py = py - cy
-    calc_z = (mat[0]*px - mat[1]*py - mat[3]) / - mat[2] + 0.6
-    calc_x = px * calc_z / config.camera.new_camera_mtx[0][0]
-    calc_y = - py * calc_z / config.camera.new_camera_mtx[1][1]
-    calc_z -= 355.5
+    calc_z = px*px*quad[0]+px*quad[1]+quad[2]
+    f = calc_z*calc_z*f_quad[0]+calc_z*f_quad[1]+f_quad[2]
+    calc_x = px/f
+    calc_y = py/f
+    #calc_z = (mat[0]*px - mat[1]*py - mat[3]) / - mat[2] + 0.6
+    #calc_x = px * calc_z / config.camera.new_camera_mtx[0][0]
+    #calc_y = - py * calc_z / config.camera.new_camera_mtx[1][1]
+    calc_z -= 360.0
     #print(calc_x, calc_y, calc_z)
     flip = calc_x < 0.0
     """

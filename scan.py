@@ -64,18 +64,17 @@ class Scan(object):
         for s in range(0, steps):
             if s > 0:
                 self.motor.rotate(self.degrees_per_step)
-            sleep(0.5)
+            sleep(0.25)
             if self.color:
-                # TODO turn on light
                 self.camera.capture_file(os.path.join(image_path, f'color_%04d.jpg' % s))
             if self.left_laser:
                 self.ll.on()
-                sleep(0.2)
+                sleep(0.1)
                 self.camera.capture_file(os.path.join(image_path, f'left_%04d.jpg' % s))
                 self.ll.off()
             if self.right_laser:
                 self.rl.on()
-                sleep(0.2)
+                sleep(0.1)
                 self.camera.capture_file(os.path.join(image_path, f'right_%04d.jpg' % s))
                 self.rl.off()
         self.motor.disable()

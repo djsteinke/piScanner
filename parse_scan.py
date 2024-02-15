@@ -164,7 +164,7 @@ class ScanParser(object):
                     c = cv2.resize(c, (w_tmp, h_tmp), interpolation=cv2.INTER_AREA)
                     h, w = img.shape
                 """
-                roi = [[200, 880], [1200, 1700]] if right else [[200, 880], [1200, 1700]]
+                roi = [[200, 880], [200, 1400]] if right else [[200, 880], [200, 1400]]
                 #cv2.imshow('img', img)
                 #cv2.waitKey()
 

@@ -65,6 +65,7 @@ class ScanParser(object):
         self.load_details()
         self.xy_r = []
         self.xy_l = []
+        self.roi = []
 
     def load_details(self):
         try:
@@ -88,6 +89,7 @@ class ScanParser(object):
         left = glob.glob("%s/left*" % image_path.rstrip('/'))
         color = glob.glob("%s/color*" % image_path.rstrip('/'))
 
+        self.roi = self.get_roi(right[0] if len(color) == 0 else color[1])
         print(f'RIGHT[{len(right)}] LEFT[{len(left)}] COLOR[{len(color)}]')
         if len(color) == 0:
             color = None
@@ -130,6 +132,7 @@ class ScanParser(object):
         xyz_all = []
         #print(self.config.camera.f)
         #print(self.config.camera.new_camera_mtx)
+
         for i, i_path in enumerate(images):
             if i <= s:
                 if right:
@@ -164,20 +167,19 @@ class ScanParser(object):
                     c = cv2.resize(c, (w_tmp, h_tmp), interpolation=cv2.INTER_AREA)
                     h, w = img.shape
                 """
-                roi = [[200, 880], [200, 1400]] if right else [[200, 880], [200, 1400]]
                 #cv2.imshow('img', img)
                 #cv2.waitKey()
 
-                xy = points_max_cols(img, threshold=(60, 255), c=max_cols_c, roi=roi, right=right)
+                xy = points_max_cols(img, threshold=(60, 255), c=max_cols_c, roi=self.roi, right=right)
                 # xy = remove_noise(xy, w)
 
                 offset = pic_num * float(self.details.dps)
-                if right:
-                    for x, y in xy:
-                        self.xy_r.append([x, y])
-                else:
-                    for x, y in xy:
-                        self.xy_l.append([x, y])
+                #if right:
+                #    for x, y in xy:
+                #        self.xy_r.append([x, y])
+                #else:
+                #    for x, y in xy:
+                #        self.xy_l.append([x, y])
 
                 print("%s: %03d/%03d" % (side, pic_num + 1, s), round(offset, 1))
                 xyz = []
@@ -198,6 +200,32 @@ class ScanParser(object):
             xyz = [[x, y, z, r, g, b, xn, yn, zn] for x, y, z, r, g, b, xn, yn, zn, flip in xyz]
             points.extend(xyz)
         return points
+
+
+    def get_roi(self, path, ratio=1.0):
+        xroi = [0, 0]
+        yroi = [0, 0]
+        img = cv2.imread(path)
+        img = self.config.camera.correct_distortion(img)
+        h, w, c = img.shape
+
+        shrink = int(h / 640)
+
+        h_tmp = int(h / shrink)
+        w_tmp = int(w / shrink)
+        roi = cv2.resize(img, (w_tmp, h_tmp), interpolation=cv2.INTER_AREA)
+        r = cv2.selectROI("ROI", roi)
+        xroi[0] = int(r[0]) * shrink
+        xroi[1] = int(r[0] + r[2]) * shrink
+        yroi[0] = int(r[1]) * shrink
+        yroi[1] = int(r[1] + r[3]) * shrink
+        print('ROI')
+        print(xroi, yroi)
+        if xroi == [0, 0]:
+            xroi = [0, w]
+            yroi = [0, h]
+        cv2.destroyWindow("ROI")
+        return [int(xroi[0] / ratio), int(xroi[1] / ratio)], [int(yroi[0] / ratio), int(yroi[1] / ratio)]
 
 
 def main():

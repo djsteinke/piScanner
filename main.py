@@ -38,12 +38,6 @@ class Test(object):
         self.value = 'Some Value.'
 
 
-@app.route('/test')
-def test():
-    t = Test()
-    return render_template('test.html', test=t)
-
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -110,7 +104,7 @@ def setup_load_setup():
 
 @app.route('/run_calibration', methods=["GET", "POST"])
 def run_calibration():
-    scanner_config.camera.run_calibration()
+    scanner_config.camera.run_calibration(scanner_config.get_stepper_motor())
     scanner_config.save()
     return jsonify(message=scanner_config.camera.calibration_values(), statusCode=200), 200
 
@@ -132,5 +126,6 @@ def load_setup():
 if __name__ == '__main__':
     scanner_config = ScannerConfiguration.load()
     camera.start()
-    app.run(debug=False, host="192.168.0.154", port=3100)
+    #app.run(debug=False, host="192.168.0.154", port=3100)
+    app.run(debug=False, host="localhost", port=3100)
 

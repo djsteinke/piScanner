@@ -142,7 +142,7 @@ def points_max_cols(img, threshold=(60, 255), c=False, roi=None, right=True):
         ret, bin_img = cv2.threshold(gray, t_min, t_max, cv2.THRESH_BINARY)
         # contour, hierarchy = cv2.findContours(bin_img, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
         h, w = bin_img.shape
-        c = cv2.resize(bin_img, (360, 640), interpolation=cv2.INTER_AREA)
+        #c = cv2.resize(bin_img, (360, 640), interpolation=cv2.INTER_AREA)
         #cv2.imshow("pic", c)
         #cv2.waitKey()
         #cv2.destroyAllWindows()

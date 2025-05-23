@@ -57,12 +57,17 @@ class CameraConfiguration(object):
             "cz": self.cz
         }
 
-    def correct_distortion(self, img, crop=False):
+    def correct_distortion(self, img, crop=False, mtx=None, dist=None, new_camera_mtx=None):
+        if mtx is None or dist is None or new_camera_mtx is None:
+            mtx = self.mtx
+            dist = self.dist
+            new_camera_mtx = self.new_camera_mtx
+
         h, w = img.shape[:2]
         if h < w:
             img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)
             h, w = img.shape[:2]
-        undistorted_img = cv2.undistort(img, self.mtx, self.dist, None, self.new_camera_mtx)
+        undistorted_img = cv2.undistort(img, mtx, dist, None, new_camera_mtx)
         if crop and len(self.roi) == 4:
             x, y, w, h = self.roi
             undistorted_img = undistorted_img[y:y + h, x:x + w]
@@ -127,7 +132,7 @@ class CameraConfiguration(object):
         print(mtx)
         print(w, h, new_camera_mtx, roi)
 
-        correct = self.correct_distortion(gray_pic)
+        correct = self.correct_distortion(gray_pic, mtx=mtx, dist=dist, new_camera_mtx=new_camera_mtx)
         cv2.imwrite('corrected.jpg', correct)
         """
         c_img = cv2.line(orig_pic, (round(mtx[0][2]), 0), (round(mtx[0][2]), h), (0, 0, 255), 2)

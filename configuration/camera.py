@@ -4,7 +4,7 @@ import glob
 import accessories.camera as camera
 import time
 
-from scanner_paths import calibration_path
+from scanner_paths import calibration_images_path
 
 criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
 
@@ -73,8 +73,8 @@ class CameraConfiguration(object):
         return self.correct_distortion(img, crop)
 
     def take_correct_pic(self, file_name):
-        path = f'%s/%s.jpg' % (calibration_path, file_name)
-        camera.capture_file_cam(f'%s/%s.jpg' % (calibration_path, file_name))
+        path = f'%s/%s.jpg' % (calibration_images_path, file_name)
+        camera.capture_file_cam(f'%s/%s.jpg' % (calibration_images_path, file_name))
         img = self.correct_crop_file(path, False)
         cv2.imwrite(path, img)
 
@@ -87,7 +87,7 @@ class CameraConfiguration(object):
         objp = np.zeros((nx * ny, 3), np.float32)
         objp[:, :2] = np.mgrid[0:nx, 0:ny].T.reshape(-1, 2)
 
-        p = calibration_path
+        p = calibration_images_path
 
         images = glob.glob('%s/calibration_*.jpg' % p.rstrip('/'))
         print(len(images))
@@ -207,8 +207,8 @@ class CameraConfiguration(object):
                 motor.rotate(degrees, False)
 
             try:
-                camera.capture_file_cam(f'%s/calibration_%04d.jpg' % (calibration_path, i))
-                print('captured', f'%s/calibration_%04d.jpg' % (calibration_path, i))
+                camera.capture_file_cam(f'%s/calibration_%04d.jpg' % (calibration_images_path, i))
+                print('captured', f'%s/calibration_%04d.jpg' % (calibration_images_path, i))
             except:
                 print('error taking photo')
                 pass
@@ -291,9 +291,9 @@ class CameraConfiguration(object):
             camera.camera.start()
             camera.camera.set_focus_mm(350.0)
         if pic:
-            camera.capture_file_cam(f'%s/%s.jpg' % (calibration_path, file_name))
+            camera.capture_file_cam(f'%s/%s.jpg' % (calibration_images_path, file_name))
 
-        img = cv2.imread(f'%s/%s.jpg' % (calibration_path, file_name))
+        img = cv2.imread(f'%s/%s.jpg' % (calibration_images_path, file_name))
         h, w = img.shape[:2]
         if h < w:
             img = cv2.rotate(img, cv2.ROTATE_90_COUNTERCLOCKWISE)

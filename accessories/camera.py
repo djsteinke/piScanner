@@ -38,7 +38,7 @@ def capture_file_cam_old(f_name):
 
 def capture_file_cam(f_name):
     print("capture_file_cam", f_name)
-    buffer = camera.get_buffer("save")
+    buffer = camera.get_buffer("main")
     print("get_buffer", f_name)
     cv2.imwrite(f_name, buffer)
 
